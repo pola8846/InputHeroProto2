@@ -11,7 +11,14 @@ public class TestEnemy_Air_R_1 : Enemy
     private float patrolDistance;
     [SerializeField]
     private float patrolTick = 1f;
+    [SerializeField]
+    private float patrolMinRange = 2f;//한 번 움직일때 최소
+    [SerializeField]
+    private float patrolMaxRange = 4f;//한 번 움직일 때 최대
+    [SerializeField]
+    private float patrolRangeTotal = 5f;//첫 위치
     private Vector2 patrolDist;
+    private Vector2 patrolOrigin;
     [SerializeField]
     private int state = 0;
     private Renderer renderer;
@@ -30,13 +37,14 @@ public class TestEnemy_Air_R_1 : Enemy
         timer2 = Time.time;
         timer3 = Time.time;
         patrolDist = transform.position;
+        patrolOrigin = transform.position;
     }
     protected override void Update()
     {
         base.Update();
-        if (state >= 0 && state <= 2 && FindPlayer())
+        if (state >= 0 && state <= 2 && FindPlayer())//플레이어 발견 시
         {
-            state = 3;
+            SetState(3);
             return;
         }
         switch (state)
@@ -44,22 +52,19 @@ public class TestEnemy_Air_R_1 : Enemy
             case 0://순찰 대기
                 if (timer1 + patrolTick <= Time.time)
                 {
-                    state = 1;
-                    patrolDist = new Vector2(transform.position.x + Random.Range(-patrolDistance, patrolDistance), transform.position.y);
+                    SetState(1);
                 }
                 break;
             case 1://순찰 이동
                 if (Vector3.Distance(transform.position, (Vector3)patrolDist) <= .3f)
                 {
-                    state = 0;
-                    timer1 = Time.time;
+                    SetState(0);
                 }
                 break;
             case 2://순찰 복귀
                 if (Vector3.Distance(transform.position, (Vector3)patrolDist) <= .3f)
                 {
-                    state = 0;
-                    timer1 = Time.time;
+                    SetState(0);
                 }
                 break;
             case 3://플레이어에게 접근
@@ -94,14 +99,71 @@ public class TestEnemy_Air_R_1 : Enemy
                     rb.velocity = GetDist(patrolDist) * speed;
                 }
                 break;
+            case 3:
+
+                break;
             default:
                 break;
         }
     }
 
-    private Vector2 GetDist(Vector2 target)
+    private void SetState(int num)
+    {
+        switch (state)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+
+        state = num;
+
+        switch (state)
+        {
+            case 0:
+                timer1 = Time.time;
+                break;
+            case 1:
+                SetRandomPatrolPosition();
+                break;
+            case 2:
+                patrolDist = patrolOrigin;
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private Vector2 GetDist(Vector2 target)//대상까지 방향벡터 가져오기
     {
         Vector2 temp = target - (Vector2)transform.position;
         return temp.normalized;
+    }
+    private void SetColor(Color color)
+    {
+        if (color == Color.clear)
+        {
+            renderer.material.color = originColor;
+        }
+        else
+        {
+            renderer.material.color = color;
+        }
+    }
+
+    private void SetRandomPatrolPosition()
+    {
+        float randomVelue = Random.Range(1,1);
+        float targetX = transform.position.x + Random.Range(-patrolDistance, patrolDistance);
+        patrolDist = new Vector2(targetX, transform.position.y);
     }
 }

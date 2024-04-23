@@ -46,31 +46,19 @@ public class TestEnemy_Gr_M_1 : Enemy
             case 1:
                 if (timer1 + attackWaitTime <= Time.time)//공격 대기 시간 지나면
                 {
-                    state = 2;
-                    renderer.material.color = Color.red;
-                    timer2 = Time.time;
-                    atkGO = Instantiate(atk, transform);
-                    atkGO.GetComponent<Attack>().Initialization(this, "Player", atkGO);
-                    //if (!isLookLeft)
-                    //{
-                    //    atkGO.transform.localPosition = new Vector3(-atkGO.transform.localPosition.x, atkGO.transform.localPosition.y);
-                    //}
+                    SetState(2);
                 }
                 break;
             case 2:
                 if (timer2 + attackTime <= Time.time)
                 {
-                    state = 3;
-                    timer3 = Time.time;
-                    rb.velocity = new Vector2(0, rb.velocity.y);
-                    Destroy(atkGO);
+                    SetState(3);
                 }
                 break;
             case 3:
                 if (timer3 + attackCoolTime <= Time.time)
                 {
-                    state = 0;
-                    renderer.material.color = originColor;
+                    SetState(0);
                 }
                 break;
             default:
@@ -103,9 +91,9 @@ public class TestEnemy_Gr_M_1 : Enemy
                     if (AttackRangeCheck())//공격 사거리 내에 오면 스테이트 1로
                     {
                         rb.velocity = new Vector2(0, rb.velocity.y);
-                        state = 1;
+                        SetState(1);
                         timer1 = Time.time;
-                        renderer.material.color = Color.yellow;
+                        SetColor(Color.yellow);
                     }
                 }
                 else
@@ -129,8 +117,61 @@ public class TestEnemy_Gr_M_1 : Enemy
 
     }
 
+    private void SetState(int num)
+    {
+        switch (state)
+        {
+            case 0:
+                break;
+            case 1:
+                SetColor(Color.red);
+                timer2 = Time.time;
+                atkGO = Instantiate(atk, transform);
+                atkGO.GetComponent<Attack>().Initialization(this, "Player", atkGO);
+                break;
+            case 2:
+                timer3 = Time.time;
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                Destroy(atkGO);
+                break;
+            case 3:
+                SetColor(Color.clear);
+                break;
+            default:
+                break;
+        }
+
+        state = num;
+
+        switch (state)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+    }
+
     private bool AttackRangeCheck()
     {
         return Vector3.Distance(transform.position, GameManager.Player.transform.position) <= attackRange;
+    }
+
+    private void SetColor(Color color)
+    {
+        if (color == Color.clear)
+        {
+            renderer.material.color = originColor;
+        }
+        else
+        {
+            renderer.material.color = color;
+        }
     }
 }
