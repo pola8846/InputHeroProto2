@@ -1,0 +1,194 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 같은 판정으로 취급되는 공격 전체
+/// </summary>
+public class Attack : MonoBehaviour
+{
+    /// <summary>
+    /// 공격하는 유닛
+    /// </summary>
+    private Unit attackUnit;
+    /// <summary>
+    /// 공격하는 유닛
+    /// </summary>
+    public Unit AttackUnit
+    {
+        get
+        {
+            return attackUnit;
+        }
+    }
+    private string targetTag;//피해를 입힐 대상의 태그
+    private List<DamageArea> damageAreaList = new();//등록된 대미지
+    private List<Unit> damagedUnitList = new();//대미지 받은 유닛 리스트
+    private bool isInitialized = false;//초기화 되었는가?
+    
+    public bool dealDamageOnEnter = true;//접촉 시 대미지를 입히는가?
+    public bool isDestroySelfAuto = true;//대미지가 전부 사라지면 파괴되는가?
+
+    protected virtual void Update()
+    {
+        //초기화 안했을 때 예외
+        if (!isInitialized)
+        {
+            return;
+        }
+
+        //isDestroySelfAuto 활성화 시 등록된 모든 대미지가 사라지면 파괴
+        if (isDestroySelfAuto && damageAreaList.Count == 0)
+        {
+            Destroy(gameObject);
+        }
+
+        //dealDamageOnEnter 활성화 시 접촉할 때 대미지
+        if (dealDamageOnEnter)
+        {
+            foreach (var contactedUnit in GetContactedUnits())
+            {
+                if (!damagedUnitList.Contains(contactedUnit.Key))
+                {
+                    damagedUnitList.Add(contactedUnit.Key);
+                    contactedUnit.Value.DealDamage(contactedUnit.Key);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 동적 생성. 초기화도 동시에 이루어짐.
+    /// 스크립트에서 위치를 지정해 줄 때 사용하면 될 것
+    /// 주로 투사체 발사
+    /// </summary>
+    /// <param name="unit">공격자 유닛</param>
+    /// <param name="targetTag">피격 대상의 태그</param>
+    /// <param name="parent">부모가 될 Transform. null이면 부모가 없음</param>
+    /// <param name="DamageAreaObjects">초기에 등록할 대미지의 게임 오브젝트</param>
+    /// <returns>생성된 Attack</returns>
+    public static Attack MakeGameObject(Unit unit, string targetTag, Transform parent = null, params GameObject[] DamageAreaObjects)
+    {
+        GameObject go = new GameObject();
+        if (parent != null)
+        {
+            go.transform.parent = parent;
+        }
+        Attack result = go.AddComponent<Attack>();
+        result.Initialization(unit, targetTag, DamageAreaObjects);
+        return result;
+    }
+
+    /// <summary>
+    /// 초기화
+    /// 사용 전에 반드시 초기화하여야 함
+    /// </summary>
+    /// <param name="unit">공격자 유닛</param>
+    /// <param name="targetTag">피격 대상의 태그</param>
+    /// <param name="DamageAreaObjects">초기에 등록할 대미지의 게임 오브젝트</param>
+    public void Initialization(Unit unit, string targetTag, params GameObject[] DamageAreaObjects)
+    {
+        attackUnit = unit;
+        this.targetTag = targetTag;
+        damageAreaList.Clear();
+        damagedUnitList.Clear();
+        foreach (var obj in DamageAreaObjects)
+        {
+            EnrollDamage(obj);
+        }
+        isInitialized = true;
+    }
+
+    /// <summary>
+    /// 대미지 등록
+    /// </summary>
+    /// <param name="damageArea">등록할 대미지</param>
+    public void EnrollDamage(DamageArea damageArea)//대미지 하나 등록
+    {
+        if (damageAreaList.Contains(damageArea))
+        {
+            return;
+        }
+        damageAreaList.Add(damageArea);
+        damageArea.Source = this;
+    }
+
+    /// <summary>
+    /// 본인 혹은 자식의 모든 대미지 등록
+    /// </summary>
+    /// <param name="go">기준이 될 오브젝트</param>
+    public void EnrollDamage(GameObject go)//한 번에 여러 대미지 등록
+    {
+        foreach (DamageArea damageArea in go.GetComponentsInChildren<DamageArea>())
+        {
+            EnrollDamage(damageArea);
+        }
+    }
+
+    /// <summary>
+    /// 대미지 해제
+    /// </summary>
+    /// <param name="damageArea">해제할 대미지</param>
+    public void WithdrawDamage(DamageArea damageArea)//대미지 해제
+    {
+        if (damageAreaList.Contains(damageArea))
+        {
+            damageAreaList.Remove(damageArea);
+        }
+    }
+
+    /// <summary>
+    /// 본인 혹은 자식의 모든 대미지 해제
+    /// </summary>
+    /// <param name="go">기준이 될 오브젝트</param>
+    public void WithdrawDamage(GameObject go)
+    {
+        foreach (DamageArea damageArea in go.GetComponentsInChildren<DamageArea>())
+        {
+            WithdrawDamage(damageArea);
+        }
+    }
+
+    /// <summary>
+    /// 접촉한 유닛 탐색
+    /// 등록된 Damage에 접촉 중인 모든 유닛을 읽어서, 우선도를 고려하여 어느 대미지가 적용될 지 알려줌
+    /// </summary>
+    /// <returns>Key: 접촉한 유닛, Value: 접촉한 DamageArea</returns>
+    private Dictionary<Unit, DamageArea> GetContactedUnits()
+    {
+        Dictionary<Unit, DamageArea> dict = new();//우선권을 고려하여, 어느 유닛에게 어떤 피해 영역이 충돌한 것으로 볼지 기록
+        //dict 채우기
+        foreach (DamageArea damageArea in damageAreaList)//모든 피해 영역에 대해
+        {
+            List<Unit> unitList = new();//해당 피해 영역이 충돌 중인 유닛
+            foreach (HitBox hitBox in damageArea.HitBoxList)//충돌 중인 모든 히트박스에 대해
+            {
+                if (!unitList.Contains(hitBox.Unit) &&//처음 충돌한 유닛이면
+                    hitBox.CompareTag(targetTag))//목표 유닛이면
+                {
+                    unitList.Add(hitBox.Unit);//등록한다
+                }
+            }
+
+            foreach (Unit unit in unitList)//충돌 중인 모든 유닛에 대해
+            {
+                if (!dict.ContainsKey(unit))//해당 유닛 충돌이 처음이라면
+                {
+                    dict.Add(unit, damageArea);//등록한다
+                }
+                else//두 번째 이후라면
+                {
+                    if (dict[unit] != damageArea &&//본인이 아니고
+                        dict[unit].Priority < damageArea.Priority)//자기 우선권이 더 높다면
+                    {
+                        dict[unit] = damageArea;//대체한다
+                    }
+                }
+            }
+        }
+
+        return dict;
+    }
+
+}
