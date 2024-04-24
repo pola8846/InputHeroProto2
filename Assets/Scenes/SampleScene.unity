@@ -2524,6 +2524,7 @@ GameObject:
   - component: {fileID: 2042873438}
   - component: {fileID: 2042873437}
   - component: {fileID: 2042873436}
+  - component: {fileID: 2042873442}
   m_Layer: 9
   m_Name: Monster_Air_R_1
   m_TagString: Enemy
@@ -2552,7 +2553,7 @@ MonoBehaviour:
     attackPower: 0
     defencePower: 0
     defenceRate: 0
-    moveSpeed: 3
+    moveSpeed: 8
     jumpPower: 0
     cooldownRate: 0
     jumpCount: 0
@@ -2565,9 +2566,17 @@ MonoBehaviour:
   patrolSpeedRate: 0.2
   patrolDistance: 2
   patrolTick: 1
-  patrolMinRange: 2
-  patrolMaxRange: 5
-  patrolRangeTotal: 5
+  patrolRange: 5
+  attackRange2: 4
+  attackRange3: 0.5
+  attackRangeAngle: 45
+  attackMoveCount: 3
+  attackCount: 2
+  attackMoveSpeedRate: 1.5
+  attackMoveWaitTime: 0.5
+  attackDelay: 0.35
+  attackWaitTimeBeforeAttack: 1
+  attackWaitTimeAfterAttack: 2
   state: 0
 --- !u!50 &2042873437
 Rigidbody2D:
@@ -2700,12 +2709,39 @@ Transform:
   m_GameObject: {fileID: 2042873435}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.28, y: 3.16, z: 0}
+  m_LocalPosition: {x: 1.51, y: 3.43, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2042873442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042873435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletGO: {fileID: 6433798773826802276, guid: e03b0612a35654e4e8f29e14f2bd48b2, type: 3}
+  bulletNum: 1
+  shootType: 0
+  bulletSpeedMin: 8
+  bulletSpeedMax: 8
+  bulletAngleMin: 0
+  bulletAngleMax: 0
+  bulletDamageMin: 1
+  bulletDamageMax: 1
+  isHitOnce: 0
+  isDestroyAfterHit: 1
+  lifeTime: 2
+  lifeDistance: 5
+  triger: 0
+  Unit: {fileID: 0}
 --- !u!1 &2084208171
 GameObject:
   m_ObjectHideFlags: 0
@@ -3026,7 +3062,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102322329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 840709817e2fd8e4a8b65aaa39a809f7, type: 3}
   m_Name: 
