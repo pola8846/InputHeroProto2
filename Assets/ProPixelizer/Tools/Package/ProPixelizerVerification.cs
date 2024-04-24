@@ -42,7 +42,7 @@ namespace ProPixelizer
             bool generatedWarning = false;
 
             // In the future, I hope that Unity makes ShaderGraphPreferences public so that I can use that rather than hard-coded names here.
-            int variantLimit = EditorPrefs.GetInt("UnityEditor.ShaderGraph.VariantLimit", 128);
+            int variantLimit = EditorPrefs.GetInt("UnityEditor.ShaderGraph.VariantLimit", 256);
             if (variantLimit < 256)
             {
                 Debug.LogWarning(string.Format(
