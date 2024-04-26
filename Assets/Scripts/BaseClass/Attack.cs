@@ -47,12 +47,21 @@ public class Attack : MonoBehaviour
         //dealDamageOnEnter 활성화 시 접촉할 때 대미지
         if (dealDamageOnEnter)
         {
-            foreach (var contactedUnit in GetContactedUnits())
+            //foreach (var contactedUnit in GetContactedUnits())
+            //{
+            //    if (!damagedUnitList.Contains(contactedUnit.Key))
+            //    {
+            //        damagedUnitList.Add(contactedUnit.Key);
+            //        contactedUnit.Value.DealDamage(contactedUnit.Key);
+            //    }
+            //}
+
+            foreach (var contactedUnit in GetConnectedHitbox())
             {
                 if (!damagedUnitList.Contains(contactedUnit.Key))
                 {
                     damagedUnitList.Add(contactedUnit.Key);
-                    contactedUnit.Value.DealDamage(contactedUnit.Key);
+                    contactedUnit.Value.Value.DealDamage(contactedUnit.Value.Key);
                 }
             }
         }
@@ -187,8 +196,47 @@ public class Attack : MonoBehaviour
                 }
             }
         }
-
         return dict;
+    }
+
+    private Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> GetConnectedHitbox()
+    {
+        Dictionary<HitBox, DamageArea> dict = new();//우선권을 고려하여, 어느 히트박스에게 어떤 피해 영역이 충돌한 것으로 볼지 기록
+        Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> temp = new();
+        //temp 채우기
+        foreach (DamageArea damageArea in damageAreaList)//모든 피해 영역에 대해
+        {
+            foreach (HitBox hitBox in damageArea.HitBoxList)//충돌 중인 모든 히트박스에 대해
+            {
+                if (hitBox.CompareTag(targetTag))//목표 유닛이면
+                {
+                    if (!temp.ContainsKey(hitBox.Unit))//처음 충돌한 유닛이면
+                    {
+                        temp.Add(hitBox.Unit, new KeyValuePair<HitBox, DamageArea>(hitBox, damageArea));//등록한다
+                    }
+                    else//이전에 충돌 검사된 유닛이라면
+                    {
+                        if (temp[hitBox.Unit].Key.Priority + temp[hitBox.Unit].Value.Priority < hitBox.Priority + damageArea.Priority)//우선도 합이 더 높으면
+                        {
+                            temp[hitBox.Unit] = new KeyValuePair<HitBox, DamageArea>(hitBox, damageArea);//등록한다
+                        }
+                    }
+                }
+            }
+        }
+
+        ///
+        /// 원래는 Attack에서 한 유닛에 한 번만 공격 체크
+        /// 히트박스 사이 구분 없이 그냥 Unit으로 등록하여 충돌 중인 유닛을 감지
+        /// 피해 영역의 우선도만 고려하여 등록하였음
+        /// 
+        /// <Unit, <HitBox, DamageArea>>로 한다면
+        /// 첫 유닛을 찾으면 유닛을 key로, valued에 딕셔너리를 생성, 충돌한 hitbox를 key로, 충돌한 DamageArea를 value로 넣는다
+        /// 같은 유닛이라면 hitbox나 damagearea의 우선도를 합산, 높으면 대체함
+        ///
+
+
+        return temp;
     }
 
 }

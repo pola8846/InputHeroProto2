@@ -6,13 +6,27 @@ using UnityEngine;
 
 public class HitBox : MonoBehaviour
 {
-    [SerializeField]
+    /// <summary>
+    /// 모체 유닛. 자동으로 등록됨
+    /// </summary>
     private Unit unit;
+    /// <summary>
+    /// 모체 유닛
+    /// </summary>
     public Unit Unit
     {
         get { return unit; }
         set { unit = value; }
     }
+
+
+    /// <summary>
+    /// 우선도. 높은 것을 우선함.
+    /// </summary>
+    [SerializeField]
+    private int priority = 0;
+    public int Priority { get => priority; }
+
     protected virtual void Start()
     {
         var temp = GetComponentInParent<Unit>();
@@ -27,5 +41,15 @@ public class HitBox : MonoBehaviour
         {
             Debug.LogWarning($"HitBox: {gameObject}에서 모체 Unit을 찾지 못함");
         }
+    }
+
+    /// <summary>
+    /// 히트박스를 통해 대미지를 전달하는 구문
+    /// HitBox의 
+    /// </summary>
+    /// <param name="damage"></param>
+    public virtual void Damage(float damage)
+    {
+        unit.Damage(damage);
     }
 }

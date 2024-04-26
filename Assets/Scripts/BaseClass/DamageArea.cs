@@ -66,6 +66,20 @@ public class DamageArea : MonoBehaviour
         }
     }
 
+    public void DealDamage(HitBox hitBox)
+    {
+        UnitManager.Instance.DamageUnitToHitbox(hitBox, source.AttackUnit, this);
+
+        if (destroyHitCounter != -1)
+        {
+            destroyHitCounter--;
+            if (destroyHitCounter == 0)
+            {
+                Destroy();
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //충돌 중인 히트박스 등록

@@ -10,11 +10,19 @@ public class PlayerUnit : Unit
     [SerializeField]
     private KeyCode MoveR = KeyCode.D;
     [SerializeField]
+    private KeyCode MoveU = KeyCode.W;
+    [SerializeField]
+    private KeyCode MoveD = KeyCode.S;
+    [SerializeField]
     private KeyCode Jump = KeyCode.Space;
     [SerializeField]
     private KeyCode Attack = KeyCode.Z;
     [SerializeField]
-    private KeyCode Attack2 = KeyCode.X;
+    private KeyCode Attack2 = KeyCode.Mouse0;
+    [SerializeField]
+    private float maxSpeedX;
+    [SerializeField]
+    private float maxSpeedY;
     [SerializeField]
     private Animator animator;
     private int canJumpCounter;
@@ -34,6 +42,10 @@ public class PlayerUnit : Unit
     protected override void FixedUpdate()
     {
         rb.velocity = new Vector2(movementX, rb.velocity.y);
+        rb.velocity = new Vector2(
+            Mathf.Clamp(rb.velocity.x, -maxSpeedX, maxSpeedX),
+            Mathf.Clamp(rb.velocity.y, -maxSpeedY, maxSpeedY)
+            );
     }
 
     protected override void Update()
@@ -67,14 +79,25 @@ public class PlayerUnit : Unit
     public override void KeyDown(KeyCode keyCode)
     {
         base.KeyDown(keyCode);
-        if (keyCode==Jump && canJumpCounter>0)
+        if (keyCode == Jump)
         {
-            canJumpCounter--;
-            rb.velocity = Vector2.zero;
-            rb.AddForce(Vector2.up * JumpPower);
-            isJumping = true;
-            animator.SetBool("IsJumping", true);
+            if (canJumpCounter > 0)
+            {
+                canJumpCounter--;
+                rb.velocity = Vector2.zero;
+                rb.AddForce(Vector2.up * JumpPower);
+                isJumping = true;
+                animator.SetBool("IsJumping", true);
+            }
         }
+
+        if (GroundCheck() == false && keyStay.ContainsKey(MoveD) && keyStay[MoveD])
+        {
+            //±Þ°­ÇÏ
+            rb.velocity = new Vector2(rb.velocity.x, -maxSpeedY);
+        }
+
+
         if (canMove && !animator.GetBool("IsJumping"))
         {
             if (keyCode == Attack)

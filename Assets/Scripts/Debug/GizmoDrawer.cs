@@ -6,9 +6,16 @@ public class GizmoDrawer
 {
     private static Color gizmoColor = Color.green;
 
-    public static void DrawBox(BoxCollider2D Collider, Transform transform)
+    public static void DrawBox(BoxCollider2D Collider, Transform transform, Color color = new())
     {
-        Gizmos.color = gizmoColor;
+        if (color == new Color())
+        {
+            Gizmos.color = gizmoColor;
+        }
+        else
+        {
+            gizmoColor = color;
+        }
 
         // BoxCollider2D의 경계를 계산합니다.
         Vector2 center = transform.TransformPoint(Collider.offset);
@@ -26,9 +33,16 @@ public class GizmoDrawer
         Gizmos.DrawLine(bottomRight, bottomLeft);
         Gizmos.DrawLine(bottomLeft, topLeft);
     }
-    public static void DrawCapsule(CapsuleCollider2D Collider, Transform transform)
+    public static void DrawCapsule(CapsuleCollider2D Collider, Transform transform, Color color = new())
     {
-        Gizmos.color = gizmoColor;
+        if (color == new Color())
+        {
+            Gizmos.color = gizmoColor;
+        }
+        else
+        {
+            gizmoColor = color;
+        }
 
         // Capsule Collider 2D의 오프셋을 적용하고, 전역 좌표계로 변환합니다.
         Vector2 capsuleCenter = (Vector2)transform.position + Collider.offset;
@@ -50,9 +64,16 @@ public class GizmoDrawer
         Gizmos.DrawLine(pointA - Vector2.right * radius, pointB - Vector2.right * radius);
     }
 
-    public static void DrawCircle(CircleCollider2D Collider, Transform transform)
+    public static void DrawCircle(CircleCollider2D Collider, Transform transform, Color color = new())
     {
-        Gizmos.color = gizmoColor;
+        if (color == new Color())
+        {
+            Gizmos.color = gizmoColor;
+        }
+        else
+        {
+            gizmoColor = color;
+        }
 
         // Collider 2D의 오프셋을 적용하고, 전역 좌표계로 변환합니다.
         Vector2 Center = (Vector2)transform.position + Collider.offset;
