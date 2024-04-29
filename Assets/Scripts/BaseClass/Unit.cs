@@ -10,8 +10,14 @@ using UnityEngine;
 /// </summary>
 public class Unit : MonoBehaviour, IMoveReceiver
 {
+    /// <summary>
+    /// 유닛 아이디
+    /// </summary>
     [SerializeField]
     protected int unitID = -1;
+    /// <summary>
+    /// 유닛 아이디
+    /// </summary>
     public int UnitID
     {
         get
@@ -54,16 +60,6 @@ public class Unit : MonoBehaviour, IMoveReceiver
             return stats.jumpPower;
         }
     }
-
-    protected float movementX = 0;
-    [SerializeField]
-    protected Transform groundCheckerLT;
-    [SerializeField]
-    protected Transform groundCheckerRD;
-    [SerializeField]
-    protected float groundCheckRadius = 0;
-    [SerializeField]
-    protected string groundLayer = "";
 
     protected Dictionary<KeyCode, bool> keyStay = new();
     [SerializeField]
@@ -149,30 +145,11 @@ public class Unit : MonoBehaviour, IMoveReceiver
         transform.Rotate(new(0, 180, 0));
     }
 
-    /// <summary>
-    /// 땅에 있는지 체크
-    /// </summary>
-    /// <returns>땅에 있는가?</returns>
-    protected bool GroundCheck()
+    public void Turn(bool lookLeft)
     {
-        if (groundCheckerLT == null || groundCheckerRD == null)
+        if (isLookLeft!=lookLeft)
         {
-            return false;
-        }
-        return Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer));
-        //return Physics2D.OverlapCircle(groundChecker.transform.position, groundCheckRadius, LayerMask.GetMask("Ground")) ||
-        //Physics2D.OverlapCircle(groundChecker2.transform.position, groundCheckRadius, LayerMask.GetMask("Ground"));
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (groundCheckerLT != null && groundCheckerRD != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(new Vector3(groundCheckerLT.position.x, groundCheckerLT.position.y, 0), new Vector3(groundCheckerRD.position.x, groundCheckerLT.position.y, 0));
-            Gizmos.DrawLine(new Vector3(groundCheckerLT.position.x, groundCheckerLT.position.y, 0), new Vector3(groundCheckerLT.position.x, groundCheckerRD.position.y, 0));
-            Gizmos.DrawLine(new Vector3(groundCheckerRD.position.x, groundCheckerLT.position.y, 0), new Vector3(groundCheckerRD.position.x, groundCheckerRD.position.y, 0));
-            Gizmos.DrawLine(new Vector3(groundCheckerLT.position.x, groundCheckerRD.position.y, 0), new Vector3(groundCheckerRD.position.x, groundCheckerRD.position.y, 0));
+            Turn();
         }
     }
 }
@@ -189,14 +166,6 @@ public struct Stats
     /// 최대 체력
     /// </summary>
     public float maxHealth;
-    /// <summary>
-    /// 현재 마나
-    /// </summary>
-    public float magicPoint;
-    /// <summary>
-    /// 최대 마나
-    /// </summary>
-    public float maxMagicPoint;
     /// <summary>
     /// 공격력
     /// </summary>
@@ -221,6 +190,9 @@ public struct Stats
     /// 쿨타임 배율
     /// </summary>
     public float cooldownRate;
+    /// <summary>
+    /// 점프 횟수
+    /// </summary>
     public int jumpCount;
 
 
@@ -237,14 +209,6 @@ public struct Stats
         /// 최대 체력
         /// </summary>
         maxHealth,
-        /// <summary>
-        /// 현재 마나
-        /// </summary>
-        magicPoint,
-        /// <summary>
-        /// 최대 마나
-        /// </summary>
-        maxMagicPoint,
         /// <summary>
         /// 공격력
         /// </summary>
@@ -269,6 +233,9 @@ public struct Stats
         /// 쿨타임 배율
         /// </summary>
         cooldownRate,
+        /// <summary>
+        /// 점프 횟수
+        /// </summary>
         jumpCount,
     }
 }

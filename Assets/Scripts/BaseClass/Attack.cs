@@ -22,6 +22,7 @@ public class Attack : MonoBehaviour
             return attackUnit;
         }
     }
+    [SerializeField]
     private string targetTag;//피해를 입힐 대상의 태그
     private List<DamageArea> damageAreaList = new();//등록된 대미지
     private List<Unit> damagedUnitList = new();//대미지 받은 유닛 리스트

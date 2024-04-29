@@ -38,6 +38,7 @@ public class BulletShooter : MonoBehaviour
     public bool triger = false;
 
     public Unit Unit;
+    public bool isPlayers = false;
 
     private void Update()
     {
@@ -58,11 +59,10 @@ public class BulletShooter : MonoBehaviour
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
                     Vector2 direction = quat * Vector2.up;
 
-                    Attack attack = Attack.MakeGameObject(Unit, "Player");
+                    Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
                     GameObject go = Instantiate(bulletGO, transform.position, transform.rotation, attack.transform);
                     Bullet bullet = go.GetComponent<Bullet>();
-                    DamageArea DA = go.GetComponent<DamageArea>();
-                    attack.EnrollDamage(DA);
+                    attack.EnrollDamage(go);
                     //Attack attack = new(Unit, "Player");
                     //attack.EnrollDamage(DA);
 
@@ -81,11 +81,10 @@ public class BulletShooter : MonoBehaviour
                     {
                         Vector2 direction = quat * Vector2.up;
 
-                        Attack attack = Attack.MakeGameObject(Unit, "Player");
+                        Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
                         GameObject go = Instantiate(bulletGO, transform.position, transform.rotation, attack.transform);
                         Bullet bullet = go.GetComponent<Bullet>();
-                        DamageArea DA = go.GetComponent<DamageArea>();
-                        attack.EnrollDamage(DA);
+                        attack.EnrollDamage(go);
                         //Attack attack = new(Unit, "Player");
                         //attack.EnrollDamage(DA);
 

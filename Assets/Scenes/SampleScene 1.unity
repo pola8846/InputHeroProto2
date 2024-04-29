@@ -765,7 +765,8 @@ MonoBehaviour:
   lifeTime: 2
   lifeDistance: 5
   triger: 0
-  Unit: {fileID: 0}
+  Unit: {fileID: 2102322338}
+  isPlayers: 0
 --- !u!1 &345223248
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,10 +1320,11 @@ GameObject:
   - component: {fileID: 587807041}
   - component: {fileID: 587807040}
   - component: {fileID: 587807039}
-  - component: {fileID: 587807044}
   - component: {fileID: 587807046}
   - component: {fileID: 587807045}
   - component: {fileID: 587807047}
+  - component: {fileID: 587807044}
+  - component: {fileID: 587807048}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1400,6 +1402,7 @@ Transform:
   - {fileID: 1632778984}
   - {fileID: 117875828}
   - {fileID: 2041347885}
+  - {fileID: 1025902573}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &587807044
@@ -1418,8 +1421,6 @@ MonoBehaviour:
   stats:
     health: 9999
     maxHealth: 9999
-    magicPoint: 0
-    maxMagicPoint: 0
     attackPower: 1
     defencePower: 0
     defenceRate: 0
@@ -1427,10 +1428,6 @@ MonoBehaviour:
     jumpPower: 300
     cooldownRate: 0
     jumpCount: 888
-  groundCheckerLT: {fileID: 1672024804}
-  groundCheckerRD: {fileID: 436812006}
-  groundCheckRadius: 0.1
-  groundLayer: Ground
   isLookLeft: 1
   MoveL: 97
   MoveR: 100
@@ -1439,9 +1436,19 @@ MonoBehaviour:
   Jump: 32
   Attack: 122
   Attack2: 323
-  maxSpeedX: 15
-  maxSpeedY: 15
+  Dash: 304
+  Slow: 116
   animator: {fileID: 740408926}
+  dashSpeedRate: 2.53
+  dashTime: 0.4
+  slowRate: 0.5
+  slowTime: 4
+  groundCheckerLT: {fileID: 1672024804}
+  groundCheckerRD: {fileID: 436812006}
+  groundCheckRadius: 0.1
+  groundLayer: Ground
+  targetter: {fileID: 1408658485}
+  shooter: {fileID: 2041347886}
 --- !u!251 &587807045
 PlatformEffector2D:
   m_ObjectHideFlags: 0
@@ -1533,6 +1540,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.9741602}
   m_EdgeRadius: 0
+--- !u!114 &587807048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587807037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef10e4b390631f840b789c763095ea49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeedX: 20
+  maxSpeedY: 15
 --- !u!1 &662481098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,7 +1612,8 @@ MonoBehaviour:
   lifeTime: 2
   lifeDistance: 5
   triger: 0
-  Unit: {fileID: 0}
+  Unit: {fileID: 2102322338}
+  isPlayers: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2521,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981429831}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1025902572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1025902573}
+  m_Layer: 7
+  m_Name: Targetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1025902573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025902572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 587807041}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &1062102783
 Material:
   serializedVersion: 8
@@ -2782,6 +2835,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eae39a7121b8254c971327ace932f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1408658485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408658486}
+  - component: {fileID: 1408658489}
+  - component: {fileID: 1408658488}
+  - component: {fileID: 1408658487}
+  m_Layer: 7
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1408658486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408658485}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.1, y: 3.67, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1408658487
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408658485}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1408658488
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408658485}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1408658489
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408658485}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1410101376
 GameObject:
   m_ObjectHideFlags: 0
@@ -3285,6 +3443,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2041347885}
+  - component: {fileID: 2041347886}
   m_Layer: 7
   m_Name: Shoot
   m_TagString: Untagged
@@ -3301,12 +3460,40 @@ Transform:
   m_GameObject: {fileID: 2041347884}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 587807041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2041347886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041347884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletGO: {fileID: 6433798773826802276, guid: 44bfeb3464186d8469545702db73803f, type: 3}
+  bulletNum: 1
+  shootType: 0
+  bulletSpeedMin: 15
+  bulletSpeedMax: 15
+  bulletAngleMin: 90
+  bulletAngleMax: 90
+  bulletDamageMin: 1
+  bulletDamageMax: 1
+  isHitOnce: 0
+  isDestroyAfterHit: 0
+  lifeTime: 1
+  lifeDistance: 0
+  triger: 0
+  Unit: {fileID: 587807044}
+  isPlayers: 1
 --- !u!1 &2042873435
 GameObject:
   m_ObjectHideFlags: 0
@@ -3322,6 +3509,8 @@ GameObject:
   - component: {fileID: 2042873437}
   - component: {fileID: 2042873436}
   - component: {fileID: 2042873442}
+  - component: {fileID: 2042873443}
+  - component: {fileID: 2042873444}
   m_Layer: 9
   m_Name: Monster_Air_R_1
   m_TagString: Enemy
@@ -3345,8 +3534,6 @@ MonoBehaviour:
   stats:
     health: 10
     maxHealth: 10
-    magicPoint: 0
-    maxMagicPoint: 0
     attackPower: 0
     defencePower: 0
     defenceRate: 0
@@ -3354,10 +3541,6 @@ MonoBehaviour:
     jumpPower: 0
     cooldownRate: 0
     jumpCount: 0
-  groundCheckerLT: {fileID: 0}
-  groundCheckerRD: {fileID: 0}
-  groundCheckRadius: 0
-  groundLayer: 
   isLookLeft: 1
   findDistance: 5
   patrolSpeedRate: 0.2
@@ -3538,7 +3721,35 @@ MonoBehaviour:
   lifeTime: 2
   lifeDistance: 5
   triger: 0
-  Unit: {fileID: 0}
+  Unit: {fileID: 2042873436}
+  isPlayers: 0
+--- !u!114 &2042873443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042873435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef10e4b390631f840b789c763095ea49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeedX: 0
+  maxSpeedY: 0
+--- !u!114 &2042873444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042873435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1 &2044855565
 GameObject:
   m_ObjectHideFlags: 0
@@ -3767,6 +3978,7 @@ GameObject:
   - component: {fileID: 2102322335}
   - component: {fileID: 2102322337}
   - component: {fileID: 2102322338}
+  - component: {fileID: 2102322339}
   m_Layer: 7
   m_Name: Monster_Gr_M_1
   m_TagString: Enemy
@@ -3948,8 +4160,6 @@ MonoBehaviour:
   stats:
     health: 10
     maxHealth: 10
-    magicPoint: 0
-    maxMagicPoint: 0
     attackPower: 0
     defencePower: 0
     defenceRate: 0
@@ -3957,10 +4167,6 @@ MonoBehaviour:
     jumpPower: 0
     cooldownRate: 0
     jumpCount: 0
-  groundCheckerLT: {fileID: 0}
-  groundCheckerRD: {fileID: 0}
-  groundCheckRadius: 0
-  groundLayer: 
   isLookLeft: 0
   findDistance: 5
   attackRange: 1
@@ -3970,6 +4176,20 @@ MonoBehaviour:
   attackCoolTime: 1
   state: 0
   atk: {fileID: 2118297980352511954, guid: ffe6cde7a37dd0b4aa4250636489bb52, type: 3}
+--- !u!114 &2102322339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102322329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef10e4b390631f840b789c763095ea49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeedX: 0
+  maxSpeedY: 0
 --- !u!1001 &2145711371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4306,3 +4526,4 @@ SceneRoots:
   - {fileID: 975074943}
   - {fileID: 2980389497740437059}
   - {fileID: 2145711371}
+  - {fileID: 1408658486}

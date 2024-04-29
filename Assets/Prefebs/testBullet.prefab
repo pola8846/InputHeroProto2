@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
-  hitOnce: 1
+  hitOnce: 0
   damage: 1
 --- !u!114 &1824735415699142916
 MonoBehaviour:

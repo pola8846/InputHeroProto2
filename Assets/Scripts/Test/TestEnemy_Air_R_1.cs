@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TestEnemy_Air_R_1 : Enemy
 {
-    private Rigidbody2D rb;
     [SerializeField]
     private float patrolSpeedRate = 1f;
     [SerializeField]
@@ -49,10 +48,11 @@ public class TestEnemy_Air_R_1 : Enemy
     private float timer2;
     private float timer3;
     private float timer4;
+
+    private Mover mover;
     protected override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody2D>();
         renderer = GetComponent<Renderer>();
         shooter = GetComponent<BulletShooter>();
         originColor = renderer.material.color;
@@ -62,6 +62,7 @@ public class TestEnemy_Air_R_1 : Enemy
         timer4 = Time.time;
         patrolDist = transform.position;
         patrolOrigin = transform.position;
+        mover = GetComponent<Mover>();
     }
     protected override void Update()
     {
@@ -155,7 +156,6 @@ public class TestEnemy_Air_R_1 : Enemy
 
 
         var player = GameManager.Player;
-        //bool isRight = player.transform.position.x >= transform.position.x;//플레이어가 오른쪽에 있는가?
 
         switch (state)
         {
@@ -200,7 +200,7 @@ public class TestEnemy_Air_R_1 : Enemy
                 break;
             case 4:
                 attackMoveCounter++;
-                rb.velocity = new Vector2(0, 0);
+                mover.StopMove();
                 break;
             case 6:
                 attackCounter = 0;
@@ -217,7 +217,7 @@ public class TestEnemy_Air_R_1 : Enemy
         switch (state)
         {
             case 0:
-                rb.velocity = Vector3.zero;
+                mover.StopMove();
                 timer1 = Time.time;
                 break;
             case 1:
@@ -235,7 +235,7 @@ public class TestEnemy_Air_R_1 : Enemy
                 SetAttackPos();
                 break;
             case 5:
-                rb.velocity = Vector3.zero;
+                mover.StopMove();
                 timer2 = Time.time;
                 break;
             case 6:
@@ -296,11 +296,11 @@ public class TestEnemy_Air_R_1 : Enemy
         if (Vector2.Distance(targetPos, (Vector2)transform.position) <= speed * Time.fixedDeltaTime)
         {
             transform.position = targetPos;
-            rb.velocity = Vector3.zero;
+                mover.StopMove();
         }
         else
         {
-            rb.velocity = GetDist(targetPos) * speed;
+            mover.SetVelocity(GetDist(targetPos) * speed);
         }
     }
 }
