@@ -14,12 +14,12 @@ public class Mover : MonoBehaviour
 
     //최대 속도
     [SerializeField]
-    private float maxSpeedX = 0;
+    private float maxSpeedX = -1;
     public float MaxSpeedX
     { get { return maxSpeedX; } set { maxSpeedX = value; } }
 
     [SerializeField]
-    private float maxSpeedY = 0;
+    private float maxSpeedY = -1;
     public float MaxSpeedY
     { get { return maxSpeedY; } set { maxSpeedY = value; } }
 
@@ -43,9 +43,14 @@ public class Mover : MonoBehaviour
         PerformanceManager.StartTimer("Mover.FixedUpdate");
 
         if (fixSpeedX)
+        {
             SetVelocityX();
+
+        }
         if (fixSpeedY)
+        {
             SetVelocityY();
+        }
         MaxSpeedCheck();
 
         PerformanceManager.StopTimer("Mover.FixedUpdate");
@@ -54,11 +59,11 @@ public class Mover : MonoBehaviour
     private void MaxSpeedCheck()
     {
         PerformanceManager.StartTimer("Mover.MaxSpeedCheck");
-        if (maxSpeedX != 0)
+        if (maxSpeedX >= 0)
         {
             rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxSpeedX, maxSpeedX), rb.velocity.y);
         }
-        if (maxSpeedY != 0)
+        if (maxSpeedY >= 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -maxSpeedY, maxSpeedY));
         }
@@ -86,11 +91,11 @@ public class Mover : MonoBehaviour
         SetVelocityX();
         if (!once)
         {
-            fixSpeedX = true;
+            fixSpeedX = false;
         }
         else
         {
-            fixSpeedX = false;
+            fixSpeedX = true;
         }
     }
 
@@ -115,6 +120,8 @@ public class Mover : MonoBehaviour
     private void SetVelocityY()
     {
         PerformanceManager.StartTimer("Mover.SetVelocityY");
+        //Debug.Log(fixSpeedY);
+        //Debug.Log($"{gameObject.name}, {targetSpeedY}");
         rb.velocity = new Vector2(rb.velocity.x, targetSpeedY);
         MaxSpeedCheck();
         PerformanceManager.StopTimer("Mover.SetVelocityY");
@@ -130,11 +137,11 @@ public class Mover : MonoBehaviour
         SetVelocityY();
         if (!once)
         {
-            fixSpeedY = true;
+            fixSpeedY = false;
         }
         else
         {
-            fixSpeedY = false;
+            fixSpeedY = true;
         }
     }
 

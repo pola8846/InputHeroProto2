@@ -16,8 +16,8 @@ TagManager:
   - Unit
   - HitBox
   - Unit_Fly
-  - 
-  - 
+  - HalfGround
+  - Unit_DownJump
   - 
   - 
   - 

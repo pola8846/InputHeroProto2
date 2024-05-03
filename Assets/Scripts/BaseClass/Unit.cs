@@ -129,6 +129,10 @@ public class Unit : MonoBehaviour, IMoveReceiver
             keyStay.Add(keyCode, false);
         }
     }
+    public bool IsKeyPushing(KeyCode keyCode)
+    {
+        return keyStay.ContainsKey(keyCode) && keyStay[keyCode];
+    }
 
     public void KeyReset(KeyCode keyCode)
     {

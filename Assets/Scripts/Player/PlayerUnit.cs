@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerUnit : Unit, IGroundChecker
 {
@@ -52,6 +51,8 @@ public class PlayerUnit : Unit, IGroundChecker
     [SerializeField]
     protected string groundLayer = "";
     [SerializeField]
+    protected string halfGroundLayer = "";
+    [SerializeField]
     private GameObject targetter;
 
     private Mover mover;
@@ -60,12 +61,15 @@ public class PlayerUnit : Unit, IGroundChecker
     [SerializeField]
     private float shootCooltime;
     private bool canShoot = true;
+    private bool isDownJumping = false;
+    private PlatformEffector2D effector2D;
 
 
     protected override void Start()
     {
         base.Start();
         mover = GetComponent<Mover>();
+        effector2D = GetComponent<PlatformEffector2D>();
         GameManager.SetPlayer(this);
     }
 
@@ -115,7 +119,14 @@ public class PlayerUnit : Unit, IGroundChecker
             return;
         }
 
-        if (keyCode == Jump)
+       
+
+
+        if (!isDownJumping && ((keyCode == Jump && IsKeyPushing(MoveD)) || (keyCode == MoveD && IsKeyPushing(Jump))))
+        {
+            SetHalfDownJump(true);
+        }
+        else if (keyCode == Jump)
         {
             if (canJumpCounter > 0 && canMove)
             {
@@ -133,7 +144,6 @@ public class PlayerUnit : Unit, IGroundChecker
             mover.SetVelocityY(-mover.MaxSpeedY, true);
         }
 
-
         if (canMove && !animator.GetBool("IsJumping"))
         {
             if (keyCode == Attack)
@@ -149,6 +159,15 @@ public class PlayerUnit : Unit, IGroundChecker
         if (keyCode == Slow && isSlowed == false)
         {
             StartCoroutine(DoSlow());
+        }
+    }
+
+    public override void KeyUp(KeyCode keyCode)
+    {
+        base.KeyUp(keyCode);
+        if (isDownJumping && (keyCode == Jump || keyCode == MoveD))
+        {
+            SetHalfDownJump(false);
         }
     }
 
@@ -220,9 +239,23 @@ public class PlayerUnit : Unit, IGroundChecker
         {
             return false;
         }
-        bool result = Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer));
+        bool result = Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer, halfGroundLayer));
         PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
         return result;
+    }
+
+    private void SetHalfDownJump(bool isDownJumping)
+    {
+        int layerIndex = LayerMask.NameToLayer(halfGroundLayer);
+        this.isDownJumping = isDownJumping;
+        if (isDownJumping)
+        {
+            effector2D.colliderMask &= ~(1<<layerIndex);
+        }
+        else
+        {
+            effector2D.colliderMask |= (1<<layerIndex);
+        }
     }
 
     private IEnumerator DoDash()

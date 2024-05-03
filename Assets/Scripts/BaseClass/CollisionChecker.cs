@@ -64,4 +64,38 @@ public class CollisionChecker : MonoBehaviour
         PerformanceManager.StopTimer("CollisionChecker.GetListOfClass");
         return result;
     }
+
+    public static List<Collider2D> GetItems(params CollisionChecker[] checkers)
+    {
+        List<Collider2D> result = new();
+
+        foreach(var checker in checkers)
+        {
+            foreach (var collider in checker.EnteredColliders)
+            {
+                if (!result.Contains(collider))
+                {
+                    result.Add(collider);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static List<T> GetListOfClassAtMulty<T>(params CollisionChecker[] checkers)
+    {
+        List<T> result = new();
+        foreach (var checker in checkers)
+        {
+            foreach (var item in checker.GetListOfClass<T>())
+            {
+                if (!result.Contains(item))
+                {
+                    result.Add(item);
+                }
+            }
+        }
+        return result;
+    }
 }
