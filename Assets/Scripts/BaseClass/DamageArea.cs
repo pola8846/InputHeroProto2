@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
 /// 피해+부가효과를 나타내는 Damage를 입히기 위한 영역(게임 오브젝트)
 /// 자체적으로는 충돌 중인 히트박스만 감지, 실제 트리거는 Attack에서 함
 /// </summary>
-public class DamageArea : MonoBehaviour
+public class DamageArea : CollisionChecker
 {
     /// <summary>
     /// 공격자
@@ -43,10 +44,26 @@ public class DamageArea : MonoBehaviour
     /// 1 이상이라면 해당 횟수 충돌 이후 소멸
     /// </summary>
     public int destroyHitCounter = -1;
-    
-    private List<HitBox> hitBoxList = new();//충돌 중인 히트박스 리스트
+
+    //private List<HitBox> hitBoxList = new();//충돌 중인 히트박스 리스트
     public List<HitBox> HitBoxList
-    { get { return hitBoxList; } }
+    {
+        get
+        {
+            PerformanceManager.StartTimer("DamageArea.HitBoxList.get");
+            List<HitBox> temp = new();
+            foreach (var collider in EnteredColliders)
+            {
+                HitBox hitBox = collider.GetComponent<HitBox>();
+                if (hitBox is not null)
+                {
+                    temp.Add(hitBox);
+                }
+            }
+            PerformanceManager.StopTimer("DamageArea.HitBoxList.get");
+            return temp;
+        }
+    }
 
     /// <summary>
     /// 해당 DamageArea로 인해 피해를 주도록 만듬
@@ -80,25 +97,6 @@ public class DamageArea : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //충돌 중인 히트박스 등록
-        HitBox hitBox = collision.GetComponent<HitBox>();
-        if (hitBox != null)
-        {
-            hitBoxList.Add(hitBox);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //충돌 중인 히트박스 등록 해제
-        HitBox hitBox = collision.GetComponent<HitBox>();
-        if (hitBox != null && hitBoxList.Contains(hitBox))
-        {
-            hitBoxList.Remove(hitBox);
-        }
-    }
 
     /// <summary>
     /// 등록 해제 및 삭제. 유니티의 Destroy말고 이걸 쓸 것

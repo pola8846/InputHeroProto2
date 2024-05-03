@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TestEnemy_Air_R_1 : Enemy
@@ -49,7 +50,7 @@ public class TestEnemy_Air_R_1 : Enemy
     private float timer3;
     private float timer4;
 
-    private Mover mover;
+    private MoverByTransform mover;
     protected override void Start()
     {
         base.Start();
@@ -62,7 +63,7 @@ public class TestEnemy_Air_R_1 : Enemy
         timer4 = Time.time;
         patrolDist = transform.position;
         patrolOrigin = transform.position;
-        mover = GetComponent<Mover>();
+        mover = GetComponent<MoverByTransform>();
     }
     protected override void Update()
     {
@@ -81,25 +82,29 @@ public class TestEnemy_Air_R_1 : Enemy
                 }
                 break;
             case 1://순찰 이동
-                if (Vector2.Distance(transform.position, (Vector3)patrolDist) <= .1f)
+                //if (Vector2.Distance(transform.position, (Vector3)patrolDist) <= .1f)
+                if (!mover.IsMoving)
                 {
                     SetState(0);
                 }
                 break;
             case 2://순찰 복귀
-                if (Vector2.Distance(transform.position, (Vector3)patrolDist) <= .1f)
+                if (!mover.IsMoving)
+                //if (Vector2.Distance(transform.position, (Vector3)patrolDist) <= .1f)
                 {
                     SetState(0);
                 }
                 break;
             case 3://플레이어에게 접근
-                if (Vector2.Distance(transform.position, (Vector3)attackPos) <= .1f)
+                if (!mover.IsMoving)
+                //if (Vector2.Distance(transform.position, (Vector3)attackPos) <= .1f)
                 {
                     SetState(4);
                 }
                 break;
             case 4://공격 영역 내에서 재이동
-                if (Vector2.Distance(transform.position, (Vector3)attackPos) <= .1f)
+                if (!mover.IsMoving)
+                //if (Vector2.Distance(transform.position, (Vector3)attackPos) <= .1f)
                 {
                     if (attackMoveCounter >= attackMoveCount)
                     {
@@ -161,27 +166,20 @@ public class TestEnemy_Air_R_1 : Enemy
         {
             case 1:
                 {
-                    float speed = Mathf.Max(0, Speed) * patrolSpeedRate;
-                    MoveTo(patrolDist, speed);
+
                 }
                 break;
             case 2:
                 {
-                    float speed = Mathf.Max(0, Speed);
-                    MoveTo(patrolDist, speed);
                 }
                 break;
             case 3:
+                if (Vector2.Distance(GameManager.Player.transform.position, transform.position) <= attackRange2)
                 {
-                    float speed = Mathf.Max(0, Speed);
-                    MoveTo(attackPos, speed);
+                    mover.StopMove();
                 }
                 break;
             case 4:
-                {
-                    float speed = Mathf.Max(0, Speed) * attackMoveSpeedRate;
-                    MoveTo(attackPos, speed);
-                }
                 break;
             default:
                 break;
@@ -197,6 +195,9 @@ public class TestEnemy_Air_R_1 : Enemy
             case 1:
                 break;
             case 2:
+                break;
+            case 3:
+                mover.StopMove();
                 break;
             case 4:
                 attackMoveCounter++;
@@ -221,18 +222,34 @@ public class TestEnemy_Air_R_1 : Enemy
                 timer1 = Time.time;
                 break;
             case 1:
-                SetRandomPatrolPosition();
+                {
+                    SetRandomPatrolPosition();
+                    float speed = Mathf.Max(0, Speed) * patrolSpeedRate;
+                    MoveTo(patrolDist, speed);
+                }
                 break;
             case 2:
-                patrolDist = patrolOrigin;
+                {
+                    patrolDist = patrolOrigin;
+                    float speed = Mathf.Max(0, Speed);
+                    MoveTo(patrolDist, speed);
+                }
                 break;
             case 3:
-                SetAttackPosOrigin();
-                SetAttackPos();
-                attackMoveCounter = 0;
+                {
+                    SetAttackPosOrigin();
+                    SetAttackPos();
+                    attackMoveCounter = 0;
+                    float speed = Mathf.Max(0, Speed);
+                    MoveTo(patrolDist, speed);
+                }
                 break;
             case 4:
-                SetAttackPos();
+                {
+                    SetAttackPos();
+                    float speed = Mathf.Max(0, Speed) * attackMoveSpeedRate;
+                    MoveTo(attackPos, speed);
+                }
                 break;
             case 5:
                 mover.StopMove();
@@ -293,14 +310,6 @@ public class TestEnemy_Air_R_1 : Enemy
 
     private void MoveTo(Vector2 targetPos, float speed)
     {
-        if (Vector2.Distance(targetPos, (Vector2)transform.position) <= speed * Time.fixedDeltaTime)
-        {
-            transform.position = targetPos;
-                mover.StopMove();
-        }
-        else
-        {
-            mover.SetVelocity(GetDist(targetPos) * speed);
-        }
+        mover.StartMove(MoverByTransform.moveType.LinearByPosWithSpeed, targetPos, speed);
     }
 }

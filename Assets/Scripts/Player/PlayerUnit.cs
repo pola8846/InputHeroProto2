@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class PlayerUnit : Unit, IGroundChecker
 {
+    [Header("조작키")]
     [SerializeField]
     private KeyCode MoveL = KeyCode.A;
     [SerializeField]
@@ -23,6 +24,7 @@ public class PlayerUnit : Unit, IGroundChecker
     private KeyCode Dash = KeyCode.LeftShift;
     [SerializeField]
     private KeyCode Slow = KeyCode.LeftShift;
+    [Header("기타")]
     [SerializeField]
     private Animator animator;
     private int canJumpCounter;
@@ -55,6 +57,9 @@ public class PlayerUnit : Unit, IGroundChecker
     private Mover mover;
     [SerializeField]
     private BulletShooter shooter;
+    [SerializeField]
+    private float shootCooltime;
+    private bool canShoot = true;
 
 
     protected override void Start()
@@ -91,7 +96,10 @@ public class PlayerUnit : Unit, IGroundChecker
                 mover.StopMoveX();
             }
         }
-            
+        if (keyStay.ContainsKey(Attack2) && keyStay[Attack2] && canShoot)
+        {
+            StartCoroutine(DoShoot());
+        }
 
         animator.SetFloat("MoveSpeedRate", Mathf.Abs(mover.Velocity.x) / stats.moveSpeed);
     }
@@ -134,9 +142,9 @@ public class PlayerUnit : Unit, IGroundChecker
                 canMove = false;
             }
         }
-        if (keyCode == Attack2)
+        if (keyCode == Attack2 && canShoot)
         {
-            ShootToMouse();
+            StartCoroutine(DoShoot());
         }
         if (keyCode == Slow && isSlowed == false)
         {
@@ -146,6 +154,7 @@ public class PlayerUnit : Unit, IGroundChecker
 
     private void RotateTargetter()
     {
+        PerformanceManager.StartTimer("PlayerUnit.RotateTargetter");
         //타게터 회전
 
         //마우스 위치 읽어오기
@@ -157,10 +166,13 @@ public class PlayerUnit : Unit, IGroundChecker
         //거리 구하고 적용
         Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up*.5f)).normalized * 2;
         targetter.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
+        PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
 
     private void ShootToMouse()
     {
+        PerformanceManager.StartTimer("PlayerUnit.ShootToMouse");
+
         //쏠 방향을 구해온다
         Vector2 dir = (Vector2)targetter.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
         float angle = Vector2.SignedAngle(dir, Vector2.up);
@@ -174,8 +186,9 @@ public class PlayerUnit : Unit, IGroundChecker
         shooter.bulletAngleMax = angle;
         shooter.bulletAngleMin = angle;
         shooter.triger = true;
+        PerformanceManager.StopTimer("PlayerUnit.ShootToMouse");
     }
-    
+
     public void AttackEnd()
     {
         canMove = true;
@@ -183,6 +196,7 @@ public class PlayerUnit : Unit, IGroundChecker
 
     private void JumpCheck()
     {
+        PerformanceManager.StartTimer("PlayerUnit.JumpCheck");
         if (isJumping && mover.Velocity.y <= -0.01f)
         {
             isJumping = false;
@@ -196,15 +210,19 @@ public class PlayerUnit : Unit, IGroundChecker
         {
             canJumpCounter = stats.jumpCount - 1;
         }
+        PerformanceManager.StopTimer("PlayerUnit.JumpCheck");
     }
 
     public bool GroundCheck()
     {
+        PerformanceManager.StartTimer("PlayerUnit.GroundCheck");
         if (groundCheckerLT == null || groundCheckerRD == null)
         {
             return false;
         }
-        return Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer));
+        bool result = Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer));
+        PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
+        return result;
     }
 
     private IEnumerator DoDash()
@@ -221,8 +239,17 @@ public class PlayerUnit : Unit, IGroundChecker
     {
         isSlowed = true;
         Time.timeScale = slowRate;
+        Time.fixedDeltaTime = Time.timeScale / 50;
         yield return new WaitForSecondsRealtime(slowTime);
         Time.timeScale = 1;
+        Time.fixedDeltaTime = Time.timeScale / 50;
         isSlowed = false;
+    }
+    private IEnumerator DoShoot()
+    {
+        canShoot = false;
+        ShootToMouse();
+        yield return new WaitForSecondsRealtime(shootCooltime);
+        canShoot = true;
     }
 }
