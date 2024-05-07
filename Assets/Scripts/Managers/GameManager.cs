@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
+    private const int framePerSec = 50;
 
     private void Awake()
     {
@@ -33,5 +34,11 @@ public class GameManager : MonoBehaviour
     public static void SetPlayer(PlayerUnit player)
     {
         GameManager.player = player;
+    }
+
+    public static void SetTimeScale(float scale)
+    {
+        Time.timeScale = scale;
+        Time.fixedDeltaTime = Time.timeScale / framePerSec;
     }
 }

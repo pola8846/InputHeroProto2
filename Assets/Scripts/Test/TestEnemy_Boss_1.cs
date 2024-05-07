@@ -417,6 +417,7 @@ public class TestEnemy_Boss_1 : Enemy
                 break;
 
             case State.BarrageAttack1_EWait:
+                //Debug.Log($"{targetPlatform.transform.position}, {targetPlatform}");
                 transform.position = targetPlatform.transform.position + (Vector3.up * targetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
                 shooter.shootType = BulletShootType.fan;
                 shooter.BulletNum = barrageAttack1BulletNum;
@@ -519,40 +520,35 @@ public class TestEnemy_Boss_1 : Enemy
 
             if (IsPlayerInMeleeAttack1Area())
             {
+                //근거리
                 states.Add(State.MeleeAttack1_EWait);
             }
             else
             {
+                //원거리
                 states.Add(State.RangeAttack1_EWait);
             }
 
+            //발판 이동 후 부채꼴 탄
             if (TimeCheck(time_BAttack2, barrageAttack1Cooltime))
             {
-                targetPlatform = Random.Range(0, 2) == 0 ? platformL : platformR;
                 states.Add(State.BarrageAttack1_EWait);
             }
 
+            //전방위 탄
             if (TimeCheck(time_BAttack, barrageAttack2Cooltime))
             {
                 states.Add(State.BarrageAttack2_EWait);
             }
 
+            //서있는 발판 광역
             if (TimeCheck(time_AreaAttack, areaAttack1Cooltime))
             {
-                if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1)
+                if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1 ||
+                    collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1 ||
+                    collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
                 {
-                    targetPlatform = platformD;
-                    states.Add(State.AreaAttack1_EWait);
-                }
-                else if (collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1)
-                {
-                    targetPlatform = platformL;
-                    states.Add(State.AreaAttack1_EWait);
-                }
-                else if (collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
-                {
-                    targetPlatform = platformR;
-                    states.Add(State.AreaAttack1_EWait);
+                states.Add(State.AreaAttack1_EWait);
                 }
             }
 
@@ -561,6 +557,29 @@ public class TestEnemy_Boss_1 : Enemy
             if (states.Count >= 1)
             {
                 int rand = Random.Range(0, states.Count);
+                var result = states[rand];
+
+                switch(result)
+                {
+                    case State.BarrageAttack1_EWait:
+                    targetPlatform = Random.Range(0, 2) == 0 ? platformL : platformR;
+                        break;
+
+                    case State.AreaAttack1_EWait:
+                        if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1)
+                        {
+                            targetPlatform = platformD;
+                        }
+                        else if (collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1)
+                        {
+                            targetPlatform = platformL;
+                        }
+                        else if (collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
+                        {
+                            targetPlatform = platformR;
+                        }
+                        break;
+                }
                 SetState(states[rand]);
                 return true;
             }

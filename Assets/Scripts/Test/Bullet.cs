@@ -14,20 +14,10 @@ public class Bullet : MonoBehaviour
     private Vector3 originPos;
 
 
-    public bool hitOnce = true;
+    [SerializeField]
+    private bool isNotSlowed = false;
     public float damage = 1f;
 
-    public void DealDamage(Unit unit)
-    {
-        if (hitOnce)
-        {
-            // ÃÑ¾ËÀ» ÆÄ±«
-            Destroy();
-        }
-
-        // ´ë¹ÌÁö
-        //unit.Health -= damage;
-    }
 
     private void Start()
     {
@@ -63,11 +53,11 @@ public class Bullet : MonoBehaviour
         switch (moveType)
         {
             case BulletMoveType.straight:
-                transform.Translate(speed * Time.deltaTime * direction);
+                transform.Translate(speed * Time.deltaTime * direction / (isNotSlowed ? Time.timeScale : 1));
                 break;
             case BulletMoveType.curve:
                 transform.Translate(speed * Time.deltaTime * direction);
-                Quaternion quat = Quaternion.Euler(0, 0, turnSpeed * Time.deltaTime);
+                Quaternion quat = Quaternion.Euler(0, 0, turnSpeed * Time.deltaTime / (isNotSlowed ? Time.timeScale : 1));
                 direction = quat * direction;
                 break;
             default:

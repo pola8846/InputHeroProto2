@@ -131,7 +131,7 @@ public class PlayerUnit : Unit, IGroundChecker
             if (canJumpCounter > 0 && canMove)
             {
                 canJumpCounter--;
-                mover.SetVelocityY(0);
+                mover.SetVelocityY(0, true);
                 mover.AddForceY(JumpPower);
                 isJumping = true;
                 animator.SetBool("IsJumping", true);
@@ -141,7 +141,7 @@ public class PlayerUnit : Unit, IGroundChecker
         if (GroundCheck() == false && keyStay.ContainsKey(MoveD) && keyStay[MoveD])
         {
             //±Þ°­ÇÏ
-            mover.SetVelocityY(-mover.MaxSpeedY, true);
+            mover.SetVelocityY(-mover.MaxSpeedY, false);
         }
 
         if (canMove && !animator.GetBool("IsJumping"))
@@ -271,11 +271,9 @@ public class PlayerUnit : Unit, IGroundChecker
     private IEnumerator DoSlow()
     {
         isSlowed = true;
-        Time.timeScale = slowRate;
-        Time.fixedDeltaTime = Time.timeScale / 50;
+        GameManager.SetTimeScale(slowRate);
         yield return new WaitForSecondsRealtime(slowTime);
-        Time.timeScale = 1;
-        Time.fixedDeltaTime = Time.timeScale / 50;
+        GameManager.SetTimeScale(1);
         isSlowed = false;
     }
     private IEnumerator DoShoot()
