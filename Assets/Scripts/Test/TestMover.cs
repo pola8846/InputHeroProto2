@@ -25,15 +25,6 @@ public class TestMover : MonoBehaviour
                     mMoveReceiver.KeyUp(key);
                 }
             }
-
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    mMoveReceiver.KeyDown(KeyCode.Mouse0);
-            //}
-            //if (Input.GetMouseButtonUp(0))
-            //{
-            //    mMoveReceiver.KeyUp(KeyCode.Mouse0);
-            //}
         }
     }
 }

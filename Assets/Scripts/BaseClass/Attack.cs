@@ -27,15 +27,17 @@ public class Attack : MonoBehaviour
     private List<DamageArea> damageAreaList = new();//등록된 대미지
     private List<Unit> damagedUnitList = new();//대미지 받은 유닛 리스트
     private bool isInitialized = false;//초기화 되었는가?
-    
+
     public bool dealDamageOnEnter = true;//접촉 시 대미지를 입히는가?
     public bool isDestroySelfAuto = true;//대미지가 전부 사라지면 파괴되는가?
 
     protected virtual void Update()
     {
+        PerformanceManager.StartTimer("Attack.Update");
         //초기화 안했을 때 예외
         if (!isInitialized)
         {
+            PerformanceManager.StopTimer("Attack.Update");
             return;
         }
 
@@ -45,27 +47,8 @@ public class Attack : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //dealDamageOnEnter 활성화 시 접촉할 때 대미지
-        if (dealDamageOnEnter)
-        {
-            //foreach (var contactedUnit in GetContactedUnits())
-            //{
-            //    if (!damagedUnitList.Contains(contactedUnit.Key))
-            //    {
-            //        damagedUnitList.Add(contactedUnit.Key);
-            //        contactedUnit.Value.DealDamage(contactedUnit.Key);
-            //    }
-            //}
-
-            foreach (var contactedUnit in GetConnectedHitbox())
-            {
-                if (!damagedUnitList.Contains(contactedUnit.Key))
-                {
-                    damagedUnitList.Add(contactedUnit.Key);
-                    contactedUnit.Value.Value.DealDamage(contactedUnit.Value.Key);
-                }
-            }
-        }
+        
+        PerformanceManager.StopTimer("Attack.Update");
     }
 
     /// <summary>
@@ -160,48 +143,36 @@ public class Attack : MonoBehaviour
         }
     }
 
+    public void DamageEnter()
+    {
+        PerformanceManager.StartTimer("Attack.DamageEnter");
+        //dealDamageOnEnter 활성화 시 접촉할 때 대미지
+        if (dealDamageOnEnter)
+        {
+            foreach (var contactedUnit in GetConnectedHitbox())
+            {
+                if (!damagedUnitList.Contains(contactedUnit.Key))
+                {
+                    damagedUnitList.Add(contactedUnit.Key);
+                    contactedUnit.Value.Value.DealDamage(contactedUnit.Value.Key);
+                }
+            }
+        }
+        PerformanceManager.StopTimer("Attack.DamageEnter");
+    }
+
+    public void DamageExit()
+    {
+
+    }
+
     /// <summary>
     /// 접촉한 유닛 탐색
     /// 등록된 Damage에 접촉 중인 모든 유닛을 읽어서, 우선도를 고려하여 어느 대미지가 적용될 지 알려줌
     /// </summary>
-    /// <returns>Key: 접촉한 유닛, Value: 접촉한 DamageArea</returns>
-    private Dictionary<Unit, DamageArea> GetContactedUnits()
-    {
-        Dictionary<Unit, DamageArea> dict = new();//우선권을 고려하여, 어느 유닛에게 어떤 피해 영역이 충돌한 것으로 볼지 기록
-        //dict 채우기
-        foreach (DamageArea damageArea in damageAreaList)//모든 피해 영역에 대해
-        {
-            List<Unit> unitList = new();//해당 피해 영역이 충돌 중인 유닛
-            foreach (HitBox hitBox in damageArea.HitBoxList)//충돌 중인 모든 히트박스에 대해
-            {
-                if (!unitList.Contains(hitBox.Unit) &&//처음 충돌한 유닛이면
-                    hitBox.CompareTag(targetTag))//목표 유닛이면
-                {
-                    unitList.Add(hitBox.Unit);//등록한다
-                }
-            }
-
-            foreach (Unit unit in unitList)//충돌 중인 모든 유닛에 대해
-            {
-                if (!dict.ContainsKey(unit))//해당 유닛 충돌이 처음이라면
-                {
-                    dict.Add(unit, damageArea);//등록한다
-                }
-                else//두 번째 이후라면
-                {
-                    if (dict[unit] != damageArea &&//본인이 아니고
-                        dict[unit].Priority < damageArea.Priority)//자기 우선권이 더 높다면
-                    {
-                        dict[unit] = damageArea;//대체한다
-                    }
-                }
-            }
-        }
-        return dict;
-    }
-
     private Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> GetConnectedHitbox()
     {
+        PerformanceManager.StartTimer("Attack.GetConnectedHitbox");
         Dictionary<HitBox, DamageArea> dict = new();//우선권을 고려하여, 어느 히트박스에게 어떤 피해 영역이 충돌한 것으로 볼지 기록
         Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> temp = new();
         //temp 채우기
@@ -236,6 +207,7 @@ public class Attack : MonoBehaviour
         /// 같은 유닛이라면 hitbox나 damagearea의 우선도를 합산, 높으면 대체함
         ///
 
+        PerformanceManager.StopTimer("Attack.GetConnectedHitbox");
 
         return temp;
     }

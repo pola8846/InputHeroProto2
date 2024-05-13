@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulletShooter : MonoBehaviour
 {
-    public GameObject bulletGO;
+    public GameObject GO;
 
     [SerializeField]
     private int bulletNum = 1;
@@ -20,59 +20,78 @@ public class BulletShooter : MonoBehaviour
         }
     }
 
-    public BulletShootType shootType;
+    public ShootType shootType;
 
-    public float bulletSpeedMin = 1;
-    public float bulletSpeedMax = 1;
+    [SerializeField]
+    private float bulletSpeedMin = 1;
+    public float BulletSpeedMin
+    {
+        get
+        {
+            return bulletSpeedMin;
+        }
+        set
+        {
+            bulletSpeedMin = Mathf.Max(0, value);
+        }
+    }
+    [SerializeField]
+    private float bulletSpeedMax = 1;
+    public float BulletSpeedMax
+    {
+        get
+        {
+            return bulletSpeedMax;
+        }
+        set
+        {
+            bulletSpeedMax = Mathf.Max(0, value);
+        }
+    }
+    public float BulletSpeed
+    {
+        set
+        {
+            bulletSpeedMax = bulletSpeedMin = Mathf.Max(0, value);
+        }
+    }
     public float bulletAngleMin = 90;
     public float bulletAngleMax = 90;
-    public float bulletDamageMin = 1;
-    public float bulletDamageMax = 1;
-
-    public bool isHitOnce;//한 번만 충돌 가능한가?
-    public bool isDestroyAfterHit;//충돌 후 사라지는가?
+    public float BulletAngle
+    {
+        set
+        {
+            bulletAngleMax = bulletAngleMin = value;
+        }
+    }
 
     public float lifeTime = 0;
     public float lifeDistance = 0;
 
-    public bool triger = false;
-
     public Unit Unit;
     public bool isPlayers = false;
 
-    private void Update()
+
+    public void Triger()
     {
-        if (triger)
-        {
-            triger = false;
-            Shoot();
-        }
+        Shoot();
     }
 
-    private void Shoot()//테스트용. 프로토에서 쓰던 것 그대로 가져와서 수정
+    private void Shoot()
     {
+        PerformanceManager.StartTimer("BulletShooter.Shoot");
         switch (shootType)
         {
-            case BulletShootType.oneWay:
+            case ShootType.oneWay:
                 for (int i = 0; i < bulletNum; i++)
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
                     Vector2 direction = quat * Vector2.up;
-
-                    Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
-                    GameObject go = Instantiate(bulletGO, transform.position, transform.rotation, attack.transform);
-                    Bullet bullet = go.GetComponent<Bullet>();
-                    attack.EnrollDamage(go);
-                    //Attack attack = new(Unit, "Player");
-                    //attack.EnrollDamage(DA);
-
-                    bullet.Initialize(BulletMoveType.straight,
-                        direction, Random.Range(bulletDamageMin, bulletDamageMax), Random.Range(bulletSpeedMin, bulletSpeedMax),
-                        lifeTime: lifeTime, lifeDistance: lifeDistance);
+                    MakeProjectile(direction);
                 }
                 break;
 
-            case BulletShootType.fan:
+            case ShootType.fan:
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, bulletAngleMin);
                     Quaternion quatAtOnce = Quaternion.Euler(0, 0, (bulletAngleMax - bulletAngleMin) / bulletNum);
@@ -80,18 +99,7 @@ public class BulletShooter : MonoBehaviour
                     for (int i = 0; i < bulletNum; i++)
                     {
                         Vector2 direction = quat * Vector2.up;
-
-                        Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
-                        GameObject go = Instantiate(bulletGO, transform.position, transform.rotation, attack.transform);
-                        Bullet bullet = go.GetComponent<Bullet>();
-                        attack.EnrollDamage(go);
-                        //Attack attack = new(Unit, "Player");
-                        //attack.EnrollDamage(DA);
-
-                        bullet.Initialize(BulletMoveType.straight,
-                            direction, Random.Range(bulletDamageMin, bulletDamageMax), Random.Range(bulletSpeedMin, bulletSpeedMax),
-                            lifeTime: lifeTime, lifeDistance: lifeDistance);
-
+                        MakeProjectile(direction);
                         quat *= quatAtOnce;
                     }
                 }
@@ -101,10 +109,24 @@ public class BulletShooter : MonoBehaviour
                 break;
         }
 
+        PerformanceManager.StopTimer("BulletShooter.Shoot");
+    }
+
+    private void MakeProjectile(Vector2 direction)
+    {
+        Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
+        
+        GameObject go = Instantiate(GO, transform.position, transform.rotation, attack.transform);
+        attack.EnrollDamage(go);
+
+        Projectile projectile = go.GetComponent<Projectile>();
+        projectile?.Initialize(
+            direction, Random.Range(bulletSpeedMin, bulletSpeedMax),
+            lifeTime: lifeTime, lifeDistance: lifeDistance);
     }
 }
 
-public enum BulletShootType
+public enum ShootType
 {
     oneWay,
     fan,

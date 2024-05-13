@@ -23,6 +23,7 @@ public class PlayerUnit : Unit, IGroundChecker
     private KeyCode Dash = KeyCode.LeftShift;
     [SerializeField]
     private KeyCode Slow = KeyCode.LeftShift;
+
     [Header("기타")]
     [SerializeField]
     private Animator animator;
@@ -47,6 +48,9 @@ public class PlayerUnit : Unit, IGroundChecker
     [SerializeField]
     protected Transform groundCheckerRD;
     [SerializeField]
+    private GameObject groundChecker;
+    private Collider2D groundCheckerCollider;
+    [SerializeField]
     protected float groundCheckRadius = 0;
     [SerializeField]
     protected string groundLayer = "";
@@ -70,11 +74,13 @@ public class PlayerUnit : Unit, IGroundChecker
         base.Start();
         mover = GetComponent<Mover>();
         effector2D = GetComponent<PlatformEffector2D>();
+        groundCheckerCollider = groundChecker?.GetComponent<Collider2D>();
         GameManager.SetPlayer(this);
     }
 
     protected override void Update()
     {
+        PerformanceManager.StartTimer("PlayerUnit.Update");
         RotateTargetter();
         JumpCheck();
         if (canMove)
@@ -106,6 +112,7 @@ public class PlayerUnit : Unit, IGroundChecker
         }
 
         animator.SetFloat("MoveSpeedRate", Mathf.Abs(mover.Velocity.x) / stats.moveSpeed);
+        PerformanceManager.StopTimer("PlayerUnit.Update");
     }
 
 
@@ -118,9 +125,6 @@ public class PlayerUnit : Unit, IGroundChecker
             StartCoroutine(DoDash());
             return;
         }
-
-       
-
 
         if (!isDownJumping && ((keyCode == Jump && IsKeyPushing(MoveD)) || (keyCode == MoveD && IsKeyPushing(Jump))))
         {
@@ -141,7 +145,7 @@ public class PlayerUnit : Unit, IGroundChecker
         if (GroundCheck() == false && keyStay.ContainsKey(MoveD) && keyStay[MoveD])
         {
             //급강하
-            mover.SetVelocityY(-mover.MaxSpeedY, false);
+            mover.SetVelocityY(-mover.MaxSpeedY, true);
         }
 
         if (canMove && !animator.GetBool("IsJumping"))
@@ -194,17 +198,12 @@ public class PlayerUnit : Unit, IGroundChecker
 
         //쏠 방향을 구해온다
         Vector2 dir = (Vector2)targetter.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
-        float angle = Vector2.SignedAngle(dir, Vector2.up);
+        float angle = Vector2.SignedAngle(dir, Vector2.up) * -1;
 
-        if (isLookLeft)
-        {
-            angle *= -1;
-        }
 
         //방향대로 쏜다
-        shooter.bulletAngleMax = angle;
-        shooter.bulletAngleMin = angle;
-        shooter.triger = true;
+        shooter.BulletAngle = angle;
+        shooter.Triger();
         PerformanceManager.StopTimer("PlayerUnit.ShootToMouse");
     }
 
@@ -235,13 +234,22 @@ public class PlayerUnit : Unit, IGroundChecker
     public bool GroundCheck()
     {
         PerformanceManager.StartTimer("PlayerUnit.GroundCheck");
-        if (groundCheckerLT == null || groundCheckerRD == null)
+
+        if (groundChecker is null)
         {
+            PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
             return false;
         }
-        bool result = Physics2D.OverlapArea(groundCheckerLT.position, groundCheckerRD.position, LayerMask.GetMask(groundLayer, halfGroundLayer));
+
+        int layer = LayerMask.GetMask(groundLayer, halfGroundLayer);
+        if (groundCheckerCollider.IsTouchingLayers(layer))
+        {
+            PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
+            return true;
+        }
+
         PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
-        return result;
+        return false;
     }
 
     private void SetHalfDownJump(bool isDownJumping)

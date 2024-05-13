@@ -24,7 +24,9 @@ public class Mover : MonoBehaviour
     { get { return maxSpeedY; } set { maxSpeedY = value; } }
 
     //속도 고정
+    [SerializeField]
     private bool fixSpeedX = false;
+    [SerializeField]
     private bool fixSpeedY = false;
 
     public Vector2 Velocity
@@ -89,14 +91,7 @@ public class Mover : MonoBehaviour
     {
         targetSpeedX = speed;
         SetVelocityX();
-        if (!once)
-        {
-            fixSpeedX = false;
-        }
-        else
-        {
-            fixSpeedX = true;
-        }
+        fixSpeedX = !once;
     }
 
     /// <summary>
@@ -135,14 +130,7 @@ public class Mover : MonoBehaviour
     {
         targetSpeedY = speed;
         SetVelocityY();
-        if (!once)
-        {
-            fixSpeedY = false;
-        }
-        else
-        {
-            fixSpeedY = true;
-        }
+        fixSpeedY = !once;
     }
 
     /// <summary>
@@ -191,7 +179,7 @@ public class Mover : MonoBehaviour
         targetSpeedY = 0;
         if (instant)
         {
-            SetVelocity(Vector2.zero);
+            SetVelocity(Vector2.zero, true);
         }
         PerformanceManager.StopTimer("Mover.StopMove");
     }

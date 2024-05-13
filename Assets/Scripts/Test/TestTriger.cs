@@ -21,7 +21,7 @@ public class TestTriger : MonoBehaviour
                 {
                     continue;
                 }
-                bulletShooters[i].triger = true;
+                bulletShooters[i].Triger();
                 yield return new WaitForSeconds(delay);
             }
             yield return null;

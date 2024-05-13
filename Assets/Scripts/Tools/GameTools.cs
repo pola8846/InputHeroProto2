@@ -21,3 +21,5 @@ public class GameTools
         return sqrDistance > sqrVector;
     }
 }
+
+public delegate void Act();

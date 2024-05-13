@@ -1,7 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class TestEnemy_Boss_1 : Enemy
@@ -14,9 +13,13 @@ public class TestEnemy_Boss_1 : Enemy
     private State state;
 
     private Mover moverV;
+    public Mover MoverV => moverV;
     private MoverByTransform moverT;
+    public MoverByTransform MoverT => moverT;
+
     private Rigidbody2D rb;
     private BulletShooter shooter;
+    public BulletShooter Shooter => shooter;
 
     private float originGravity;
 
@@ -39,69 +42,52 @@ public class TestEnemy_Boss_1 : Enemy
 
     [Header("근접공격")]
     [SerializeField]
+    private AttackState melee;
+    [SerializeField]
     private GameObject meleeAttackObject;
-    [SerializeField]
-    private float meleeAttack1EWaitTime = .5f;
-    [SerializeField]
-    private float meleeAttack1Time = .1f;
-    [SerializeField]
-    private float meleeAttack1LWaitTime = .4f;
+    public GameObject MeleeAttackObject => meleeAttackObject;
 
     [Header("원거리 점사")]
     [SerializeField]
-    private float rangeAttack1EWaitTime = .3f;
-    [SerializeField]
-    private float rangeAttack1Time = .25f;
+    private AttackState range;
     [SerializeField]
     private int rangeAttack1RepeatCount = 4;
-    [SerializeField]
-    private float rangeAttack1LWaitTime = .3f;
 
     [Header("광역 공격")]
     [SerializeField]
-    private float areaAttack1EWaitTime = 2f;
-    [SerializeField]
-    private float areaAttack1AttackTime = 0.75f;
-    [SerializeField]
-    private float areaAttack1LWaitTime = 1.25f;
+    private AttackState area;
     [SerializeField]
     private float areaAttack1Cooltime = 45f;
     [SerializeField]
     private GameObject areaAttackObjectL;
+    public GameObject AreaAttackObjectL => areaAttackObjectL;
     [SerializeField]
     private GameObject areaAttackObjectR;
+    public GameObject AreaAttackObjectR => areaAttackObjectR;
     [SerializeField]
     private GameObject areaAttackObjectD;
+    public GameObject AreaAttackObjectD => areaAttackObjectD;
 
 
     [Header("주변 탄 발사")]
     [SerializeField]
-    private float barrageAttack1EWaitTime = 2f;
-    [SerializeField]
-    private float barrageAttack1AttackTime = .5f;
+    private AttackState barrage1;
     [SerializeField]
     private int barrageAttack1BulletNum = 8;
+    public int BarrageAttack1BulletNum => barrageAttack1BulletNum;
     [SerializeField]
     private float barrageAttack1Angle = 45f;
-    [SerializeField]
-    private int barrageAttack1RepeatCount = 6;
-    [SerializeField]
-    private float barrageAttack1LWaitTime = 2f;
+    public float BarrageAttack1Angle => barrageAttack1Angle;
     [SerializeField]
     private float barrageAttack1Cooltime = 60f;
 
 
     [Header("주변 탄 발사")]
     [SerializeField]
-    private float barrageAttack2EWaitTime = 2f;
-    [SerializeField]
-    private float barrageAttack2AttackTime = 1.5f;
+    private AttackState barrage2;
     [SerializeField]
     private int barrageAttack2BulletNum = 16;
-    [SerializeField]
-    private int barrageAttack2RepeatCount = 3;
-    [SerializeField]
-    private float barrageAttack2LWaitTime = 2f;
+    public int BarrageAttack2BulletNum => barrageAttack2BulletNum;
     [SerializeField]
     private float barrageAttack2Cooltime = 30f;
 
@@ -118,29 +104,36 @@ public class TestEnemy_Boss_1 : Enemy
     [Header("맵 위치")]
     [SerializeField]
     private Transform platformL;
+    public Transform PlatformL => platformL;
     [SerializeField]
     private CollisionChecker collisionCheckerL;
     [SerializeField]
     private Transform platformR;
+    public Transform PlatformR => platformR;
     [SerializeField]
     private CollisionChecker collisionCheckerR;
     [SerializeField]
     private Transform platformD;
+    public Transform PlatformD => platformD;
     [SerializeField]
     private CollisionChecker collisionCheckerD;
-    private Transform targetPlatform;
+    public Transform targetPlatform;
 
     //색 변경
-    private Renderer renderer;
+    private new Renderer renderer;
     private Color originColor;
 
     //타이머
-    private float lastAttackTime;
-    private float stateTime;//현 상태에 진입한 시간
-    private float tick;
-    private float time_BAttack;
-    private float time_BAttack2;
-    private float time_AreaAttack;
+    private TickTimer lastAttackTime;
+    private TickTimer stateTime;//현 상태에 진입한 시간
+    private TickTimer tick;
+    private TickTimer time_BAttack;
+    private TickTimer time_BAttack2;
+    private TickTimer time_AreaAttack;
+
+
+    //FSM
+    private StateMachine stateMachine;
 
 
     //기본함수
@@ -154,11 +147,18 @@ public class TestEnemy_Boss_1 : Enemy
         shooter = gameObject.GetComponent<BulletShooter>();
         originGravity = rb.gravityScale;
         originColor = renderer.material.color;
-        lastAttackTime = stateTime = tick = Time.time;
 
-        time_BAttack = -999f;
-        time_AreaAttack = -999f;
-        time_BAttack2 = -999f;
+
+
+        lastAttackTime = new();
+        stateTime = new();//현 상태에 진입한 시간
+        tick = new(checkTime: 0.1f, autoReset: true);
+        time_BAttack = new(isTrigerInstant: true);
+        time_BAttack2 = new(isTrigerInstant: true);
+        time_AreaAttack = new(isTrigerInstant: true);
+
+        stateMachine = new(this);
+        stateMachine.ChangeState<TestEnemy_Boss_1_Idle>();
     }
 
     protected override void Update()
@@ -166,21 +166,20 @@ public class TestEnemy_Boss_1 : Enemy
         PerformanceManager.StartTimer("TestEnemy_Boss_1.Update");
 
         base.Update();
+        stateMachine.Update();
 
         switch (state)
         {
             case State.Wait:
 
-                if (TimeCheck(tick, 0.1f))
+                if (tick.Check())
                 {
-                    tick = Time.time;
-
                     if (ChoiceAttack())
                     {
                         break;
                     }
                 }
-                if (TimeCheck(stateTime, wait_MaxTime))
+                if (stateTime.Check(wait_MaxTime))
                 {
                     SetState(State.Move);
                 }
@@ -190,7 +189,7 @@ public class TestEnemy_Boss_1 : Enemy
                 {
                     SetState(State.Wait);
                 }
-                else if (TimeCheck(stateTime, move_MaxTime))
+                else if (stateTime.Check(move_MaxTime))
                 {
                     SetState(State.Wait);
                 }
@@ -198,19 +197,19 @@ public class TestEnemy_Boss_1 : Enemy
 
             //근접
             case State.MeleeAttack1_EWait:
-                if (TimeCheck(stateTime, meleeAttack1EWaitTime))
+                if (stateTime.Check(melee.waitTime_Early))
                 {
                     SetState(State.MeleeAttack1_Attack);
                 }
                 break;
             case State.MeleeAttack1_Attack:
-                if (TimeCheck(stateTime, meleeAttack1Time))
+                if (stateTime.Check(melee.waitTime_Attack))
                 {
                     SetState(State.MeleeAttack1_LWait);
                 }
                 break;
             case State.MeleeAttack1_LWait:
-                if (TimeCheck(stateTime, meleeAttack1LWaitTime))
+                if (stateTime.Check(melee.waitTime_Late))
                 {
                     SetState(State.Wait);
                 }
@@ -218,13 +217,13 @@ public class TestEnemy_Boss_1 : Enemy
 
             //원거리
             case State.RangeAttack1_EWait:
-                if (TimeCheck(stateTime, rangeAttack1EWaitTime))
+                if (stateTime.Check(range.waitTime_Early))
                 {
                     SetState(State.RangeAttack1_Attack);
                 }
                 break;
             case State.RangeAttack1_Attack:
-                if (TimeCheck(stateTime, rangeAttack1Time))
+                if (stateTime.Check(range.waitTime_Attack))
                 {
                     if (rangeAttack1Counter >= rangeAttack1RepeatCount)
                     {
@@ -237,7 +236,7 @@ public class TestEnemy_Boss_1 : Enemy
                 }
                 break;
             case State.RangeAttack1_LWait:
-                if (TimeCheck(stateTime, rangeAttack1LWaitTime))
+                if (stateTime.Check(range.waitTime_Late))
                 {
                     SetState(State.Wait);
                 }
@@ -245,19 +244,19 @@ public class TestEnemy_Boss_1 : Enemy
 
             //광역
             case State.AreaAttack1_EWait:
-                if (TimeCheck(stateTime, areaAttack1EWaitTime))
+                if (stateTime.Check(area.waitTime_Early))
                 {
                     SetState(State.AreaAttack1_Attack);
                 }
                 break;
             case State.AreaAttack1_Attack:
-                if (TimeCheck(stateTime, areaAttack1AttackTime))
+                if (stateTime.Check(area.waitTime_Attack))
                 {
                     SetState(State.AreaAttack1_LWait);
                 }
                 break;
             case State.AreaAttack1_LWait:
-                if (TimeCheck(stateTime, areaAttack1LWaitTime))
+                if (stateTime.Check(area.waitTime_Late))
                 {
                     SetState(State.Wait);
                 }
@@ -265,15 +264,15 @@ public class TestEnemy_Boss_1 : Enemy
 
             //탄막1
             case State.BarrageAttack1_EWait:
-                if (TimeCheck(stateTime, barrageAttack1EWaitTime))
+                if (stateTime.Check(barrage1.waitTime_Early))
                 {
                     SetState(State.BarrageAttack1_Attack);
                 }
                 break;
             case State.BarrageAttack1_Attack:
-                if (TimeCheck(stateTime, barrageAttack1AttackTime))
+                if (stateTime.Check(barrage1.waitTime_Attack))
                 {
-                    if (barrageAttack1Counter >= barrageAttack1RepeatCount)
+                    if (barrageAttack1Counter >= barrage1.repeatCount)
                     {
                         SetState(State.BarrageAttack1_LWait);
                     }
@@ -284,7 +283,7 @@ public class TestEnemy_Boss_1 : Enemy
                 }
                 break;
             case State.BarrageAttack1_LWait:
-                if (TimeCheck(stateTime, barrageAttack1LWaitTime))
+                if (stateTime.Check(barrage1.waitTime_Late))
                 {
                     SetState(State.Wait);
                 }
@@ -292,15 +291,15 @@ public class TestEnemy_Boss_1 : Enemy
 
             //탄막2
             case State.BarrageAttack2_EWait:
-                if (TimeCheck(stateTime, barrageAttack2EWaitTime))
+                if (stateTime.Check(barrage2.waitTime_Early))
                 {
                     SetState(State.BarrageAttack2_Attack);
                 }
                 break;
             case State.BarrageAttack2_Attack:
-                if (TimeCheck(stateTime, barrageAttack2AttackTime))
+                if (stateTime.Check(barrage2.waitTime_Attack))
                 {
-                    if (barrageAttack2Counter >= barrageAttack2RepeatCount)
+                    if (barrageAttack2Counter >= barrage2.repeatCount)
                     {
                         SetState(State.BarrageAttack2_LWait);
                     }
@@ -311,7 +310,7 @@ public class TestEnemy_Boss_1 : Enemy
                 }
                 break;
             case State.BarrageAttack2_LWait:
-                if (TimeCheck(stateTime, barrageAttack2LWaitTime))
+                if (stateTime.Check(barrage2.waitTime_Late))
                 {
                     SetState(State.Wait);
                 }
@@ -320,26 +319,12 @@ public class TestEnemy_Boss_1 : Enemy
         PerformanceManager.StopTimer("TestEnemy_Boss_1.Update");
     }
 
-
-    protected override void FixedUpdate()
-    {
-        PerformanceManager.StartTimer("TestEnemy_Boss_1.FixedUpdate");
-        base.FixedUpdate();
-        switch (state)
-        {
-            case State.Wait:
-                break;
-        }
-        PerformanceManager.StopTimer("TestEnemy_Boss_1.FixedUpdate");
-
-    }
-
     //상태 변경
     private void SetState(State st)
     {
         PerformanceManager.StartTimer("TestEnemy_Boss_1.SetState");
         ExitState(st);
-        stateTime = Time.time;
+        stateTime.Reset();
         state = st;
         EnterState(st);
         PerformanceManager.StopTimer("TestEnemy_Boss_1.SetState");
@@ -351,7 +336,7 @@ public class TestEnemy_Boss_1 : Enemy
         {
             case State.Wait:
                 SetColor(Color.clear);
-                tick = Time.time;
+                tick.Reset();
                 StopMove();
                 break;
             case State.Move://플레이어랑 멀면 플레이어에게 이동
@@ -361,22 +346,20 @@ public class TestEnemy_Boss_1 : Enemy
                 SetColor(Color.red * 0.8f);
                 break;
 
-
             case State.MeleeAttack1_Attack:
                 SetColor(Color.red);
                 meleeAttackGO = Instantiate(meleeAttackObject, transform);
                 meleeAttackGO.GetComponent<Attack>().Initialization(this, "Player", meleeAttackGO);
-                Destroy(meleeAttackGO, meleeAttack1Time);
+                Destroy(meleeAttackGO, melee.waitTime_Attack);
                 break;
-
 
             case State.RangeAttack1_EWait:
                 SetColor(Color.yellow * 0.8f);
                 rangeAttack1Counter = 0;
-                shooter.shootType = BulletShootType.oneWay;
+                shooter.shootType = ShootType.oneWay;
                 shooter.BulletNum = 1;
-                shooter.bulletSpeedMax = shooter.bulletSpeedMin = 8f;
-                shooter.bulletDamageMax = shooter.bulletDamageMin = stats.attackPower;
+                shooter.BulletSpeed = 8f;
+                //shooter.bulletDamageMax = shooter.bulletDamageMin = stats.attackPower;
                 break;
 
             case State.RangeAttack1_Attack:
@@ -410,25 +393,25 @@ public class TestEnemy_Boss_1 : Enemy
                         areaAttackGO = Instantiate(areaAttackObjectR);
                         areaAttackGO.GetComponent<Attack>().Initialization(this, "Player", areaAttackGO);
                     }
-                    Destroy(areaAttackGO, areaAttack1AttackTime);
+                    Destroy(areaAttackGO, area.waitTime_Attack);
 
-                    time_AreaAttack = Time.time;
+                    time_AreaAttack.Reset();
                 }
                 break;
 
             case State.BarrageAttack1_EWait:
                 //Debug.Log($"{targetPlatform.transform.position}, {targetPlatform}");
                 transform.position = targetPlatform.transform.position + (Vector3.up * targetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
-                shooter.shootType = BulletShootType.fan;
+                shooter.shootType = ShootType.fan;
                 shooter.BulletNum = barrageAttack1BulletNum;
-                shooter.bulletSpeedMax = shooter.bulletSpeedMin = 6f;
+                shooter.BulletSpeed = 6f;
                 moverV.SetVelocity(new Vector2(0, 0.2f));
                 break;
 
             case State.BarrageAttack1_Attack:
                 ShootToPlayer(barrageAttack1Angle);
                 barrageAttack1Counter++;
-                time_BAttack2 = Time.time;
+                time_BAttack2.Reset();
                 break;
             case State.BarrageAttack1_LWait:
                 StopMove();
@@ -437,11 +420,11 @@ public class TestEnemy_Boss_1 : Enemy
             case State.BarrageAttack2_EWait:
                 {
                     SetColor(Color.cyan);
-                    shooter.shootType = BulletShootType.fan;
+                    shooter.shootType = ShootType.fan;
                     shooter.BulletNum = barrageAttack2BulletNum;
                     shooter.bulletAngleMax = 360;
                     shooter.bulletAngleMin = 0;
-                    shooter.bulletSpeedMax = shooter.bulletSpeedMin = 3f;
+                    shooter.BulletSpeed = 3f;
                     barrageAttack2Counter = 0;
                 }
                 break;
@@ -450,9 +433,9 @@ public class TestEnemy_Boss_1 : Enemy
                     float temp = (360 / barrageAttack2BulletNum) / 2;
                     shooter.bulletAngleMax += temp;
                     shooter.bulletAngleMin += temp;
-                    time_BAttack = Time.time;
+                    time_BAttack.Reset();
                     barrageAttack2Counter++;
-                    shooter.triger = true;
+        shooter.Triger();
                 }
                 break;
         }
@@ -472,17 +455,15 @@ public class TestEnemy_Boss_1 : Enemy
                 SetColor(Color.clear);
                 break;
             case State.MeleeAttack1_LWait:
-                lastAttackTime = Time.time;
+                lastAttackTime.Reset();
                 break;
 
             case State.RangeAttack1_EWait:
                 SetColor(Color.yellow);
                 break;
             case State.RangeAttack1_LWait:
-                lastAttackTime = Time.time;
+                lastAttackTime.Reset();
                 break;
-
-
             case State.AreaAttack1_EWait:
                 {
                     SetColor(Color.clear);
@@ -490,13 +471,13 @@ public class TestEnemy_Boss_1 : Enemy
                 break;
 
             case State.BarrageAttack2_LWait:
-                lastAttackTime -= Time.time;
+                lastAttackTime.Reset();
                 break;
         }
     }
 
     //기타
-    private void SetColor(Color color)
+    public void SetColor(Color color)
     {
         if (color == Color.clear)
         {
@@ -514,7 +495,7 @@ public class TestEnemy_Boss_1 : Enemy
     /// <returns>공격 골랐는지</returns>
     private bool ChoiceAttack()
     {
-        if (TimeCheck(lastAttackTime, anyAttackCooltime))
+        if (lastAttackTime.Check(anyAttackCooltime))
         {
             List<State> states = new();
 
@@ -530,25 +511,25 @@ public class TestEnemy_Boss_1 : Enemy
             }
 
             //발판 이동 후 부채꼴 탄
-            if (TimeCheck(time_BAttack2, barrageAttack1Cooltime))
+            if (time_BAttack2.Check(barrageAttack1Cooltime))
             {
                 states.Add(State.BarrageAttack1_EWait);
             }
 
             //전방위 탄
-            if (TimeCheck(time_BAttack, barrageAttack2Cooltime))
+            if (time_BAttack.Check(barrageAttack2Cooltime))
             {
                 states.Add(State.BarrageAttack2_EWait);
             }
 
             //서있는 발판 광역
-            if (TimeCheck(time_AreaAttack, areaAttack1Cooltime))
+            if (time_AreaAttack.Check(areaAttack1Cooltime))
             {
                 if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1 ||
                     collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1 ||
                     collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
                 {
-                states.Add(State.AreaAttack1_EWait);
+                    states.Add(State.AreaAttack1_EWait);
                 }
             }
 
@@ -556,13 +537,13 @@ public class TestEnemy_Boss_1 : Enemy
 
             if (states.Count >= 1)
             {
-                int rand = Random.Range(0, states.Count);
+                int rand = UnityEngine.Random.Range(0, states.Count);
                 var result = states[rand];
 
-                switch(result)
+                switch (result)
                 {
                     case State.BarrageAttack1_EWait:
-                    targetPlatform = Random.Range(0, 2) == 0 ? platformL : platformR;
+                        targetPlatform = UnityEngine.Random.Range(0, 2) == 0 ? platformL : platformR;
                         break;
 
                     case State.AreaAttack1_EWait:
@@ -589,7 +570,7 @@ public class TestEnemy_Boss_1 : Enemy
     }
 
     //이동
-    private void MoveToPlayer()
+    public void MoveToPlayer()
     {
         bool isPlayerLeft = (GameManager.Player.transform.position.x <= transform.position.x);
         if (isPlayerLeft != isLookLeft)
@@ -601,32 +582,19 @@ public class TestEnemy_Boss_1 : Enemy
         float moveX = Stats.moveSpeed * (isLookLeft ? -1 : 1);
         moverV.SetVelocityX(moveX);
     }
-    private void StopMove()
+    public void StopMove()
     {
         moverT.StopMove();
         moverV.StopMove();
         rb.gravityScale = originGravity;
     }
-    private void MoveByTranceform(Vector2 target, float speedRate = 1f)
-    {
-        rb.velocity = Vector2.zero;
-        rb.gravityScale = 0f;
-        moverT.StartMove(MoverByTransform.moveType.LinearByPosWithSpeed, target, speedRate * Stats.moveSpeed);
-    }
-
-    private void ShootToPlayer(float angleRange = 0f)
+    public void ShootToPlayer(float angleRange = 0f)
     {
         Vector2 temp = GetDist(GameManager.Player.transform.position + Vector3.up * 0.5f);
-        float temp2 = Vector2.SignedAngle(Vector2.up, temp) * (isLookLeft ? 1 : -1);
+        float temp2 = Vector2.SignedAngle(Vector2.up, temp);
         shooter.bulletAngleMax = temp2 + angleRange;
         shooter.bulletAngleMin = temp2 - angleRange;
-        shooter.triger = true;
-    }
-
-    //시간 체크
-    private bool TimeCheck(float timer, float targetTime)
-    {
-        return timer + targetTime < Time.time;
+        shooter.Triger();
     }
 
     //대상까지 방향벡터 가져오기
@@ -639,7 +607,6 @@ public class TestEnemy_Boss_1 : Enemy
     /// <summary>
     /// 플레이어가 근접공격 사거리 안에 있는지
     /// </summary>
-    /// <returns></returns>
     private bool IsPlayerInMeleeAttack1Area()
     {
         var tempList = meleeAttack1AreaChecker.GetListOfClass<PlayerUnit>();

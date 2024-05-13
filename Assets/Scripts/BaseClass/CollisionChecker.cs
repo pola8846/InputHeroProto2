@@ -2,44 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CollisionChecker : MonoBehaviour
 {
     private List<Collider2D> enteredColliders = new();
+    private bool isCached_enteredColliders = false;
+    private List<Collider2D> tempList = new();
     public List<Collider2D> EnteredColliders
     {
         get
         {
             PerformanceManager.StartTimer("CollisionChecker.EnteredColliders.get");
-            List<Collider2D> temp = new();
+
+            if (isCached_enteredColliders)
+            {
+                PerformanceManager.StopTimer("CollisionChecker.EnteredColliders.get");
+                return enteredColliders;
+            }
+
+            tempList.Clear();
             foreach (var item in enteredColliders)
             {
                 if (item != null)
                 {
-                    temp.Add(item);
+                    tempList.Add(item);
                 }
             }
-            enteredColliders = temp.ToList();
+            enteredColliders = tempList.ToList();
+
+            isCached_enteredColliders = true;
             PerformanceManager.StopTimer("CollisionChecker.EnteredColliders.get");
             return enteredColliders;
         }
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    virtual protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (!enteredColliders.Contains(collision))
         {
             enteredColliders.Add(collision);
         }
+        isCached_enteredColliders = false;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    virtual protected void OnTriggerExit2D(Collider2D collision)
     {
         if (enteredColliders.Contains(collision))
         {
             enteredColliders.Remove(collision);
         }
+        isCached_enteredColliders = false;
     }
 
     /// <summary>
@@ -69,7 +84,7 @@ public class CollisionChecker : MonoBehaviour
     {
         List<Collider2D> result = new();
 
-        foreach(var checker in checkers)
+        foreach (var checker in checkers)
         {
             foreach (var collider in checker.EnteredColliders)
             {

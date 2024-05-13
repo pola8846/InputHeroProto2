@@ -262,9 +262,8 @@ public class TestEnemy_Air_R_1 : Enemy
                 timer4 = Time.time;
                 //АјАн
                 Vector2 temp = GetDist(GameManager.Player.transform.position);
-                shooter.bulletAngleMax = shooter.bulletAngleMin =
-                    Vector2.SignedAngle(Vector2.up, temp);
-                shooter.triger = true;
+                shooter.BulletAngle = Vector2.SignedAngle(Vector2.up, temp);
+                shooter.Triger();
                 break;
             default:
                 break;

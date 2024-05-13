@@ -68,6 +68,8 @@ public class MoverByTransform : MonoBehaviour
 
     private void Update()
     {
+        PerformanceManager.StartTimer("MoverByTransform.Update");
+
         if (isMoving)
         {
             switch (type)
@@ -88,7 +90,7 @@ public class MoverByTransform : MonoBehaviour
                     break;
             }
         }
-
+        PerformanceManager.StopTimer("MoverByTransform.Update");
     }
 
     /// <summary>
@@ -96,6 +98,7 @@ public class MoverByTransform : MonoBehaviour
     /// </summary>
     public void StartMove(moveType type, Vector2 target, params float[] options)
     {
+        PerformanceManager.StartTimer("MoverByTransform.StartMove");
         moveTimer = 0;
         this.type = type;
         posOrigin = Position;
@@ -122,6 +125,7 @@ public class MoverByTransform : MonoBehaviour
             default:
                 break;
         }
+        PerformanceManager.StopTimer("MoverByTransform.StartMove");
     }
 
     public void StopMove()
@@ -132,6 +136,7 @@ public class MoverByTransform : MonoBehaviour
 
     private void MoveLinearByPosWithTime()
     {
+        PerformanceManager.StartTimer("MoverByTransform.MoveLinearByPosWithTime");
         //타이머 체크
         moveTimer += Time.deltaTime;
         if (moveTimer >= targetMoveTime)
@@ -149,9 +154,11 @@ public class MoverByTransform : MonoBehaviour
 
         //이동
         Position = new Vector2(moveX, moveY);
+        PerformanceManager.StopTimer("MoverByTransform.MoveLinearByPosWithTime");
     }
     private void MoveLinearByPosWithSpeed()
     {
+        PerformanceManager.StartTimer("MoverByTransform.MoveLinearByPosWithSpeed");
         //타이머 체크
         moveTimer += Time.deltaTime;
         float targetDist = (targetPos - posOrigin).magnitude;//이동해야 하는 거리
@@ -174,9 +181,11 @@ public class MoverByTransform : MonoBehaviour
 
         //이동
         Position = new Vector2(moveX, moveY);
+        PerformanceManager.StopTimer("MoverByTransform.MoveLinearByPosWithSpeed");
     }
     private void MoveLinearBySpeed()
     {
+        PerformanceManager.StartTimer("MoverByTransform.MoveLinearBySpeed");
         float deltaTime = Time.deltaTime;
         if (targetMoveTime > 0)
         {
@@ -192,5 +201,6 @@ public class MoverByTransform : MonoBehaviour
         temp.x += deltaTime * targetSpeed.x;
         temp.y += deltaTime * targetSpeed.y;
         Position = temp;
+        PerformanceManager.StopTimer("MoverByTransform.MoveLinearBySpeed");
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// 피해+부가효과를 나타내는 Damage를 입히기 위한 영역(게임 오브젝트)
@@ -45,24 +46,47 @@ public class DamageArea : CollisionChecker
     /// </summary>
     public int destroyHitCounter = -1;
 
-    //private List<HitBox> hitBoxList = new();//충돌 중인 히트박스 리스트
+    private List<HitBox> cachedList = new();
+    private bool isCached_HitBoxList = false;
     public List<HitBox> HitBoxList
     {
         get
         {
             PerformanceManager.StartTimer("DamageArea.HitBoxList.get");
-            List<HitBox> temp = new();
+
+            if (isCached_HitBoxList)
+            {
+                PerformanceManager.StopTimer("DamageArea.HitBoxList.get");
+                return cachedList;
+            }
+
+            cachedList.Clear();
             foreach (var collider in EnteredColliders)
             {
                 HitBox hitBox = collider.GetComponent<HitBox>();
                 if (hitBox is not null)
                 {
-                    temp.Add(hitBox);
+                    cachedList.Add(hitBox);
                 }
             }
+            isCached_HitBoxList = true;
             PerformanceManager.StopTimer("DamageArea.HitBoxList.get");
-            return temp;
+            return cachedList;
         }
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        base.OnTriggerEnter2D(collision);
+        isCached_HitBoxList = false;
+        Source.DamageEnter();
+    }
+
+    protected override void OnTriggerExit2D(Collider2D collision)
+    {
+        base.OnTriggerExit2D(collision);
+        isCached_HitBoxList = false;
+        Source.DamageExit();
     }
 
     /// <summary>

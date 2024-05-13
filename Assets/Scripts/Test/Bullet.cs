@@ -1,94 +1,75 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+/// <summary>
+/// 단순 직선 투사체
+/// </summary>
+public class Bullet : Projectile
 {
-    private Vector2 direction;//진행 방향
-    private float turnSpeed;
-    [SerializeField]
-    private float speed;
-    private BulletMoveType moveType;
-    private float lifeDistance = 0f;
-    private Vector3 originPos;
-
+    private Rigidbody2D rb;
 
     [SerializeField]
     private bool isNotSlowed = false;
-    public float damage = 1f;
 
-
-    private void Start()
+    public override void Initialize(Vector2 dir, float speed, float lifeTime = -1f, float lifeDistance = -1f)
     {
-        originPos = transform.position;
+        PerformanceManager.StartTimer("Bullet.Initialize");
+        base.Initialize(dir, speed, lifeTime, lifeDistance);
+
+        rb = GetComponent<Rigidbody2D>();
+        SetSpeed();
+        if (isNotSlowed)
+        {
+            GameManager.OnTimeScaleChanged += TimeScaleChanged;
+        }
+        PerformanceManager.StopTimer("Bullet.Initialize");
     }
 
-    public void Initialize(BulletMoveType moveType, Vector2 dir, float damage, float speed, float turnSpeed = 0, float lifeTime = 0f, float lifeDistance = 0f)
+    protected override void Update()
     {
-        this.moveType = moveType;
-        direction = dir;
-        this.speed = speed;
-        this.turnSpeed = turnSpeed;
-        this.damage = damage;
-        if (lifeTime > 0)
-        {
-            Destroy(lifeTime);
-        }
-        this.lifeDistance = lifeDistance;
-        originPos = transform.position;
+        PerformanceManager.StartTimer("Bullet.Update");
+        base.Update();
+
+        PerformanceManager.StopTimer("Bullet.Update");
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (lifeDistance > 0 && Vector3.Distance(originPos, transform.position) >= lifeDistance)
+        if (isNotSlowed)
         {
-            Destroy();
-            return;
-        }
-        if (direction == null)
-        {
-            return;
-        }
-        switch (moveType)
-        {
-            case BulletMoveType.straight:
-                transform.Translate(speed * Time.deltaTime * direction / (isNotSlowed ? Time.timeScale : 1));
-                break;
-            case BulletMoveType.curve:
-                transform.Translate(speed * Time.deltaTime * direction);
-                Quaternion quat = Quaternion.Euler(0, 0, turnSpeed * Time.deltaTime / (isNotSlowed ? Time.timeScale : 1));
-                direction = quat * direction;
-                break;
-            default:
-                break;
+            GameManager.OnTimeScaleChanged -= TimeScaleChanged;
         }
     }
 
-    private void Destroy(float lifeTime = -1)
+    /// <summary>
+    /// 시간 배속 바뀌었을 때 이벤트에서 실행하는 함수
+    /// </summary>
+    private void TimeScaleChanged(object sender, float timeScale)
     {
-        if (lifeTime>0)
+        SetSpeed();
+    }
+
+    /// <summary>
+    /// 속도 재설정
+    /// </summary>
+    private void SetSpeed()
+    {
+        if (isNotSlowed)
         {
-            StartCoroutine(DestroyDelay(lifeTime));
+            if (Time.timeScale == 0)
+            {
+                rb.velocity = Vector3.zero;
+            }
+            else
+            {
+                rb.velocity = direction * speed / Time.timeScale;
+            }
         }
         else
         {
-            var da = GetComponent<DamageArea>();
-            da.Destroy();
+            rb.velocity = direction * speed;
         }
-        
     }
-
-    private IEnumerator DestroyDelay(float lifeTime)
-    {
-        yield return new WaitForSeconds(lifeTime);
-        var da = GetComponent<DamageArea>();
-        da.Destroy();
-    }
-}
-
-public enum BulletMoveType
-{
-    straight,
-    curve,
 }

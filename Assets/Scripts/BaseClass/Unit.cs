@@ -64,6 +64,7 @@ public class Unit : MonoBehaviour, IMoveReceiver
     protected Dictionary<KeyCode, bool> keyStay = new();
     [SerializeField]
     protected bool isLookLeft = true;
+    public bool IsLookLeft => isLookLeft;
 
     protected virtual void Start()
     {
