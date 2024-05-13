@@ -2,23 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 일정 시간마다 특정 행위를 실행하는 걸 반복하는 상태
+/// </summary>
 public class TimedState : State
 {
-    protected float time;
-    private TickTimer timer;
+    protected TickTimer timer;
     public TimedState(StateMachine machine):base(machine)
     {
         unit = machine.Unit;
         this.machine = machine;
-        timer = new(time, autoReset: true);
+        timer = new(autoReset: true);
     }
-
-    private Act enterAct;
-    private Act exitAct;
 
     public override void Enter()
     {
-        enterAct?.Invoke();
         timer.Reset();
     }
 
@@ -26,13 +24,14 @@ public class TimedState : State
     {
         if (timer.Check())
         {
-
+            Main();
+            timer.Reset();
         }
     }
-
-    public override void Exit() 
+    
+    protected virtual void Main()
     {
-        exitAct?.Invoke();
+
     }
 }
 

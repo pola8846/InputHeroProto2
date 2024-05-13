@@ -27,12 +27,15 @@ public class TestEnemy_Boss_1 : Enemy
     [Header("입력용")]
     [SerializeField]
     private float wait_MaxTime;//대기 최대 시간
+    public float Wait_MaxTime => wait_MaxTime;
     [SerializeField]
     private float move_MinDist;//이동 최소 거리
     [SerializeField]
     private float move_MaxTime;//이동 최대 시간
+    public float Move_MaxTime => move_MaxTime;
     [SerializeField]
     private float meleeAttack1CheckDistance;//근접공격을 위해 멈출 거리
+    public float MeleeAttack1CheckDistance => meleeAttack1CheckDistance;
     [SerializeField]
     private CollisionChecker meleeAttack1AreaChecker;
 
@@ -185,7 +188,11 @@ public class TestEnemy_Boss_1 : Enemy
                 }
                 break;
             case State.Move:
-                if (isLookLeft == (GameManager.Player.transform.position.x > transform.position.x + meleeAttack1CheckDistance * (isLookLeft ? -1 : 1)))
+                if (IsPlayerInMeleeAttack1Area())
+                {
+                    SetState(State.MeleeAttack1_EWait);
+                }
+                else if (isLookLeft == (GameManager.Player.transform.position.x > transform.position.x + meleeAttack1CheckDistance * (isLookLeft ? -1 : 1)))
                 {
                     SetState(State.Wait);
                 }
@@ -323,10 +330,12 @@ public class TestEnemy_Boss_1 : Enemy
     private void SetState(State st)
     {
         PerformanceManager.StartTimer("TestEnemy_Boss_1.SetState");
-        ExitState(st);
+        //Debug.Log($"{state.ToString()} 퇴장");
+        ExitState(state);
         stateTime.Reset();
         state = st;
-        EnterState(st);
+        //Debug.Log($"{state.ToString()} 진입");
+        EnterState(state);
         PerformanceManager.StopTimer("TestEnemy_Boss_1.SetState");
     }
 
@@ -445,9 +454,8 @@ public class TestEnemy_Boss_1 : Enemy
     {
         switch (st)
         {
-            case State.Wait:
-                break;
             case State.Move:
+                Debug.Log(1);
                 StopMove();
                 break;
 
@@ -565,9 +573,82 @@ public class TestEnemy_Boss_1 : Enemy
                 return true;
             }
         }
-
         return false;
     }
+
+    public Type ChoiceAttackState()
+    {
+        if (lastAttackTime.Check(anyAttackCooltime))
+        {
+            List<Type> states = new();
+
+            if (IsPlayerInMeleeAttack1Area())
+            {
+                //근거리
+                states.Add(typeof(TestEnemy_Boss_1_AtkM1));
+            }
+            else
+            {
+                //원거리
+                states.Add(typeof(TestEnemy_Boss_1_AtkR1));
+            }
+
+            //발판 이동 후 부채꼴 탄
+            if (time_BAttack2.Check(barrageAttack1Cooltime))
+            {
+                states.Add(typeof(TestEnemy_Boss_1_AtkB1));
+            }
+
+            //전방위 탄
+            if (time_BAttack.Check(barrageAttack2Cooltime))
+            {
+                states.Add(typeof(TestEnemy_Boss_1_AtkB2));
+            }
+
+            //서있는 발판 광역
+            if (time_AreaAttack.Check(areaAttack1Cooltime))
+            {
+                if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1 ||
+                    collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1 ||
+                    collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
+                {
+                    states.Add(typeof(TestEnemy_Boss_1_AtkA1));
+                }
+            }
+
+
+
+            if (states.Count >= 1)
+            {
+                int rand = UnityEngine.Random.Range(0, states.Count);
+                var result = states[rand];
+
+                if (result== typeof(TestEnemy_Boss_1_AtkB1))
+                {
+                    targetPlatform = UnityEngine.Random.Range(0, 2) == 0 ? platformL : platformR;
+                }
+                else if (result == typeof(TestEnemy_Boss_1_AtkA1))
+                {
+                    if (collisionCheckerD.GetListOfClass<PlayerUnit>().Count >= 1)
+                    {
+                        targetPlatform = platformD;
+                    }
+                    else if (collisionCheckerL.GetListOfClass<PlayerUnit>().Count >= 1)
+                    {
+                        targetPlatform = platformL;
+                    }
+                    else if (collisionCheckerR.GetListOfClass<PlayerUnit>().Count >= 1)
+                    {
+                        targetPlatform = platformR;
+                    }
+                }
+                return result;
+            }
+        }
+        return null;
+    }
+
+
 
     //이동
     public void MoveToPlayer()
@@ -578,7 +659,6 @@ public class TestEnemy_Boss_1 : Enemy
             Turn();
         }
 
-        //Vector2 targetPos = (Vector2)transform.position + move_MinDist * (isLookLeft ? Vector2.left : Vector2.right);
         float moveX = Stats.moveSpeed * (isLookLeft ? -1 : 1);
         moverV.SetVelocityX(moveX);
     }
@@ -609,15 +689,15 @@ public class TestEnemy_Boss_1 : Enemy
     /// </summary>
     private bool IsPlayerInMeleeAttack1Area()
     {
-        var tempList = meleeAttack1AreaChecker.GetListOfClass<PlayerUnit>();
-        if (tempList.Count >= 1)
+        var tempList = meleeAttack1AreaChecker.GetListOfClass<HitBox>();
+        foreach (HitBox hitBox in tempList)
         {
-            return true;
+            if (hitBox.Unit == GameManager.Player)
+            {
+                return true;
+            }
         }
-        else
-        {
             return false;
-        }
     }
 
     private enum State

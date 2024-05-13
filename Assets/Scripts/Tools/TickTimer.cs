@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 타이머. 이전 Reset으로부터 지난 미리 등록했던 시간(초) 혹은 원하는 시간(초)이 지났는지 검사할 수 있음
+/// </summary>
 public class TickTimer
 {
-    private float time;
+    public float time;
     private float checkTime;
     private bool autoReset;
 
