@@ -1,28 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
-public class PlayerUnit : Unit, IGroundChecker
+[RequireComponent(typeof(Mover))]
+public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 {
     [Header("조작키")]
-    [SerializeField]
-    private KeyCode MoveL = KeyCode.A;
-    [SerializeField]
-    private KeyCode MoveR = KeyCode.D;
-    [SerializeField]
-    private KeyCode MoveU = KeyCode.W;
-    [SerializeField]
-    private KeyCode MoveD = KeyCode.S;
-    [SerializeField]
-    private KeyCode Jump = KeyCode.Space;
-    [SerializeField]
-    private KeyCode Attack = KeyCode.Z;
-    [SerializeField]
-    private KeyCode Attack2 = KeyCode.Mouse0;
-    [SerializeField]
-    private KeyCode Dash = KeyCode.LeftShift;
-    [SerializeField]
-    private KeyCode Slow = KeyCode.LeftShift;
+    //[SerializeField]
+    //private KeyCode MoveL = KeyCode.A;
+    //[SerializeField]
+    //private KeyCode MoveR = KeyCode.D;
+    //[SerializeField]
+    //private KeyCode MoveU = KeyCode.W;
+    //[SerializeField]
+    //private KeyCode MoveD = KeyCode.S;
+    //[SerializeField]
+    //private KeyCode Jump = KeyCode.Space;
+    //[SerializeField]
+    //private KeyCode Attack = KeyCode.Z;
+    //[SerializeField]
+    //private KeyCode Attack2 = KeyCode.Mouse0;
+    //[SerializeField]
+    //private KeyCode Dash = KeyCode.LeftShift;
+    //[SerializeField]
+    //private KeyCode Slow = KeyCode.LeftShift;
+    protected Dictionary<InputType, bool> keyStay = new();
 
     [Header("기타")]
     [SerializeField]
@@ -59,7 +62,6 @@ public class PlayerUnit : Unit, IGroundChecker
     [SerializeField]
     private GameObject targetter;
 
-    private Mover mover;
     [SerializeField]
     private BulletShooter shooter;
     [SerializeField]
@@ -68,14 +70,22 @@ public class PlayerUnit : Unit, IGroundChecker
     private bool isDownJumping = false;
     private PlatformEffector2D effector2D;
 
+    [SerializeField]
+    private List<PlayerSkill> skillList;
+
 
     protected override void Start()
     {
         base.Start();
-        mover = GetComponent<Mover>();
         effector2D = GetComponent<PlatformEffector2D>();
         groundCheckerCollider = groundChecker?.GetComponent<Collider2D>();
         GameManager.SetPlayer(this);
+        skillList = new List<PlayerSkill>
+        {
+            new PSkill_TestAreaAtk(),
+            new PSkill_TestDash(),
+            new PSkill_TestRangeAtk()
+        };
     }
 
     protected override void Update()
@@ -85,17 +95,17 @@ public class PlayerUnit : Unit, IGroundChecker
         JumpCheck();
         if (canMove)
         {
-            if (keyStay.ContainsKey(MoveL) && keyStay[MoveL])
+            if (IsKeyPushing(InputType.MoveLeft))
             {
-                mover.SetVelocityX(Mathf.Max(0, Speed) * -1);
+                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);
                 if (!isLookLeft)
                 {
                     Turn();
                 }
             }
-            else if (keyStay.ContainsKey(MoveR) && keyStay[MoveR])
+            else if (IsKeyPushing(InputType.MoveRight))
             {
-                mover.SetVelocityX(Mathf.Max(0, Speed));
+                MoverV.SetVelocityX(Mathf.Max(0, Speed));
                 if (isLookLeft)
                 {
                     Turn();
@@ -103,78 +113,109 @@ public class PlayerUnit : Unit, IGroundChecker
             }
             else
             {
-                mover.StopMoveX();
+                MoverV.StopMoveX();
             }
         }
-        if (keyStay.ContainsKey(Attack2) && keyStay[Attack2] && canShoot)
+        if (IsKeyPushing(InputType.Shoot) && canShoot)
         {
             StartCoroutine(DoShoot());
         }
 
-        animator.SetFloat("MoveSpeedRate", Mathf.Abs(mover.Velocity.x) / stats.moveSpeed);
+        animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
         PerformanceManager.StopTimer("PlayerUnit.Update");
     }
 
 
-    public override void KeyDown(KeyCode keyCode)
+    public void KeyDown(InputType inputType)
     {
-        base.KeyDown(keyCode);
+        //입력 검사
+        if (keyStay.ContainsKey(inputType))
+        {
+            keyStay[inputType] = true;
+        }
+        else
+        {
+            keyStay.Add(inputType, true);
+        }
 
-        if (keyCode == Dash)
+        //대시
+        if (inputType == InputType.Dash)
         {
             StartCoroutine(DoDash());
             return;
         }
 
-        if (!isDownJumping && ((keyCode == Jump && IsKeyPushing(MoveD)) || (keyCode == MoveD && IsKeyPushing(Jump))))
+        //점프
+        if (!isDownJumping && ((inputType == InputType.Jump && IsKeyPushing(InputType.MoveDown)) || (inputType == InputType .MoveDown&& IsKeyPushing(InputType.Jump))))
         {
             SetHalfDownJump(true);
         }
-        else if (keyCode == Jump)
+        else if (inputType == InputType.Jump)
         {
             if (canJumpCounter > 0 && canMove)
             {
-                canJumpCounter--;
-                mover.SetVelocityY(0, true);
-                mover.AddForceY(JumpPower);
-                isJumping = true;
-                animator.SetBool("IsJumping", true);
+                Jump();
             }
         }
 
-        if (GroundCheck() == false && keyStay.ContainsKey(MoveD) && keyStay[MoveD])
+        //급강하
+        if (GroundCheck() == false && IsKeyPushing(InputType.MoveDown))
         {
             //급강하
-            mover.SetVelocityY(-mover.MaxSpeedY, true);
+            MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
         }
 
+        //공격
         if (canMove && !animator.GetBool("IsJumping"))
         {
-            if (keyCode == Attack)
+            if (inputType == InputType.MeleeAttack)
             {
                 animator.Play("mixamo_com");
                 canMove = false;
             }
         }
-        if (keyCode == Attack2 && canShoot)
+        if (inputType == InputType .Shoot&& canShoot)
         {
             StartCoroutine(DoShoot());
         }
-        if (keyCode == Slow && isSlowed == false)
+
+        //슬로우
+        if (inputType == InputType.Slow && isSlowed == false)
         {
             StartCoroutine(DoSlow());
         }
     }
 
-    public override void KeyUp(KeyCode keyCode)
+
+    public void KeyUp(InputType inputType)
     {
-        base.KeyUp(keyCode);
-        if (isDownJumping && (keyCode == Jump || keyCode == MoveD))
+        //입력 검사
+        if (keyStay.ContainsKey(inputType))
+        {
+            keyStay[inputType] = false;
+        }
+        else
+        {
+            keyStay.Add(inputType, false);
+        }
+
+        //점프
+        if (isDownJumping && (inputType == InputType.Jump || inputType == InputType.MoveDown))
         {
             SetHalfDownJump(false);
         }
     }
 
+    public void KeyReset()
+    {
+        foreach (var item in keyStay)
+        {
+            KeyUp(item.Key);
+        }
+        keyStay.Clear();
+    }
+
+    //마우스 방향 표시기 회전(임시)
     private void RotateTargetter()
     {
         PerformanceManager.StartTimer("PlayerUnit.RotateTargetter");
@@ -192,6 +233,7 @@ public class PlayerUnit : Unit, IGroundChecker
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
 
+    //마우스 방향으로 발사(임시)
     private void ShootToMouse()
     {
         PerformanceManager.StartTimer("PlayerUnit.ShootToMouse");
@@ -212,14 +254,15 @@ public class PlayerUnit : Unit, IGroundChecker
         canMove = true;
     }
 
+    //점프 가능 체크
     private void JumpCheck()
     {
         PerformanceManager.StartTimer("PlayerUnit.JumpCheck");
-        if (isJumping && mover.Velocity.y <= -0.01f)
+        if (isJumping && MoverV.Velocity.y <= -0.01f)
         {
             isJumping = false;
         }
-        if (GroundCheck() && mover.Velocity.y <= 0.01f && !isJumping)
+        if (GroundCheck() && MoverV.Velocity.y <= 0.01f && !isJumping)
         {
             canJumpCounter = stats.jumpCount;
             animator.SetBool("IsJumping", false);   
@@ -231,6 +274,7 @@ public class PlayerUnit : Unit, IGroundChecker
         PerformanceManager.StopTimer("PlayerUnit.JumpCheck");
     }
 
+    //땅 체크
     public bool GroundCheck()
     {
         PerformanceManager.StartTimer("PlayerUnit.GroundCheck");
@@ -252,6 +296,14 @@ public class PlayerUnit : Unit, IGroundChecker
         return false;
     }
 
+    //키가 눌리고 있는지
+    private bool IsKeyPushing(InputType inputType)
+    {
+        return keyStay.ContainsKey(inputType) && keyStay[inputType];
+    }
+
+
+    //아래 점프
     private void SetHalfDownJump(bool isDownJumping)
     {
         int layerIndex = LayerMask.NameToLayer(halfGroundLayer);
@@ -266,24 +318,38 @@ public class PlayerUnit : Unit, IGroundChecker
         }
     }
 
+    //점프
+    private void Jump()
+    {
+        canJumpCounter--;
+        MoverV.SetVelocityY(0, true);
+        MoverV.AddForceY(JumpPower);
+        isJumping = true;
+        animator.SetBool("IsJumping", true);
+    }
+    //대시
     private IEnumerator DoDash()
     {
         canMove = false;
         float speed = Mathf.Max(0,Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
-        mover.SetVelocityX(speed);
+        MoverV.SetVelocityX(speed);
 
         yield return new WaitForSeconds(dashTime);
         canMove = true;
     }
 
+    //슬로우
     private IEnumerator DoSlow()
     {
         isSlowed = true;
         GameManager.SetTimeScale(slowRate);
         yield return new WaitForSecondsRealtime(slowTime);
         GameManager.SetTimeScale(1);
+        ComboManager.Instance.FindCombos(skillList);
         isSlowed = false;
     }
+
+    //원거리 평타
     private IEnumerator DoShoot()
     {
         canShoot = false;

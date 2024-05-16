@@ -281,7 +281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0fd73746123df4cb045bf4added486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMoveReceiver: {fileID: 4414254797729762089}
 --- !u!4 &351206613
 Transform:
   m_ObjectHideFlags: 0
@@ -579,7 +578,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.6444445, y: 2.088889, z: 0}
+  m_LocalScale: {x: 3.9593906, y: 2.1624365, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2044855567}
@@ -1008,14 +1007,14 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: -0.0046948357
     width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 2.7361112
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1117,12 +1116,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &963194232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2255,6 +2254,7 @@ MonoBehaviour:
   collisionCheckerR: {fileID: 1844010298}
   platformD: {fileID: 345223252}
   collisionCheckerD: {fileID: 1143069777}
+  targetPlatform: {fileID: 0}
 --- !u!114 &1202882643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2321,6 +2321,7 @@ GameObject:
   - component: {fileID: 1224023495}
   - component: {fileID: 1224023497}
   - component: {fileID: 1224023498}
+  - component: {fileID: 1224023499}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2383,6 +2384,39 @@ MonoBehaviour:
     _serializedList: []
   count:
     _serializedList: []
+--- !u!114 &1224023499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224023493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e602016f95d785949972d8ff81ee7a4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyDict:
+    _serializedList:
+    - Key: 0
+      Value: 97
+    - Key: 1
+      Value: 100
+    - Key: 2
+      Value: 119
+    - Key: 3
+      Value: 115
+    - Key: 4
+      Value: 32
+    - Key: 5
+      Value: 304
+    - Key: 6
+      Value: 323
+    - Key: 7
+      Value: 116
+    - Key: 8
+      Value: 122
+  mMoveReceiver: {fileID: 4414254797729762089}
 --- !u!1 &1408658485
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,8 +2572,8 @@ RenderTexture:
   m_DownscaleFallback: 0
   m_IsAlphaChannelOptional: 0
   serializedVersion: 5
-  m_Width: 656
-  m_Height: 376
+  m_Width: 390
+  m_Height: 213
   m_AntiAliasing: 1
   m_MipCount: -1
   m_DepthStencilFormat: 90
@@ -3471,7 +3505,7 @@ MonoBehaviour:
   - {fileID: 963194233}
   storedCamRotation: {x: 0, y: 0, z: 0, w: 0}
   storedPixelMultiplier: 0
-  origOrthoSize: 5
+  origOrthoSize: 2.7361112
 --- !u!4 &2044855567
 Transform:
   m_ObjectHideFlags: 0
@@ -3482,7 +3516,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 999}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 2.7361112, y: 2.7361112, z: 2.7361112}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 536146905}
@@ -5142,9 +5176,9 @@ MonoBehaviour:
   graphicsFormat: 8
   pixelMultiplier: 3
   ditherRepeatSize: 8
-  lastScreenSize: {x: 1920, y: 1080}
-  screenSize: {x: 1920, y: 1080}
-  renderTextureSize: {x: 656, y: 376}
+  lastScreenSize: {x: 1124, y: 591}
+  screenSize: {x: 1124, y: 591}
+  renderTextureSize: {x: 390, y: 213}
   screenHeight: 1080
   uPixelatorCam: {fileID: 4420440962801751041}
   autoDetectCameras: 0
@@ -5888,15 +5922,6 @@ MonoBehaviour:
     cooldownRate: 0
     jumpCount: 2
   isLookLeft: 1
-  MoveL: 97
-  MoveR: 100
-  MoveU: 119
-  MoveD: 115
-  Jump: 32
-  Attack: 122
-  Attack2: 323
-  Dash: 304
-  Slow: 116
   animator: {fileID: 8619681426858925324}
   dashSpeedRate: 2.53
   dashTime: 0.4
@@ -5946,7 +5971,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 2.7361112
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -6554,12 +6579,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &5685095486634151134
 GameObject:
   m_ObjectHideFlags: 0

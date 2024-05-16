@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Mover))]
 public class TestEnemy_Gr_M_1 : Enemy
 {
     [SerializeField]
@@ -22,14 +23,11 @@ public class TestEnemy_Gr_M_1 : Enemy
     private Renderer renderer;
     private Color originColor;
 
-    private Mover mover;
-
     public GameObject atk;
     private GameObject atkGO;
     protected override void Start()
     {
         base.Start();
-        mover = GetComponent<Mover>();
         renderer = GetComponent<Renderer>();
         originColor = renderer.material.color;
         timer1 = Time.time;
@@ -87,11 +85,11 @@ public class TestEnemy_Gr_M_1 : Enemy
                         Turn();
                     }
 
-                    mover.SetVelocityX(movementX);
+                    MoverV.SetVelocityX(movementX);
 
                     if (AttackRangeCheck())//공격 사거리 내에 오면 스테이트 1로
                     {
-                        mover.StopMoveX();
+                        MoverV.StopMoveX();
                         SetState(1);
                         timer1 = Time.time;
                         SetColor(Color.yellow);
@@ -99,7 +97,7 @@ public class TestEnemy_Gr_M_1 : Enemy
                 }
                 else
                 {
-                    mover.StopMoveX();
+                    MoverV.StopMoveX();
                 }
                 break;
             case 1://플레이어가 공격 사거리 내에 있을 때
@@ -107,7 +105,7 @@ public class TestEnemy_Gr_M_1 : Enemy
             case 2://공격 중일 때
                 {
                     float movementX = Mathf.Max(0, stats.moveSpeed * attackMoveSpeedRate) * (isLookLeft ? -1 : 1);
-                    mover.SetVelocityX(movementX);
+                    MoverV.SetVelocityX(movementX);
                 }
                 break;
             case 3://공격 쿨타임일 때
@@ -132,7 +130,7 @@ public class TestEnemy_Gr_M_1 : Enemy
                 break;
             case 2:
                 timer3 = Time.time;
-                mover.StopMoveX();
+                MoverV.StopMoveX();
                 Destroy(atkGO);
                 break;
             case 3:

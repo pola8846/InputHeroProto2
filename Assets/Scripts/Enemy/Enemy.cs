@@ -12,7 +12,8 @@ public class Enemy : Unit
 
     protected bool FindPlayer()
     {
-        return Vector3.Distance(transform.position, GameManager.Player.transform.position) <= findDistance;
+        bool result = GameTools.IsInDistance(transform.position, GameManager.Player.transform.position, findDistance);
+        return result;
     }
 }
 
@@ -66,7 +67,7 @@ public struct AttackState
     {
         get
         {
-            string result = "";
+            string result;
 
             switch (nowState)
             {

@@ -8,7 +8,7 @@ using UnityEngine;
 /// 유닛 공용으로 사용하는 부모 클래스
 /// 능력치 및 대미지 적용 등을 관리
 /// </summary>
-public class Unit : MonoBehaviour, IMoveReceiver
+public class Unit : MonoBehaviour
 {
     /// <summary>
     /// 유닛 아이디
@@ -61,7 +61,12 @@ public class Unit : MonoBehaviour, IMoveReceiver
         }
     }
 
-    protected Dictionary<KeyCode, bool> keyStay = new();
+
+    protected Mover moverV;
+    public Mover MoverV => moverV;
+    protected MoverByTransform moverT;
+    public MoverByTransform MoverT => moverT;
+
     [SerializeField]
     protected bool isLookLeft = true;
     public bool IsLookLeft => isLookLeft;
@@ -69,6 +74,8 @@ public class Unit : MonoBehaviour, IMoveReceiver
     protected virtual void Start()
     {
         unitID = UnitManager.Instance.EnrollUnit(this);
+        moverV = gameObject.GetComponent<Mover>();
+        moverT = gameObject.GetComponent<MoverByTransform>();
     }
 
     protected virtual void Update()
@@ -107,42 +114,6 @@ public class Unit : MonoBehaviour, IMoveReceiver
         return false;
     }
 
-    public virtual void KeyDown(KeyCode keyCode)
-    {
-        if (keyStay.ContainsKey(keyCode))
-        {
-            keyStay[keyCode] = true;
-        }
-        else
-        {
-            keyStay.Add(keyCode, true);
-        }
-    }
-
-    public virtual void KeyUp(KeyCode keyCode)
-    {
-        if (keyStay.ContainsKey(keyCode))
-        {
-            keyStay[keyCode] = false;
-        }
-        else
-        {
-            keyStay.Add(keyCode, false);
-        }
-    }
-    public bool IsKeyPushing(KeyCode keyCode)
-    {
-        return keyStay.ContainsKey(keyCode) && keyStay[keyCode];
-    }
-
-    public void KeyReset(KeyCode keyCode)
-    {
-        foreach (var item in keyStay)
-        {
-            KeyUp(item.Key);
-        }
-        keyStay.Clear();
-    }
 
     public void Turn()
     {

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PSkill_TestDash : PlayerSkill
+public class PSkill_TestRangeAtk : PlayerSkill
 {
-    public PSkill_TestDash()
+    public PSkill_TestRangeAtk()
     {
         neededCombo = new();
         neededCombo.Add(InputType.Shoot);
-        neededCombo.Add(InputType.MoveDown);
+        neededCombo.Add(InputType.MoveRight);
     }
 }

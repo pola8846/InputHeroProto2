@@ -12,16 +12,8 @@ public class TestEnemy_Boss_1 : Enemy
     [SerializeField]
     private State state;
 
-    private Mover moverV;
-    public Mover MoverV => moverV;
-    private MoverByTransform moverT;
-    public MoverByTransform MoverT => moverT;
-
-    private Rigidbody2D rb;
     private BulletShooter shooter;
     public BulletShooter Shooter => shooter;
-
-    private float originGravity;
 
     //입력용 수치
     [Header("입력용")]
@@ -143,15 +135,9 @@ public class TestEnemy_Boss_1 : Enemy
     protected override void Start()
     {
         base.Start();
-        moverV = gameObject.GetComponent<Mover>();
-        moverT = gameObject.GetComponent<MoverByTransform>();
         renderer = gameObject.GetComponent<Renderer>();
-        rb = gameObject.GetComponent<Rigidbody2D>();
         shooter = gameObject.GetComponent<BulletShooter>();
-        originGravity = rb.gravityScale;
         originColor = renderer.material.color;
-
-
 
         lastAttackTime = new();
         stateTime = new();//현 상태에 진입한 시간
@@ -455,7 +441,6 @@ public class TestEnemy_Boss_1 : Enemy
         switch (st)
         {
             case State.Move:
-                Debug.Log(1);
                 StopMove();
                 break;
 
@@ -666,7 +651,6 @@ public class TestEnemy_Boss_1 : Enemy
     {
         moverT.StopMove();
         moverV.StopMove();
-        rb.gravityScale = originGravity;
     }
     public void ShootToPlayer(float angleRange = 0f)
     {

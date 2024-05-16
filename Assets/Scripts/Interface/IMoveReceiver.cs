@@ -5,7 +5,7 @@ using UnityEngine;
 [SerializeField]
 public interface IMoveReceiver
 {
-    public void KeyDown(KeyCode keyCode);
-    public void KeyUp(KeyCode keyCode);
-    public void KeyReset(KeyCode keyCode);
+    public void KeyDown(InputType inputType);
+    public void KeyUp(InputType inputType);
+    public void KeyReset();
 }
