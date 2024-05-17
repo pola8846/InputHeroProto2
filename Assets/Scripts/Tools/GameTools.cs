@@ -91,7 +91,7 @@ public class GameTools
 
         for (int i = 0; i < temp.Length; i++)
         {
-            if (temp[i].Equals(array[i]))
+            if (!temp[i].Equals(array[i]))
             {
                 return false;
             }
@@ -124,7 +124,7 @@ public class GameTools
 
         for (int i = 0; i < arrayA.Length; i++)
         {
-            if (arrayA[i].Equals(arrayB[i]))
+            if (!arrayA[i].Equals(arrayB[i]))
             {
                 return false;
             }

@@ -11,4 +11,17 @@ public class PSkill_TestRangeAtk : PlayerSkill
         neededCombo.Add(InputType.MoveUp);
         neededCombo.Add(InputType.Shoot);
     }
+    public override void Invoke()
+    {
+        base.Invoke();
+        Player.StartCoroutine(enumerator());
+    }
+
+    private IEnumerator enumerator()
+    {
+        yield return null;
+        Debug.Log("PSkill_TestRangeAtk ½ÇÇà");
+        yield return null;
+        End();
+    }
 }

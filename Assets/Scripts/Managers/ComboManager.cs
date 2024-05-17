@@ -45,6 +45,7 @@ public class ComboManager : MonoBehaviour
 
         if (ComboInputs.Contains(input))
         {
+            Debug.Log($"입력: {input}");
             Log.Add(input);
         }
 
@@ -65,7 +66,7 @@ public class ComboManager : MonoBehaviour
                 Log.CopyTo(i - j, temp, 0, j + 1);
 
                 //일치하는 스킬이 있는지 탐색
-                foreach (PlayerSkill skill in FindedSkills)
+                foreach (PlayerSkill skill in skillList)
                 {
                     if (GameTools.CompareEnumList(skill.NeededCombo, temp))
                     {
@@ -80,12 +81,18 @@ public class ComboManager : MonoBehaviour
 
     public static PlayerSkill GetFindedSkill()
     {
-        return null;
+        if (FindedSkills.Count==0)
+        {
+            return null;
+        }
+        else
+        {
+            return FindedSkills.Dequeue();
+        }
     }
 
     public static void Reset()
     {
-        ComboInputs.Clear();
         Log.Clear();
         FindedSkills.Clear();
     }

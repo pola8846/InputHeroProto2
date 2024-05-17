@@ -134,9 +134,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             keyStay.Add(inputType, true);
         }
 
-        if (TimeManager.IsSlowed)
+        if (TimeManager.IsSlowed && !TimeManager.IsUsingSkills)
         {
-
+            ComboManager.InputLog(inputType);
         }
 
         //대시
@@ -230,6 +230,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //거리 구하고 적용
         Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
+        Debug.Log(dir.magnitude);
         targetter.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
