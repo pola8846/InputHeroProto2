@@ -14,15 +14,6 @@ public class GameManager : MonoBehaviour
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
-    private const int framePerSec = 50;
-
-    private static event EventHandler<float> onTimeScaleChanged;
-    public static event EventHandler<float> OnTimeScaleChanged
-    {
-        add { onTimeScaleChanged += value;}
-        remove { onTimeScaleChanged -= value;}
-    }
-
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -35,20 +26,9 @@ public class GameManager : MonoBehaviour
             instance = this;
     }
 
-    private void Start()
-    {
-        Time.fixedDeltaTime = Time.timeScale / framePerSec;
-    }
-
     public static void SetPlayer(PlayerUnit player)
     {
         GameManager.player = player;
     }
 
-    public static void SetTimeScale(float scale)
-    {
-        Time.timeScale = scale;
-        Time.fixedDeltaTime = Time.timeScale / framePerSec;
-        onTimeScaleChanged?.Invoke(instance, Time.timeScale);
-    }
 }

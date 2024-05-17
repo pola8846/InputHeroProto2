@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -102,7 +101,7 @@ public class GameTools
 
     public static bool CompareList<T>(T[] arrayA, T[] arrayB) where T : class
     {
-        if (arrayA.Length!=arrayB.Length)
+        if (arrayA.Length != arrayB.Length)
         {
             return false;
         }

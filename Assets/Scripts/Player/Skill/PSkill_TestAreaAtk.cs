@@ -8,6 +8,7 @@ public class PSkill_TestAreaAtk : PlayerSkill
     {
         neededCombo = new();
         neededCombo.Add(InputType.Shoot);
-        neededCombo.Add(InputType.MoveUp);
+        neededCombo.Add(InputType.Shoot);
+        neededCombo.Add(InputType.MoveDown);
     }
 }

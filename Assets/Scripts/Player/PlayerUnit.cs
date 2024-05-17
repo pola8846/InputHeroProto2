@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 [RequireComponent(typeof(Mover))]
 public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
@@ -33,18 +32,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private int canJumpCounter;
     private bool isJumping = false;
     private bool canMove = true;
-    [SerializeField, Range(1f,5f)]
+    [SerializeField, Range(1f, 5f)]
     private float dashSpeedRate = 2f;
     [SerializeField]
     private float dashTime = 1f;
     private bool isDashing = false;
-    [SerializeField]
-    private float slowRate = .5f;
-    [SerializeField]
-    private float slowTime = 4f;
-
-    private bool isSlowed = false;
-
 
     [SerializeField]
     protected Transform groundCheckerLT;
@@ -72,13 +64,17 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     [SerializeField]
     private List<PlayerSkill> skillList;
+    public List<PlayerSkill> SkillList => skillList;
 
 
     protected override void Start()
     {
         base.Start();
         effector2D = GetComponent<PlatformEffector2D>();
-        groundCheckerCollider = groundChecker?.GetComponent<Collider2D>();
+        if (groundChecker != null)
+        {
+            groundCheckerCollider = groundChecker.GetComponent<Collider2D>();
+        }
         GameManager.SetPlayer(this);
         skillList = new List<PlayerSkill>
         {
@@ -138,6 +134,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             keyStay.Add(inputType, true);
         }
 
+        if (TimeManager.IsSlowed)
+        {
+
+        }
+
         //대시
         if (inputType == InputType.Dash)
         {
@@ -146,7 +147,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //점프
-        if (!isDownJumping && ((inputType == InputType.Jump && IsKeyPushing(InputType.MoveDown)) || (inputType == InputType .MoveDown&& IsKeyPushing(InputType.Jump))))
+        if (!isDownJumping && ((inputType == InputType.Jump && IsKeyPushing(InputType.MoveDown)) || (inputType == InputType.MoveDown && IsKeyPushing(InputType.Jump))))
         {
             SetHalfDownJump(true);
         }
@@ -174,15 +175,15 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 canMove = false;
             }
         }
-        if (inputType == InputType .Shoot&& canShoot)
+        if (inputType == InputType.Shoot && canShoot)
         {
             StartCoroutine(DoShoot());
         }
 
         //슬로우
-        if (inputType == InputType.Slow && isSlowed == false)
+        if (inputType == InputType.Slow && TimeManager.IsSlowed == false)
         {
-            StartCoroutine(DoSlow());
+            TimeManager.StartSlow();
         }
     }
 
@@ -228,7 +229,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         worldMousePos.z = 0;
 
         //거리 구하고 적용
-        Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up*.5f)).normalized * 2;
+        Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
         targetter.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
@@ -265,7 +266,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         if (GroundCheck() && MoverV.Velocity.y <= 0.01f && !isJumping)
         {
             canJumpCounter = stats.jumpCount;
-            animator.SetBool("IsJumping", false);   
+            animator.SetBool("IsJumping", false);
         }
         else if (!GroundCheck() && canJumpCounter == stats.jumpCount)
         {
@@ -279,7 +280,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         PerformanceManager.StartTimer("PlayerUnit.GroundCheck");
 
-        if (groundChecker is null)
+        if (groundChecker == null)
         {
             PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
             return false;
@@ -310,11 +311,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         this.isDownJumping = isDownJumping;
         if (isDownJumping)
         {
-            effector2D.colliderMask &= ~(1<<layerIndex);
+            effector2D.colliderMask &= ~(1 << layerIndex);
         }
         else
         {
-            effector2D.colliderMask |= (1<<layerIndex);
+            effector2D.colliderMask |= (1 << layerIndex);
         }
     }
 
@@ -331,23 +332,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private IEnumerator DoDash()
     {
         canMove = false;
-        float speed = Mathf.Max(0,Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
+        float speed = Mathf.Max(0, Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
         MoverV.SetVelocityX(speed);
 
         yield return new WaitForSeconds(dashTime);
         canMove = true;
     }
 
-    //슬로우
-    private IEnumerator DoSlow()
-    {
-        isSlowed = true;
-        GameManager.SetTimeScale(slowRate);
-        yield return new WaitForSecondsRealtime(slowTime);
-        GameManager.SetTimeScale(1);
-        ComboManager.Instance.FindCombos(skillList);
-        isSlowed = false;
-    }
 
     //원거리 평타
     private IEnumerator DoShoot()

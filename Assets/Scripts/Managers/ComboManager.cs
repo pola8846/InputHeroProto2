@@ -1,26 +1,32 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class ComboManager
+public class ComboManager : MonoBehaviour
 {
     //싱글톤
     private static ComboManager instance;
-    public static ComboManager Instance
+    public static ComboManager Instance => instance;
+
+    private void Awake()
     {
-        get
+        if (instance is null)
         {
-            if (instance == null)
-            {
-                instance = new ComboManager();
-            }
-            return instance;
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
         }
     }
 
     [SerializeField]
     private List<InputType> comboInputs = new();
+    private static List<InputType> ComboInputs => instance.comboInputs;
     private List<InputType> log = new();
+    private static List<InputType> Log => instance.log;
     private Queue<PlayerSkill> findedSkills = new();
+    private static Queue<PlayerSkill> FindedSkills => instance.findedSkills;
 
     [SerializeField, Range(1, 12)]
     private int maxCombo;
@@ -30,25 +36,25 @@ public class ComboManager
     /// </summary>
     /// <param name="input">입력한 키</param>
     /// <returns>최대치까지 찼는가?</returns>
-    public bool InputLog(InputType input)
+    public static bool InputLog(InputType input)
     {
-        if (log.Count >= maxCombo)
+        if (Log.Count >= instance.maxCombo)
         {
             return true;
         }
 
-        if (comboInputs.Contains(input))
+        if (ComboInputs.Contains(input))
         {
-            log.Add(input);
+            Log.Add(input);
         }
 
-        return log.Count >= maxCombo;
+        return Log.Count >= instance.maxCombo;
     }
 
-    public void FindCombos(List<PlayerSkill> skillList)
+    public static void FindCombos(List<PlayerSkill> skillList)
     {
         //로그 전체를 돌며 콤보를 찾는다
-        for (int i = 0; i < log.Count; i++)
+        for (int i = 0; i < Log.Count; i++)
         {
             for (int j = 0; j < i + 1; j++)
             {
@@ -56,26 +62,31 @@ public class ComboManager
 
                 //배열 복사
                 InputType[] temp = new InputType[j + 1];
-                log.CopyTo(i - j, temp, 0, j + 1);
+                Log.CopyTo(i - j, temp, 0, j + 1);
 
                 //일치하는 스킬이 있는지 탐색
-                foreach (PlayerSkill skill in findedSkills)
+                foreach (PlayerSkill skill in FindedSkills)
                 {
                     if (GameTools.CompareEnumList(skill.NeededCombo, temp))
                     {
-                        findedSkills.Enqueue(skill);
+                        FindedSkills.Enqueue(skill);
                     }
                 }
             }
 
         }
-        log.Clear();
+        Log.Clear();
     }
 
-    public void Reset()
+    public static PlayerSkill GetFindedSkill()
     {
-        comboInputs.Clear();
-        log.Clear();
-        findedSkills.Clear();
+        return null;
+    }
+
+    public static void Reset()
+    {
+        ComboInputs.Clear();
+        Log.Clear();
+        FindedSkills.Clear();
     }
 }

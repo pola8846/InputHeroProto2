@@ -22,7 +22,7 @@ public class Bullet : Projectile
         SetSpeed();
         if (isNotSlowed)
         {
-            GameManager.OnTimeScaleChanged += TimeScaleChanged;
+            TimeManager.OnTimeScaleChanged += TimeScaleChanged;
         }
         PerformanceManager.StopTimer("Bullet.Initialize");
     }
@@ -39,7 +39,7 @@ public class Bullet : Projectile
     {
         if (isNotSlowed)
         {
-            GameManager.OnTimeScaleChanged -= TimeScaleChanged;
+            TimeManager.OnTimeScaleChanged -= TimeScaleChanged;
         }
     }
 

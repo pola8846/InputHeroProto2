@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,10 +8,27 @@ public class TickTimer
     public float time;
     private float checkTime;
     private bool autoReset;
+    private bool unscaledTime;
 
-    public TickTimer(float checkTime = 1f, bool isTrigerInstant = false, bool autoReset = false)
+    private float NowTime
+    {
+        get
+        {
+            if (unscaledTime)
+            {
+                return Time.unscaledTime;
+            }
+            else
+            {
+                return Time.time;
+            }
+        }
+    }
+
+    public TickTimer(float checkTime = 1f, bool isTrigerInstant = false, bool autoReset = false, bool unscaledTime = false)
     {
         this.checkTime = checkTime;
+        this.unscaledTime = unscaledTime;
         if (isTrigerInstant)
         {
             time = float.MinValue;
@@ -27,7 +42,7 @@ public class TickTimer
 
     public void Reset()
     {
-        time = Time.time;
+        time = NowTime;
     }
 
     /// <summary>
@@ -38,7 +53,7 @@ public class TickTimer
     public bool Check(float time)
     {
         PerformanceManager.StartTimer("TickTimer.Check");
-        bool result = this.time + time <= Time.time;
+        bool result = this.time + time <= NowTime;
         if (result && autoReset)
         {
             Reset();
@@ -50,5 +65,27 @@ public class TickTimer
     public bool Check()
     {
         return Check(checkTime);
+    }
+
+    /// <summary>
+    /// 설정한 이후 해당 시간만큼 지나려면 얼마나 남았는지
+    /// </summary>
+    /// <param name="time">필요한 경과 시간(s)</param>
+    /// <returns>남은 시간(s)</returns>
+    public float GetRemain(float time)
+    {
+        if (this.time + time <= NowTime)
+        {
+            return 0f;
+        }
+        else
+        {
+            return (this.time + time) - NowTime;
+        }
+    }
+
+    public float GetRemain()
+    {
+        return GetRemain(this.checkTime);
     }
 }
