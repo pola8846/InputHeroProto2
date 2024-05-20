@@ -71,6 +71,8 @@ public class Unit : MonoBehaviour
     protected bool isLookLeft = true;
     public bool IsLookLeft => isLookLeft;
 
+    public bool canDamaged = true;
+
     protected virtual void Start()
     {
         unitID = UnitManager.Instance.EnrollUnit(this);
@@ -97,7 +99,7 @@ public class Unit : MonoBehaviour
     public bool Damage(float damage)
     {
         //¿¹¿Ü
-        if (damage <= 0f)
+        if (damage <= 0f || !canDamaged)
         {
             return true;
         }

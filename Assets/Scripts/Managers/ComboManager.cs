@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class ComboManager : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class ComboManager : MonoBehaviour
         {
             Debug.Log($"ют╥б: {input}");
             Log.Add(input);
+            UIManager.Instance.testActionBar.GetComponent<TestActionBar>().add(input);
         }
 
         return Log.Count >= instance.maxCombo;
@@ -95,5 +97,6 @@ public class ComboManager : MonoBehaviour
     {
         Log.Clear();
         FindedSkills.Clear();
+        UIManager.Instance.testActionBar.GetComponent<TestActionBar>().removeAll();
     }
 }

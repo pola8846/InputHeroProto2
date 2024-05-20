@@ -23,6 +23,7 @@ public class TimeManager : MonoBehaviour
     //½½·Î¿ì
     [SerializeField]
     private float slowRate = .5f;
+    public static float SlowRate => instance.slowRate;
 
     [SerializeField]
     private float slowTime = 4f;

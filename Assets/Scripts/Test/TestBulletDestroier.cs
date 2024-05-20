@@ -6,6 +6,8 @@ public class TestBulletDestroier : MonoBehaviour
 {
 
     private bool b = false;
+    [SerializeField]
+    private bool destroySelf = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (b)
@@ -17,10 +19,14 @@ public class TestBulletDestroier : MonoBehaviour
             var temp = collision.GetComponent<TestBulletChecker>();
             if (temp != null)
             {
-                b= true;
+                if (destroySelf)
+                    b = true;
                 collision.GetComponent<DamageArea>()?.Destroy();
                 //Destroy(collision.gameObject);
-                Destroy(gameObject);
+                if (destroySelf)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }

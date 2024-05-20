@@ -6,10 +6,12 @@ public class PSkill_TestRangeAtk : PlayerSkill
 {
     public PSkill_TestRangeAtk()
     {
-        neededCombo = new();
-        neededCombo.Add(InputType.Shoot);
-        neededCombo.Add(InputType.MoveUp);
-        neededCombo.Add(InputType.Shoot);
+        neededCombo = new()
+        {
+            InputType.Shoot,
+            InputType.MoveUp,
+            InputType.Shoot
+        };
     }
     public override void Invoke()
     {
@@ -19,9 +21,16 @@ public class PSkill_TestRangeAtk : PlayerSkill
 
     private IEnumerator enumerator()
     {
-        yield return null;
         Debug.Log("PSkill_TestRangeAtk ½ÇÇà");
-        yield return null;
+        yield return new WaitForSecondsRealtime(.15f);
+
+        Vector2 dir = Player.IsLookLeft? Vector2.left : Vector2.right;
+        float angle = Vector2.SignedAngle(dir, Vector2.up) * -1;
+
+        Player.Shooter_Big.BulletAngle = angle;
+        Player.Shooter_Big.Triger();
+
+        yield return new WaitForSecondsRealtime(.6f);
         End();
     }
 }

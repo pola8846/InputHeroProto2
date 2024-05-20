@@ -43,7 +43,7 @@ public class SmoothMoving : MonoBehaviour
     {
         Vector3 temp = transform.position - directionPos;
         temp = temp.normalized;
-        temp *= -speed * Time.fixedDeltaTime;
+        temp *= -speed * Time.fixedUnscaledDeltaTime;
         transform.Translate(temp);
     }
 }

@@ -55,6 +55,7 @@ public enum InputType
     Jump,
     Dash,
     Shoot,
+    Reload,
     Slow,
     MeleeAttack,
 

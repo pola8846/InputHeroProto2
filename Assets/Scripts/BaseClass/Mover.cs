@@ -29,6 +29,8 @@ public class Mover : MonoBehaviour
     [SerializeField]
     private bool fixSpeedY = false;
 
+    public bool speedCap = true;
+
     public Vector2 Velocity
     {
         get { return rb.velocity; }
@@ -53,7 +55,10 @@ public class Mover : MonoBehaviour
         {
             SetVelocityY();
         }
-        MaxSpeedCheck();
+        if (speedCap)
+        {
+            MaxSpeedCheck();
+        }
 
         PerformanceManager.StopTimer("Mover.FixedUpdate");
     }
@@ -79,7 +84,10 @@ public class Mover : MonoBehaviour
     {
         PerformanceManager.StartTimer("Mover.SetVelocityX");
         rb.velocity = new Vector2(targetSpeedX, rb.velocity.y);
-        MaxSpeedCheck();
+        if (speedCap)
+        {
+            MaxSpeedCheck();
+        }
         PerformanceManager.StopTimer("Mover.SetVelocityX");
     }
 
@@ -115,10 +123,11 @@ public class Mover : MonoBehaviour
     private void SetVelocityY()
     {
         PerformanceManager.StartTimer("Mover.SetVelocityY");
-        //Debug.Log(fixSpeedY);
-        //Debug.Log($"{gameObject.name}, {targetSpeedY}");
         rb.velocity = new Vector2(rb.velocity.x, targetSpeedY);
-        MaxSpeedCheck();
+        if (speedCap)
+        {
+            MaxSpeedCheck();
+        }
         PerformanceManager.StopTimer("Mover.SetVelocityY");
     }
 
