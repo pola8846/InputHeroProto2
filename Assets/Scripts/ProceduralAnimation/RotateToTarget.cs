@@ -64,7 +64,7 @@ public class RotateToTarget : MonoBehaviour
                 switchdirChecker();
             }
         }
-
+        
         //dir = Camera.main.ScreenToWorldPoint(convertToPos) - transform.position;
 
 
@@ -118,7 +118,7 @@ public class RotateToTarget : MonoBehaviour
 
             //player.transform.rotation = Quaternion.EulerAngles(player.transform.rotation.x, 154, player.transform.rotation.z);
 
-            player.transform.eulerAngles = player.transform.eulerAngles + new Vector3(0, 75, 0);
+            player.transform.eulerAngles = player.transform.eulerAngles + new Vector3(0, 60, 0);
 
             //leftHandIK.GetComponent<TwoBoneIKConstraint>().
 
@@ -131,7 +131,7 @@ public class RotateToTarget : MonoBehaviour
            // Vector3 temp = new Vector3(player.transform.localScale.x * -1, player.transform.localScale.y, player.transform.localScale.z * -1);
            // player.transform.localScale = temp;
             //player.transform.rotation = Quaternion.EulerAngles(player.transform.rotation.x, 334, player.transform.rotation.z);
-            player.transform.eulerAngles = player.transform.eulerAngles + new Vector3(0, -75, 0);
+            player.transform.eulerAngles = player.transform.eulerAngles + new Vector3(0, -60, 0);
 
           
 
