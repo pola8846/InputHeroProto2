@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,6 +25,9 @@ public class ComboManager : MonoBehaviour
     [SerializeField]
     private List<InputType> comboInputs = new();
     private static List<InputType> ComboInputs => instance.comboInputs;
+    [SerializeField]
+    private SerializedDictionary<InputType, float> comboInputsTime = new();
+    private static SerializedDictionary<InputType, float> ComboInputsTime => instance.comboInputsTime;
     private List<InputType> log = new();
     private static List<InputType> Log => instance.log;
     private Queue<PlayerSkill> findedSkills = new();
@@ -46,9 +50,13 @@ public class ComboManager : MonoBehaviour
 
         if (ComboInputs.Contains(input))
         {
-            Debug.Log($"입력: {input}");
+            //Debug.Log($"입력: {input}");
             Log.Add(input);
             UIManager.Instance.testActionBar.GetComponent<TestActionBar>().add(input);
+        }
+        if (ComboInputsTime.ContainsKey(input))
+        {
+            TimeManager.DecreaseComboTime(ComboInputsTime[input]);
         }
 
         return Log.Count >= instance.maxCombo;

@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
         {
             return;
         }
-        Debug.Log(bulletNum);
+        //Debug.Log(bulletNum);
         instance.bulletCounter.text = $"Bullet: {bulletNum}";
     }
 }

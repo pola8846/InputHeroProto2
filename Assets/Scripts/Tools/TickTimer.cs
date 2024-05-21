@@ -88,4 +88,13 @@ public class TickTimer
     {
         return GetRemain(this.checkTime);
     }
+
+    /// <summary>
+    /// 시간을 강제로 지나게 만들기
+    /// </summary>
+    /// <param name="time">지나게 할 시간</param>
+    public void AddOffset(float time)
+    {
+        this.time -= time;
+    }
 }

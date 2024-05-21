@@ -138,4 +138,10 @@ public class TimeManager : MonoBehaviour
         Time.fixedDeltaTime = Time.timeScale / framePerSec;
         onTimeScaleChanged?.Invoke(instance, Time.timeScale);
     }
+
+    //시간 소모
+    public static void DecreaseComboTime(float time)
+    {
+        instance.slowTimer.AddOffset(time);
+    }
 }
