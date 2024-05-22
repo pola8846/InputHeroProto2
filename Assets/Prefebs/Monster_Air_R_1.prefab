@@ -186,6 +186,7 @@ MonoBehaviour:
     cooldownRate: 0
     jumpCount: 0
   isLookLeft: 1
+  canDamaged: 1
   findDistance: 5
   patrolSpeedRate: 0.2
   patrolDistance: 2
@@ -214,20 +215,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletGO: {fileID: 6433798773826802276, guid: e03b0612a35654e4e8f29e14f2bd48b2, type: 3}
+  GO: {fileID: 6433798773826802276, guid: e03b0612a35654e4e8f29e14f2bd48b2, type: 3}
   bulletNum: 1
   shootType: 0
   bulletSpeedMin: 8
   bulletSpeedMax: 8
   bulletAngleMin: 0
   bulletAngleMax: 0
-  bulletDamageMin: 1
-  bulletDamageMax: 1
-  isHitOnce: 0
-  isDestroyAfterHit: 1
   lifeTime: 2
   lifeDistance: 5
-  triger: 0
   Unit: {fileID: 9204558956086894621}
   isPlayers: 0
 --- !u!114 &7656622409073606430
@@ -244,6 +240,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeedX: 0
   maxSpeedY: 0
+  fixSpeedX: 0
+  fixSpeedY: 0
+  speedCap: 1
 --- !u!114 &3866737701998216412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,3 +269,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSetByLocal: 1
+  moveTimer: 0
+  isMoving: 0

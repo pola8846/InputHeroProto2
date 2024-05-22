@@ -54,6 +54,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private bool canShoot = true;
     [SerializeField]
     private GameObject targetter;
+    private GameObject targetterGO;
     [SerializeField]
     private int maxBullet;
     public int MaxBullet => maxBullet;
@@ -90,6 +91,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             new PSkill_TestDash(),
             new PSkill_TestRangeAtk()
         };
+        targetterGO = Instantiate(targetter);
     }
 
     protected override void Update()
@@ -254,7 +256,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private void RotateTargetter()
     {
         PerformanceManager.StartTimer("PlayerUnit.RotateTargetter");
-        //타게터 회전
+        if (targetterGO is null)
+        {
+        PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+            return;
+        }
 
         //마우스 위치 읽어오기
         Vector3 mousePos = Input.mousePosition;
@@ -264,7 +270,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //거리 구하고 적용
         Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
-        targetter.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
+        targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
 
@@ -283,7 +289,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //쏠 방향을 구해온다
-        Vector2 dir = (Vector2)targetter.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
+        Vector2 dir = (Vector2)targetterGO.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
         float angle = Vector2.SignedAngle(dir, Vector2.up) * -1;
 
 

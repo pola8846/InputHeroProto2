@@ -23,9 +23,12 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private SerializedDictionary<InputType, KeyCode> keyDict = new();
 
-    [SerializeField]
     private PlayerUnit mMoveReceiver;
 
+    private void Start()
+    {
+        mMoveReceiver = GameManager.Player;
+    }
 
     void Update()
     {

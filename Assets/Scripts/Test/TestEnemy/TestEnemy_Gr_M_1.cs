@@ -84,7 +84,7 @@ public class TestEnemy_Gr_M_1 : Enemy
                     {
                         Turn();
                     }
-
+                    //Debug.Log(movementX);
                     MoverV.SetVelocityX(movementX);
 
                     if (AttackRangeCheck())//공격 사거리 내에 오면 스테이트 1로
@@ -97,6 +97,7 @@ public class TestEnemy_Gr_M_1 : Enemy
                 }
                 else
                 {
+                    //Debug.Log("stop");
                     MoverV.StopMoveX();
                 }
                 break;
