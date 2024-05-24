@@ -879,7 +879,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4.1597443, y: 2.146965, z: 0}
+  m_LocalScale: {x: 3.6936417, y: 2.132948, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2044855567}
@@ -1324,7 +1324,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 2.898148
+  orthographic size: 3.2037036
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2289,7 +2289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1143346348
 Transform:
   m_ObjectHideFlags: 0
@@ -2781,7 +2781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1202882637
 Transform:
   m_ObjectHideFlags: 0
@@ -3281,8 +3281,8 @@ RenderTexture:
   m_DownscaleFallback: 0
   m_IsAlphaChannelOptional: 0
   serializedVersion: 5
-  m_Width: 434
-  m_Height: 224
+  m_Width: 426
+  m_Height: 246
   m_AntiAliasing: 1
   m_MipCount: -1
   m_DepthStencilFormat: 90
@@ -4570,7 +4570,7 @@ MonoBehaviour:
   - {fileID: 963194233}
   storedCamRotation: {x: 0, y: 0, z: 0, w: 0}
   storedPixelMultiplier: 0
-  origOrthoSize: 2.898148
+  origOrthoSize: 3.2037036
 --- !u!4 &2044855567
 Transform:
   m_ObjectHideFlags: 0
@@ -4581,7 +4581,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 999}
-  m_LocalScale: {x: 2.898148, y: 2.898148, z: 2.898148}
+  m_LocalScale: {x: 3.2037036, y: 3.2037036, z: 3.2037036}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 536146905}
@@ -4828,9 +4828,9 @@ MonoBehaviour:
   graphicsFormat: 8
   pixelMultiplier: 3
   ditherRepeatSize: 8
-  lastScreenSize: {x: 1254, y: 626}
-  screenSize: {x: 1254, y: 626}
-  renderTextureSize: {x: 434, y: 224}
+  lastScreenSize: {x: 1230, y: 692}
+  screenSize: {x: 1230, y: 692}
+  renderTextureSize: {x: 426, y: 246}
   screenHeight: 1080
   uPixelatorCam: {fileID: 4420440962801751041}
   autoDetectCameras: 0
@@ -4993,7 +4993,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2.898148
+  orthographic size: 3.2037036
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
