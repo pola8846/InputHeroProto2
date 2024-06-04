@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +12,7 @@ public class Projectile : MonoBehaviour
     protected float lifeTime = -1f;
     protected float lifeDistance = -1f;
     protected bool isInitialized = false;
+    protected bool isDestroyed = false;
 
     /// <summary>
     /// √ ±‚»≠
@@ -67,10 +67,12 @@ public class Projectile : MonoBehaviour
             var da = GetComponent<DamageArea>();
             if (da is not null)
             {
+                isDestroyed = true;
                 da.Destroy();
             }
             else
             {
+                isDestroyed = true;
                 Destroy(gameObject);
             }
         }
@@ -85,10 +87,12 @@ public class Projectile : MonoBehaviour
         var da = GetComponent<DamageArea>();
         if (da is not null)
         {
+            isDestroyed = true;
             da.Destroy();
         }
         else
         {
+            isDestroyed = true;
             Destroy(gameObject);
         }
     }

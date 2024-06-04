@@ -1044,7 +1044,7 @@ GameObject:
   m_Component:
   - component: {fileID: 117875828}
   - component: {fileID: 117875830}
-  - component: {fileID: 117875829}
+  - component: {fileID: 117875831}
   m_Layer: 7
   m_Name: HitBoxCapsule (1)
   m_TagString: Untagged
@@ -1067,19 +1067,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 587807041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &117875829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117875827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  priority: 0
 --- !u!70 &117875830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1115,6 +1102,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &117875831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117875827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1 &136061912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2751,51 +2751,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346274534}
   m_Mesh: {fileID: 2212009239438826721, guid: 8381b8e5bac64454e9e802d5da3f28e0, type: 3}
---- !u!1 &351206611
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 351206613}
-  - component: {fileID: 351206612}
-  m_Layer: 0
-  m_Name: test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &351206612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351206611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0fd73746123df4cb045bf4added486, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mMoveReceiver: {fileID: 587807044}
---- !u!4 &351206613
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351206611}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &360451058
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,7 +3740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4e16ece51864a42aeba80e72af6f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 587807044}
   Enemy: {fileID: 0}
   textMeshPro: {fileID: 463018797}
 --- !u!1 &492562505
@@ -4378,7 +4332,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.6444445, y: 2.088889, z: 0}
+  m_LocalScale: {x: 3.6936417, y: 2.132948, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2044855567}
@@ -4872,27 +4826,23 @@ MonoBehaviour:
     cooldownRate: 0
     jumpCount: 2
   isLookLeft: 1
-  MoveL: 97
-  MoveR: 100
-  MoveU: 119
-  MoveD: 115
-  Jump: 32
-  Attack: 122
-  Attack2: 323
-  Dash: 304
-  Slow: 116
+  canDamaged: 1
   animator: {fileID: 740408926}
   dashSpeedRate: 2.53
   dashTime: 0.4
-  slowRate: 0.1
-  slowTime: 4
+  areaAttackPrefab: {fileID: 0}
   groundCheckerLT: {fileID: 1672024804}
   groundCheckerRD: {fileID: 436812006}
+  groundChecker: {fileID: 0}
   groundCheckRadius: 0.1
   groundLayer: Ground
-  targetter: {fileID: 1408658485}
+  halfGroundLayer: 
   shooter: {fileID: 2041347886}
+  shooter_Big: {fileID: 0}
   shootCooltime: 0.8
+  targetter: {fileID: 1408658485}
+  maxBullet: 0
+  nowBullet: 0
 --- !u!251 &587807045
 PlatformEffector2D:
   m_ObjectHideFlags: 0
@@ -4998,6 +4948,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeedX: 20
   maxSpeedY: 15
+  fixSpeedX: 0
+  fixSpeedY: 0
+  speedCap: 1
 --- !u!1 &599966291
 GameObject:
   m_ObjectHideFlags: 0
@@ -6493,7 +6446,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 3.2037036
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -6595,12 +6548,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &963194232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8626,6 +8579,7 @@ MonoBehaviour:
     cooldownRate: 0
     jumpCount: 0
   isLookLeft: 1
+  canDamaged: 1
   findDistance: 5
   test: {fileID: 1139481768}
   state: 0
@@ -8635,22 +8589,59 @@ MonoBehaviour:
   meleeAttack1CheckDistance: 1
   meleeAttack1AreaChecker: {fileID: 1139481773}
   anyAttackCooltime: 3
+  melee:
+    name: 
+    waitTime_Early: 0
+    waitTime_Attack: 0
+    waitTime_Late: 0
+    repeatCount: 0
+    counter: 0
   meleeAttackObject: {fileID: 8787860899201475616, guid: 0a3d4c019683b8e46888f7ddf3249072, type: 3}
-  meleeAttack1EWaitTime: 0.5
-  meleeAttack1Time: 0.1
-  meleeAttack1LWaitTime: 0.4
-  rangeAttack1EWaitTime: 1.5
-  rangeAttack1Time: 0.25
+  range:
+    name: 
+    waitTime_Early: 0
+    waitTime_Attack: 0
+    waitTime_Late: 0
+    repeatCount: 0
+    counter: 0
   rangeAttack1RepeatCount: 4
-  rangeAttack1LWaitTime: 0.3
-  barrageAttack2EWaitTime: 2
-  barrageAttack2AttackTime: 1.5
+  area:
+    name: 
+    waitTime_Early: 0
+    waitTime_Attack: 0
+    waitTime_Late: 0
+    repeatCount: 0
+    counter: 0
+  areaAttack1Cooltime: 45
+  areaAttackObjectL: {fileID: 0}
+  areaAttackObjectR: {fileID: 0}
+  areaAttackObjectD: {fileID: 0}
+  barrage1:
+    name: 
+    waitTime_Early: 0
+    waitTime_Attack: 0
+    waitTime_Late: 0
+    repeatCount: 0
+    counter: 0
+  barrageAttack1BulletNum: 8
+  barrageAttack1Angle: 45
+  barrageAttack1Cooltime: 60
+  barrage2:
+    name: 
+    waitTime_Early: 0
+    waitTime_Attack: 0
+    waitTime_Late: 0
+    repeatCount: 0
+    counter: 0
   barrageAttack2BulletNum: 16
-  barrageAttack2RepeatCount: 3
-  barrageAttack2LWaitTime: 2
   barrageAttack2Cooltime: 30
   platformL: {fileID: 1933063005}
+  collisionCheckerL: {fileID: 0}
   platformR: {fileID: 2084208172}
+  collisionCheckerR: {fileID: 0}
+  platformD: {fileID: 0}
+  collisionCheckerD: {fileID: 0}
+  targetPlatform: {fileID: 0}
 --- !u!114 &1202882643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8680,6 +8671,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeedX: 0
   maxSpeedY: 0
+  fixSpeedX: 0
+  fixSpeedY: 0
+  speedCap: 1
 --- !u!114 &1202882645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8692,20 +8686,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletGO: {fileID: 6433798773826802276, guid: e03b0612a35654e4e8f29e14f2bd48b2, type: 3}
+  GO: {fileID: 0}
   bulletNum: 1
   shootType: 0
   bulletSpeedMin: 8
   bulletSpeedMax: 8
   bulletAngleMin: 90
   bulletAngleMax: 90
-  bulletDamageMin: 1
-  bulletDamageMax: 1
-  isHitOnce: 0
-  isDestroyAfterHit: 1
   lifeTime: 0
   lifeDistance: 30
-  triger: 0
   Unit: {fileID: 1202882642}
   isPlayers: 0
 --- !u!1 &1217729565
@@ -9714,8 +9703,8 @@ RenderTexture:
   m_DownscaleFallback: 0
   m_IsAlphaChannelOptional: 0
   serializedVersion: 5
-  m_Width: 656
-  m_Height: 376
+  m_Width: 426
+  m_Height: 246
   m_AntiAliasing: 1
   m_MipCount: -1
   m_DepthStencilFormat: 90
@@ -10351,7 +10340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1632778984}
   - component: {fileID: 1632778986}
-  - component: {fileID: 1632778985}
+  - component: {fileID: 1632778987}
   m_Layer: 7
   m_Name: HitBoxCapsule
   m_TagString: Untagged
@@ -10374,19 +10363,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 587807041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1632778985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1632778983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  priority: 0
 --- !u!70 &1632778986
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -10422,6 +10398,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &1632778987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632778983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1 &1653769647
 GameObject:
   m_ObjectHideFlags: 0
@@ -13479,20 +13468,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletGO: {fileID: 6433798773826802276, guid: 44bfeb3464186d8469545702db73803f, type: 3}
+  GO: {fileID: 0}
   bulletNum: 1
   shootType: 0
   bulletSpeedMin: 25
   bulletSpeedMax: 25
   bulletAngleMin: 90
   bulletAngleMax: 90
-  bulletDamageMin: 1
-  bulletDamageMax: 1
-  isHitOnce: 0
-  isDestroyAfterHit: 0
   lifeTime: 1
   lifeDistance: 0
-  triger: 0
   Unit: {fileID: 587807044}
   isPlayers: 1
 --- !u!1 &2044855565
@@ -13542,7 +13526,7 @@ MonoBehaviour:
   - {fileID: 963194233}
   storedCamRotation: {x: 0, y: 0, z: 0, w: 0}
   storedPixelMultiplier: 0
-  origOrthoSize: 5
+  origOrthoSize: 3.2037036
 --- !u!4 &2044855567
 Transform:
   m_ObjectHideFlags: 0
@@ -13553,7 +13537,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 999}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 3.2037036, y: 3.2037036, z: 3.2037036}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 536146905}
@@ -14481,9 +14465,9 @@ MonoBehaviour:
   graphicsFormat: 8
   pixelMultiplier: 3
   ditherRepeatSize: 8
-  lastScreenSize: {x: 1920, y: 1080}
-  screenSize: {x: 1920, y: 1080}
-  renderTextureSize: {x: 656, y: 376}
+  lastScreenSize: {x: 1230, y: 692}
+  screenSize: {x: 1230, y: 692}
+  renderTextureSize: {x: 426, y: 246}
   screenHeight: 1080
   uPixelatorCam: {fileID: 4420440962801751041}
   autoDetectCameras: 0
@@ -14628,7 +14612,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 3.2037036
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -14717,12 +14701,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -14731,7 +14715,6 @@ SceneRoots:
   - {fileID: 587807041}
   - {fileID: 1410101377}
   - {fileID: 1224023496}
-  - {fileID: 351206613}
   - {fileID: 360451062}
   - {fileID: 940764937}
   - {fileID: 1839326550}

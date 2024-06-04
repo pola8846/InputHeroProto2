@@ -192,7 +192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3385231673309479160}
   - component: {fileID: 5531407034532990261}
-  - component: {fileID: 5872564960399922400}
+  - component: {fileID: 3681029297679931206}
   m_Layer: 7
   m_Name: HitBoxCapsule (1)
   m_TagString: Untagged
@@ -250,7 +250,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
---- !u!114 &5872564960399922400
+--- !u!114 &3681029297679931206
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1059782383754933397}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 0
@@ -3248,7 +3248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 668600084141892071}
   - component: {fileID: 1919639173021858622}
-  - component: {fileID: 1103797633222950861}
+  - component: {fileID: 6809133658534229596}
   m_Layer: 7
   m_Name: HitBoxCapsule (2)
   m_TagString: Untagged
@@ -3306,7 +3306,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
---- !u!114 &1103797633222950861
+--- !u!114 &6809133658534229596
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3315,7 +3315,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8147971617352336438}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 0
@@ -3393,7 +3393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4646394034841518099}
   - component: {fileID: 6876240491881693958}
-  - component: {fileID: 4491034516859648600}
+  - component: {fileID: 5334990230040191325}
   m_Layer: 7
   m_Name: HitBoxCapsule
   m_TagString: Untagged
@@ -3451,7 +3451,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
---- !u!114 &4491034516859648600
+--- !u!114 &5334990230040191325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3460,7 +3460,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8844242220183149226}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 0

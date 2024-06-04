@@ -21,16 +21,15 @@ public class TimeManager : MonoBehaviour
     }
 
     //슬로우
-    [SerializeField]
-    private float slowRate = .5f;
-    public static float SlowRate => instance.slowRate;
+    [SerializeField] private float slowRate = .5f;//슬로우 배율
+    public static float SlowRate => instance.slowRate;//슬로우 배율
 
     [SerializeField]
-    private float slowTime = 4f;
+    private float slowTime = 4f;//슬로우 지속 시간
 
-    private bool isSlowed = false;
+    private bool isSlowed = false;//슬로우 중인가?
     public static bool IsSlowed => instance.isSlowed;
-    private bool isUsingSkills = false;
+    private bool isUsingSkills = false;//스킬 사용 중인가?
     public static bool IsUsingSkills
     {
         get
@@ -44,9 +43,8 @@ public class TimeManager : MonoBehaviour
     }
 
 
-    private TickTimer slowTimer;
-    [SerializeField]
-    private Slider slowSlider;
+    private TickTimer slowTimer;//슬로우 남은 시간 타이머
+    [SerializeField] private Slider slowSlider;//슬로우 남은 시간 UI
 
     private void Awake()
     {

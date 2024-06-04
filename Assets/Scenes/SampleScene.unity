@@ -1192,20 +1192,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletGO: {fileID: 6433798773826802276, guid: 44bfeb3464186d8469545702db73803f, type: 3}
+  GO: {fileID: 0}
   bulletNum: 1
   shootType: 0
   bulletSpeedMin: 25
   bulletSpeedMax: 25
   bulletAngleMin: 90
   bulletAngleMax: 90
-  bulletDamageMin: 1
-  bulletDamageMax: 1
-  isHitOnce: 0
-  isDestroyAfterHit: 0
   lifeTime: 1
   lifeDistance: 0
-  triger: 0
   Unit: {fileID: 1667640865}
   isPlayers: 1
 --- !u!4 &159333476
@@ -2212,7 +2207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 368771778}
   - component: {fileID: 368771780}
-  - component: {fileID: 368771779}
+  - component: {fileID: 368771781}
   m_Layer: 7
   m_Name: HitBoxCapsule (1)
   m_TagString: Untagged
@@ -2235,19 +2230,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1667640871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &368771779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368771777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  priority: 0
 --- !u!70 &368771780
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2283,6 +2265,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &368771781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368771777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1 &392962699
 GameObject:
   m_ObjectHideFlags: 0
@@ -5501,12 +5496,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &1004327470
 GameObject:
   m_ObjectHideFlags: 0
@@ -9081,7 +9076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1523613808}
   - component: {fileID: 1523613810}
-  - component: {fileID: 1523613809}
+  - component: {fileID: 1523613811}
   m_Layer: 7
   m_Name: HitBoxCapsule
   m_TagString: Untagged
@@ -9104,19 +9099,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1667640871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1523613809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1523613807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f539ca76bdf45741b39d9786c264243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  priority: 0
 --- !u!70 &1523613810
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -9152,6 +9134,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &1523613811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523613807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14eede09e1cf174985f43f5ac892bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1001 &1541091029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10124,6 +10119,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeedX: 20
   maxSpeedY: 15
+  fixSpeedX: 0
+  fixSpeedY: 0
+  speedCap: 1
 --- !u!114 &1667640865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10148,27 +10146,23 @@ MonoBehaviour:
     cooldownRate: 0
     jumpCount: 2
   isLookLeft: 1
-  MoveL: 97
-  MoveR: 100
-  MoveU: 119
-  MoveD: 115
-  Jump: 32
-  Attack: 122
-  Attack2: 323
-  Dash: 304
-  Slow: 116
+  canDamaged: 1
   animator: {fileID: 1110736966}
   dashSpeedRate: 2.53
   dashTime: 0.4
-  slowRate: 0.1
-  slowTime: 4
+  areaAttackPrefab: {fileID: 0}
   groundCheckerLT: {fileID: 936605711}
   groundCheckerRD: {fileID: 1367596262}
+  groundChecker: {fileID: 0}
   groundCheckRadius: 0.1
   groundLayer: Ground
-  targetter: {fileID: 1704443453}
+  halfGroundLayer: 
   shooter: {fileID: 159333475}
+  shooter_Big: {fileID: 0}
   shootCooltime: 0.8
+  targetter: {fileID: 1704443453}
+  maxBullet: 0
+  nowBullet: 0
 --- !u!61 &1667640866
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12171,7 +12165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4e16ece51864a42aeba80e72af6f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
   Enemy: {fileID: 0}
   textMeshPro: {fileID: 2021315331}
 --- !u!114 &2021315331

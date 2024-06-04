@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 같은 판정으로 취급되는 공격 전체
+/// 같은 판정으로 취급되는 공격 전체.
+/// 여러 개의 히트박스에 동시에 충돌 가능. 여러 개의 대미지 에리어를 동시에 가질 수 있음.
+/// 중복을 제외하고 각 유닛당 우선도 합이 높은 하나만 반환
 /// </summary>
 public class Attack : MonoBehaviour
 {
+
     /// <summary>
     /// 공격하는 유닛
     /// </summary>
-    private Unit attackUnit;
+    protected Unit attackUnit;
     /// <summary>
     /// 공격하는 유닛
     /// </summary>
@@ -22,11 +25,18 @@ public class Attack : MonoBehaviour
             return attackUnit;
         }
     }
+
     [SerializeField]
-    private string targetTag;//피해를 입힐 대상의 태그
+    protected string targetTag;//피해를 입힐 대상의 태그
+    protected bool isInitialized = false;//초기화 되었는가?
+
+    public virtual void Initialization(Unit unit, string targetTag)
+    {
+        this.attackUnit = unit;
+        this.targetTag = targetTag;
+    }
     private List<DamageArea> damageAreaList = new();//등록된 대미지
     private List<Unit> damagedUnitList = new();//대미지 받은 유닛 리스트
-    private bool isInitialized = false;//초기화 되었는가?
 
     public bool dealDamageOnEnter = true;//접촉 시 대미지를 입히는가?
     public bool isDestroySelfAuto = true;//대미지가 전부 사라지면 파괴되는가?
