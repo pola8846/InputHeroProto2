@@ -61,7 +61,17 @@ public class UnitManager : MonoBehaviour
             return true;
         }
         target.Damage(damageArea.damage);
-        //Debug.Log($"피해 입힘:{source.name}이 {target.name}에게, {damageArea.damage} 피해");
+        return true;
+        //임시
+    }
+
+    public bool DamageUnitToUnit(Unit target, Unit source, float damage)
+    {
+        if (target == null || source == null)
+        {
+            return true;
+        }
+        target.Damage(damage);
         return true;
         //임시
     }

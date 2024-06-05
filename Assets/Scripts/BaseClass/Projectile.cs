@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 투사체의 기본 클래스. 등록/제거만 기능
+/// 투사체의 기본 클래스. 등록/제거만 기능. 실제 움직임 및 충돌 시 처리는 하위 클래스에서 작성
 /// </summary>
 public class Projectile : MonoBehaviour
 {
@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour
 
         if (lifeTime > 0)
         {
-            TryDestroy();
+            StartCoroutine(DestroyDelay());
         }
 
         PerformanceManager.StopTimer("Projectile.Initialize");
@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
         PerformanceManager.StartTimer("Projectile.Update");
         if (lifeDistance > 0 && (originPos - (Vector2)transform.position).sqrMagnitude >= lifeDistance * lifeDistance)
         {
-            TryDestroy();
+            Destroy();
             PerformanceManager.StopTimer("Projectile.Update");
             return;
         }
@@ -54,35 +54,9 @@ public class Projectile : MonoBehaviour
     }
 
     /// <summary>
-    /// Destroy 시도. DamageArea가 있으면 DamageArea의 것을 대신 사용
-    /// </summary>
-    protected void TryDestroy()
-    {
-        if (lifeTime > 0)
-        {
-            StartCoroutine(DestroyDelay());
-        }
-        else
-        {
-            var da = GetComponent<DamageArea>();
-            if (da is not null)
-            {
-                isDestroyed = true;
-                da.Destroy();
-            }
-            else
-            {
-                isDestroyed = true;
-                Destroy(gameObject);
-            }
-        }
-
-    }
-
-    /// <summary>
     /// Destroy 대용
     /// </summary>
-    protected void Destroy()
+    protected virtual void Destroy()
     {
         var da = GetComponent<DamageArea>();
         if (da is not null)
