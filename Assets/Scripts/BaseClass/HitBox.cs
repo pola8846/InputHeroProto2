@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor.UIElements;
 using UnityEngine;
 
-public class HitBox : MonoBehaviour
+public class HitBox : MonoBehaviour, IBulletHitChecker
 {
     /// <summary>
     /// 모체 유닛. 자동으로 등록됨

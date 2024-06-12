@@ -353,7 +353,7 @@ public class TestEnemy_Boss_1 : Enemy
                 rangeAttack1Counter = 0;
                 shooter.shootType = ShootType.oneWay;
                 shooter.BulletNum = 1;
-                shooter.BulletSpeed = 8f;
+                shooter.BulletSpeed = 25f;
                 //shooter.bulletDamageMax = shooter.bulletDamageMin = stats.attackPower;
                 break;
 

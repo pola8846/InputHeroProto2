@@ -18,7 +18,8 @@ public class TestScript_RayStart : MonoBehaviour
     {
         Vector2 moveDist = currentPosition-previousPosition;
 
-        var ray = Physics2D.RaycastAll(previousPosition, moveDist.normalized, moveDist.magnitude, 1 << LayerMask.NameToLayer("HitBox"));
+        //var ray = Physics2D.RaycastAll(previousPosition, moveDist.normalized, moveDist.magnitude, 1 << LayerMask.NameToLayer("HitBox"));
+        var ray = Physics2D.LinecastAll(previousPosition, currentPosition, 1 << LayerMask.NameToLayer("HitBox"));
         Debug.DrawRay(previousPosition, moveDist);
         
 
@@ -36,6 +37,7 @@ public class TestScript_RayStart : MonoBehaviour
                 if (target == null || 
                     ((previousPosition - (Vector2)target.position).sqrMagnitude < (previousPosition - (Vector2)hit.transform.position).sqrMagnitude))
                 {
+                    Debug.Log("a");
                     target = hit.transform;
                 }
             }

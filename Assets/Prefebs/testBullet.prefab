@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2705311711037816339}
   - component: {fileID: 8732484691134548574}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: -6505841511348045109}
   - component: {fileID: 4541806135516011451}
   - component: {fileID: 5543008947123157215}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: testBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,9 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae0c4bf745136442bafc242774f5d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
   isNotSlowed: 0
-  damage: 1
 --- !u!114 &1824735415699142916
 MonoBehaviour:
   m_ObjectHideFlags: 0

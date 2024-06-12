@@ -5,22 +5,51 @@ using UnityEngine;
 
 public class GameTools
 {
-    #region 거리 비교
+    #region 위치 비교
     /// <summary>
-    /// 두 개 지점 사이가 주어진 거리보다 가까운지 체크
+    /// 대상 위치가 특정 지점 주변 일정 거리 내에 있는가?
     /// </summary>
-    /// <param name="start">시작 좌표</param>
-    /// <param name="end">끝 좌표</param>
-    /// <param name="distance">체크할 거리</param>
-    /// <returns>주어진 거리보다 가까운가?</returns>
-    public static bool IsInDistance(Vector2 start, Vector2 end, float distance)
+    /// <param name="targetPos">대상 위치</param>
+    /// <param name="basePos">찾을 위치</param>
+    /// <param name="distance">찾을 거리</param>
+    /// <returns>대상 위치가 특정 지점 주변 일정 거리 내에 있는가?</returns>
+    public static bool IsAround(Vector2 targetPos, Vector2 basePos, float distance)
     {
-        PerformanceManager.StartTimer("GameTools.IsInDistance");
-        Vector2 distanceVector = end - start;
-        float sqrVector = distanceVector.sqrMagnitude;
-        float sqrDistance = distance * distance;
-        PerformanceManager.StopTimer("GameTools.IsInDistance");
-        return sqrDistance > sqrVector;
+        // 두 점 사이의 거리의 제곱을 계산
+        float squaredDistance = (targetPos - basePos).sqrMagnitude;
+
+        // 주어진 거리의 제곱과 비교하여, 해당 거리 내에 있는지 여부를 반환
+        return squaredDistance <= distance * distance;
+    }
+
+    /// <summary>
+    /// 대상 위치가 특정 지점에서부터의 원뿔 형태의 범위 내에 있는가?
+    /// </summary>
+    /// <param name="targetPos">대상 위치</param>
+    /// <param name="basePos">찾을 원뿔 범위의 시작점</param>
+    /// <param name="angle">각도 기준점(Vector2D.up을 기준, 시계 방향으로 degree 각도)</param>
+    /// <param name="angleSize">각도 크기(양 옆으로 절반의 degree각도)</param>
+    /// <param name="distance">찾을 거리(원뿔 길이)</param>
+    /// <returns>대상 위치가 특정 지점에서부터의 원뿔 형태의 범위 내에 있는가?</returns>
+    public static bool IsInCorn(Vector2 targetPos, Vector2 basePos, float angle, float angleSize, float distance)
+    {
+        if (!IsAround(targetPos, basePos, distance)) { return false; }//거리 밖에 있으면 false
+
+
+        // 기준 방향 벡터 계산: Vector2.up을 주어진 각도만큼 회전시킨다.
+        float angleInRadians = angle * Mathf.Deg2Rad;
+        Vector2 coneDirection = new Vector2(Mathf.Sin(angleInRadians), Mathf.Cos(angleInRadians));
+
+        // 대상 벡터와 기준 벡터 간의 각도 계산
+        float halfAngleSizeInRadians = angleSize * 0.5f * Mathf.Deg2Rad;
+        float cosHalfAngleSize = Mathf.Cos(halfAngleSizeInRadians);
+
+        // 내적을 사용하여 각도 비교
+        Vector2 directionToTarget = targetPos - basePos;
+        float cosAngleToTarget = Vector2.Dot(directionToTarget.normalized, coneDirection);
+
+        // 대상 위치가 원뿔 형태의 각도 범위 내에 있는지 확인
+        return cosAngleToTarget >= cosHalfAngleSize;
     }
     #endregion
 

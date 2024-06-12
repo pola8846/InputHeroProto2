@@ -1833,12 +1833,44 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2892020033193987951, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: GO
+      value: 
+      objectReference: {fileID: 6433798773826802276, guid: a794d10ffc7348243a6e7c0a6f29193c, type: 3}
+    - target: {fileID: 2892020033193987951, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: bulletSpeedMax
-      value: 300
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2892020033193987951, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: bulletSpeedMin
-      value: 300
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: maxBullet
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: nowBullet
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: shootCooltime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: autoAim_mouse1
+      value: 7.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673337096895855894, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673337096895855894, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673337096895855894, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673337096895855894, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1887,8 +1919,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8147971617352336438, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1108592465}
   m_SourcePrefab: {fileID: 100100000, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+--- !u!1 &1108592464 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8147971617352336438, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+  m_PrefabInstance: {fileID: 1108592463}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1108592465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108592464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc0b00b38ccee844aec835748bbfe26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1139481768
 GameObject:
   m_ObjectHideFlags: 0
@@ -2648,8 +2700,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: -1
   stats:
-    health: 100
-    maxHealth: 100
+    health: 99999
+    maxHealth: 99999
     attackPower: 1
     defencePower: 0
     defenceRate: 0
@@ -2765,11 +2817,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GO: {fileID: 6433798773826802276, guid: e03b0612a35654e4e8f29e14f2bd48b2, type: 3}
+  GO: {fileID: 6433798773826802276, guid: 399d6269063175a42b1c231956e954f2, type: 3}
   bulletNum: 1
   shootType: 0
-  bulletSpeedMin: 20
-  bulletSpeedMax: 20
+  bulletSpeedMin: 500
+  bulletSpeedMax: 500
   bulletAngleMin: 90
   bulletAngleMax: 90
   lifeTime: 0
@@ -2792,6 +2844,7 @@ GameObject:
   - component: {fileID: 1224023500}
   - component: {fileID: 1224023501}
   - component: {fileID: 1224023502}
+  - component: {fileID: 1224023503}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2943,6 +2996,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletCounter: {fileID: 1001786054}
   testActionBar: {fileID: 1854516811}
+--- !u!114 &1224023503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224023493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d66b4d9b00a2c7042b7f28ccfdce100e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1410101376
 GameObject:
   m_ObjectHideFlags: 0
@@ -3670,8 +3735,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2125, y: 1.0875, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.71, y: 0.6368041, z: 0.585567}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1202882637}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

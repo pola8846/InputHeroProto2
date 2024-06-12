@@ -14,6 +14,25 @@ public class Projectile : MonoBehaviour
     protected bool isInitialized = false;
     protected bool isDestroyed = false;
 
+    [SerializeField]
+    protected bool canBeAutoAimed = true;
+
+
+    /// <summary>
+    /// 공격하는 유닛
+    /// </summary>
+    protected Unit attackUnit;
+    /// <summary>
+    /// 공격하는 유닛
+    /// </summary>
+    public Unit AttackUnit
+    {
+        get
+        {
+            return attackUnit;
+        }
+    }
+
     /// <summary>
     /// 초기화
     /// </summary>
@@ -21,7 +40,7 @@ public class Projectile : MonoBehaviour
     /// <param name="speed">이동 속도</param>
     /// <param name="lifeTime">수명(초)</param>
     /// <param name="lifeDistance">수명(거리)</param>
-    public virtual void Initialize(Vector2 dir, float speed, float lifeTime = -1f, float lifeDistance = -1f)
+    public virtual void Initialize(Vector2 dir, float speed, Unit sourceUnit, float lifeTime = -1f, float lifeDistance = -1f)
     {
         PerformanceManager.StartTimer("Projectile.Initialize");
 
@@ -31,6 +50,9 @@ public class Projectile : MonoBehaviour
         this.lifeTime = lifeTime;
         this.lifeDistance = lifeDistance;
         isInitialized = true;
+        attackUnit = sourceUnit;
+
+        ProjectileManager.Enroll(this);
 
         if (lifeTime > 0)
         {
@@ -59,14 +81,14 @@ public class Projectile : MonoBehaviour
     protected virtual void Destroy()
     {
         var da = GetComponent<DamageArea>();
+        isDestroyed = true;
+        ProjectileManager.Remove(this);
         if (da is not null)
         {
-            isDestroyed = true;
             da.Destroy();
         }
         else
         {
-            isDestroyed = true;
             Destroy(gameObject);
         }
     }
@@ -76,5 +98,10 @@ public class Projectile : MonoBehaviour
     {
         yield return new WaitForSeconds(lifeTime);
         Destroy();
+    }
+
+    public virtual void Parried()
+    {
+
     }
 }

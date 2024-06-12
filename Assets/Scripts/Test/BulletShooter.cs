@@ -87,6 +87,7 @@ public class BulletShooter : MonoBehaviour
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
                     Vector2 direction = quat * Vector2.up;
+                    //direction.x *= -1;
                     MakeProjectile(direction);
                 }
                 break;
@@ -100,6 +101,7 @@ public class BulletShooter : MonoBehaviour
                     {
                         Vector2 direction = quat * Vector2.up;
                         MakeProjectile(direction);
+                        //direction.x *= -1;
                         quat *= quatAtOnce;
                     }
                 }
@@ -117,11 +119,19 @@ public class BulletShooter : MonoBehaviour
         Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
         
         GameObject go = Instantiate(GO, transform.position, transform.rotation, attack.transform);
-        attack.EnrollDamage(go);
+        if (go.GetComponentsInChildren<DamageArea>().Length>=1)
+        {
+            attack.EnrollDamage(go);
+        }
+        else
+        {
+            attack.isDestroySelfAuto = false;
+        }
+
 
         Projectile projectile = go.GetComponent<Projectile>();
         projectile?.Initialize(
-            direction, Random.Range(bulletSpeedMin, bulletSpeedMax),
+            direction, Random.Range(bulletSpeedMin, bulletSpeedMax), Unit,
             lifeTime: lifeTime, lifeDistance: lifeDistance);
     }
 }

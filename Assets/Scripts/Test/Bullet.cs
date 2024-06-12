@@ -13,10 +13,10 @@ public class Bullet : Projectile
     [SerializeField]
     private bool isNotSlowed = false;
 
-    public override void Initialize(Vector2 dir, float speed, float lifeTime = -1f, float lifeDistance = -1f)
+    public override void Initialize(Vector2 dir, float speed, Unit sourceUnit, float lifeTime = -1f, float lifeDistance = -1f)
     {
         PerformanceManager.StartTimer("Bullet.Initialize");
-        base.Initialize(dir, speed, lifeTime, lifeDistance);
+        base.Initialize(dir, speed, sourceUnit, lifeTime, lifeDistance);
 
         rb = GetComponent<Rigidbody2D>();
         SetSpeed();

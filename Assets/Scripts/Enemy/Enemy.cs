@@ -12,7 +12,7 @@ public class Enemy : Unit
 
     protected bool FindPlayer()
     {
-        bool result = GameTools.IsInDistance(transform.position, GameManager.Player.transform.position, findDistance);
+        bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, findDistance);
         return result;
     }
 }

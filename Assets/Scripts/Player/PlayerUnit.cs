@@ -53,6 +53,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float shootCooltime;
     private bool canShoot = true;
     [SerializeField]
+    private float attackRange = 50f;
+    [SerializeField]
+    private float autoAim_mouse1 = 0.25f;
+    [SerializeField]
+    private LayerMask blockLayer;//오토에임을 가로막을 레이어
+
+    [SerializeField]
     private GameObject targetter;
     private GameObject targetterGO;
     [SerializeField]
@@ -67,6 +74,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             nowBullet = Mathf.Clamp(value, 0, maxBullet);
             UIManager.SetBulletCounter(nowBullet);
+        }
+    }
+    private Vector2 ShootStartPos
+    {
+        get
+        {
+            return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
         }
     }
 
@@ -194,7 +208,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             {
                 if (!TimeManager.IsUsingSkills)
                 {
-                    ShootToMouse();
+                    //ShootToMouse();
+                    Shoot();
                 }
             }
             else
@@ -252,13 +267,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         keyStay.Clear();
     }
 
+    #region 원거리 기본공격
     //마우스 방향 표시기 회전(임시)
     private void RotateTargetter()
     {
         PerformanceManager.StartTimer("PlayerUnit.RotateTargetter");
         if (targetterGO is null)
         {
-        PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+            PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
             return;
         }
 
@@ -272,6 +288,52 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
         targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+    }
+
+    private void Shoot()
+    {
+
+        Projectile target = null;
+
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = -Camera.main.transform.position.z;
+        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        worldMousePos.z = 0;
+
+        //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
+        target = ProjectileManager.FindByDistance(worldMousePos, autoAim_mouse1);
+        //경로가 확보된 탄이 있으면
+        if (target != null && BulletPathCheck(target.transform.position))
+        {
+            //해당 탄을 찍고 공격한다
+            Debug.Log(1);
+
+            var temp = target.GetComponent<TestBulletChecker>();
+            if (temp != null)
+            {
+                Debug.Log("Hit");
+                var da = target.GetComponentInChildren<DamageArea>();
+                if (da != null)
+                {
+                    da.Destroy();
+                }
+                else
+                {
+                    var prj = target.GetComponentInChildren<Projectile>();
+                    if (prj != null)
+                    {
+                        prj.Parried();
+                    }
+                }
+            }
+            DrawHitGrapic(ShootStartPos, target.transform.position);
+            return;
+        }
+
+        //추가로 오토에임 건다
+
+        //오토에임 안 걸리면 직선으로 쏴서 닿는 것을 목표로 잡는다
+        ShootByRay();
     }
 
     //마우스 방향으로 발사(임시)
@@ -290,7 +352,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //쏠 방향을 구해온다
         Vector2 dir = (Vector2)targetterGO.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
-        float angle = Vector2.SignedAngle(dir, Vector2.up) * -1;
+        float angle = Vector2.SignedAngle(dir, Vector2.up) * (IsLookLeft ? -1 : 1);
 
 
         //방향대로 쏜다
@@ -299,10 +361,152 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         PerformanceManager.StopTimer("PlayerUnit.ShootToMouse");
     }
 
+    private void ShootByRay()
+    {
+        //레이를 쏜다
+
+        //쏠 방향을 구해온다
+        Vector2 dir = ((Vector2)targetterGO.transform.position - ShootStartPos).normalized;//총알 방향
+
+        //방향대로 쏜다
+        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet"));
+        var ray = Physics2D.RaycastAll(ShootStartPos, dir, attackRange, layer);
+        Collider2D target = null;//충돌한 적법하고 가장 가까운 대상
+        Vector2 hitPos = Vector2.zero;//충돌한 지점
+
+        //유효하며 가장 가까운 것을 찾는다
+        float minDistance = float.MaxValue;
+        foreach (var hit in ray)
+        {
+            //적법하지 않은 대상 넘기기
+            if (hit.collider.GetComponent<IBulletHitChecker>() == null &&
+                hit.collider.GetComponent<Unit>() == null &&
+                hit.collider.GetComponent<Projectile>() == null)
+            {
+                continue;
+            }
+
+            if (hit.transform == transform ||
+                hit.transform.parent == transform)
+            {
+                continue;
+            }
+
+            //가장 가까운 것 찾기
+            float distance = Vector2.Distance(ShootStartPos, hit.point);
+            if (distance < minDistance)
+            {
+                target = hit.collider;
+                hitPos = hit.point;
+                minDistance = distance;
+            }
+        }
+
+        //가로막혔는가?
+        if (target == null)
+        {
+            //최대 사거리까지 발사
+            //그래픽 표시
+            DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
+            return;
+        }
+
+        //적법한 대상에게 충돌
+        //피해 적용
+        HitCheck(target, hitPos);
+        //그래픽 표시
+        DrawHitGrapic(ShootStartPos, hitPos);
+    }
+
+    /// <summary>
+    /// 해당 위치까지 총알이 갈 수 있는지(중간에 장애물이 없는지)
+    /// </summary>
+    /// <param name="targetPos">목표 위치</param>
+    /// <returns>갈 수 있는가?</returns>
+    private bool BulletPathCheck(Vector2 targetPos)
+    {
+        //레이를 쏜다
+        var ray = Physics2D.LinecastAll(ShootStartPos, targetPos, blockLayer);
+        //플레이어가 아닌 것에 닿으면 막힌다
+        foreach (var hit in ray)
+        {
+            if (!hit.transform.CompareTag("Player"))
+                return false;
+        }
+
+        //안 닿으면 안 막힌다
+        return true;
+    }
+
+    /// <summary>
+    /// 피격 처리
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="hitPos"></param>
+    /// <returns></returns>
+    private bool HitCheck(Collider2D target, Vector2 hitPos)
+    {
+        if (target == null)
+        {
+            return false;
+        }
+
+        // 충돌 처리
+        Debug.Log(target.gameObject.name);
+
+        //적 히트박스면
+        HitBox hitBox = target.GetComponent<HitBox>();
+        if (hitBox != null && target.CompareTag("Enemy"))
+        {
+            hitBox.Damage(1);
+            //Hit(hitBox.Unit);
+            return true;
+        }
+
+        //총알이면
+        //if (Time.timeScale < 1)
+        {
+            var temp = target.GetComponent<TestBulletChecker>();
+            if (temp != null)
+            {
+                Debug.Log("Hit");
+                var da = target.GetComponentInChildren<DamageArea>();
+                if (da != null)
+                {
+                    da.Destroy();
+                    return true;
+                }
+
+                var prj = target.GetComponentInChildren<Projectile>();
+                if (prj != null)
+                {
+                    prj.Parried();
+                }
+                return true;
+            }
+        }
+
+        //기타 장애물이면
+        if (true)
+        {
+
+        }
+
+        // 충돌에 대한 처리 추가
+        return false;
+    }
+
+    //총알 발사 그래픽 그리기
+    private void DrawHitGrapic(Vector2 start, Vector2 target)
+    {
+        Debug.DrawLine(start, target);
+    }
+
     public void AttackEnd()
     {
         canMove = true;
     }
+    #endregion
 
     //점프 가능 체크
     private void JumpCheck()
@@ -410,9 +614,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private IEnumerator DoShoot()
     {
         canShoot = false;
-        ShootToMouse();
+        Shoot();
+        //ShootToMouse();
         yield return new WaitForSecondsRealtime(shootCooltime);
         canShoot = true;
     }
-
 }
