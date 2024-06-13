@@ -58,6 +58,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float autoAim_mouse1 = 0.25f;
     [SerializeField]
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
+    [SerializeField]
+    private GameObject trail;
 
     [SerializeField]
     private GameObject targetter;
@@ -152,6 +154,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public void KeyDown(InputType inputType)
     {
         //입력 검사
+        if (TimeManager.IsSlowing)
+        {
+            return;
+        }
+
+
         if (keyStay.ContainsKey(inputType))
         {
             keyStay[inputType] = true;
@@ -326,7 +334,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                     }
                 }
             }
-            DrawHitGrapic(ShootStartPos, target.transform.position);
+            StartCoroutine(DrawHitGrapic(ShootStartPos, target.transform.position));
             return;
         }
 
@@ -407,7 +415,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             //최대 사거리까지 발사
             //그래픽 표시
-            DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
+            StartCoroutine(DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange)));
+            //DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
             return;
         }
 
@@ -415,7 +424,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //피해 적용
         HitCheck(target, hitPos);
         //그래픽 표시
-        DrawHitGrapic(ShootStartPos, hitPos);
+        StartCoroutine(DrawHitGrapic(ShootStartPos, hitPos));
+        //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
     /// <summary>
@@ -496,10 +506,19 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return false;
     }
 
-    //총알 발사 그래픽 그리기
-    private void DrawHitGrapic(Vector2 start, Vector2 target)
+    //총알 발사 그래픽 그리기. 표시되긴 하는데 안 이쁨
+    private IEnumerator DrawHitGrapic(Vector2 start, Vector2 target)
     {
-        Debug.DrawLine(start, target);
+        GameObject go = Instantiate(trail);
+        go.transform.position = start;
+        go.GetComponent<TrailRenderer>().emitting = true;
+
+        yield return null;
+
+        go.transform.position = target;
+        Destroy(go, go.GetComponent<TrailRenderer>().time);
+
+        //Debug.DrawLine(start, target);
     }
 
     public void AttackEnd()
