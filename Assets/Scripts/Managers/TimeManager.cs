@@ -188,7 +188,6 @@ public class TimeManager : MonoBehaviour
     //시간 배율 조정
     public static void SetTimeScale(float scale)
     {
-        Debug.Log(scale);
         Time.timeScale = scale;
         Time.fixedDeltaTime = Time.timeScale / framePerSec;
         onTimeScaleChanged?.Invoke(instance, Time.timeScale);

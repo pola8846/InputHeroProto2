@@ -75,42 +75,36 @@ public class ProjectileManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 대상 위치에서 일정 거리 내에 있는 가장 가까운 탄환 찾기
+    /// 대상 위치에서 일정 거리 내에 있는 탄환 찾기
     /// </summary>
     /// <param name="distance">찾을 거리</param>
     /// <param name="origin">찾을 원점</param>
-    /// <returns>찾은 탄환, 없다면 null</returns>
-    public static Projectile FindByDistance(Vector2 origin, float distance, bool isPlayers = false)
+    /// <returns>찾은 탄환</returns>
+    public static List<Projectile> FindByDistance(Vector2 origin, float distance, bool isPlayers = false)
     {
         //주변에 있는 모든 탄 가져오기
-        List<Projectile> list = FindByFunc((Projectile) =>
+        return FindByFunc((Projectile) =>
         {
             return GameTools.IsAround(origin, Projectile.transform.position, distance);
-        }, 
+        },
         isPlayers);
+    }
 
-        if (list.Count > 0)
+    /// <summary>
+    /// 대상 위치에서 특정 부채꼴 내에 있는 탄환 찾기
+    /// </summary>
+    /// <param name="basePos">부채꼴 시작점</param>
+    /// <param name="angle">부채꼴 중앙 각도</param>
+    /// <param name="angleSize">부채꼴 총 각도</param>
+    /// <param name="distance">부채꼴 반지름</param>
+    /// <param name="isPlayers">플레이어 탄환을 찾을 것인가?</param>
+    /// <returns>찾은 탄환</returns>
+    public static List<Projectile> FindInCorn(Vector2 basePos, float angle, float angleSize, float distance, bool isPlayers = false)
+    {
+        return FindByFunc((Projectile) =>
         {
-            //찾은 모든 탄 중 가장 가까운 것 찾기
-            Projectile closest = list[0];
-            float sqrDist = ((Vector2)closest.transform.position - origin).sqrMagnitude;
-
-            for (int i = 1; i < list.Count; i++)
-            {
-                float temp = ((Vector2)list[i].transform.position - origin).sqrMagnitude;
-                if (temp < sqrDist)
-                {
-                    closest = list[i];
-                    sqrDist = temp;
-                }
-            }
-
-            return closest;
-        }
-        else
-        {
-            //찾은 탄 없다면 null 반환
-            return null;
-        }
+            return GameTools.IsInCorn(Projectile.transform.position, basePos, angle, angleSize, distance);
+        },
+            isPlayers);
     }
 }

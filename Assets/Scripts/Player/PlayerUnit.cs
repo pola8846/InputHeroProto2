@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 [RequireComponent(typeof(Mover))]
 public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
@@ -56,6 +57,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float attackRange = 50f;
     [SerializeField]
     private float autoAim_mouse1 = 0.25f;
+    [SerializeField]
+    private float autoAim_cornAngle1 = 1f;
+    [SerializeField]
+    private float autoAim_sqrLength1 = 10f;
+    [SerializeField]
+    private float autoAim_sqrWidth1 = 1f;
     [SerializeField]
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
     [SerializeField]
@@ -309,13 +316,48 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         worldMousePos.z = 0;
 
         //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
-        target = ProjectileManager.FindByDistance(worldMousePos, autoAim_mouse1);
-        //경로가 확보된 탄이 있으면
+        target = GameTools.FindClosest(worldMousePos, ProjectileManager.FindByDistance(worldMousePos, autoAim_mouse1));
+        //쏠 수 있으면 쏜다
+        if (ShootToTarget(target))
+        {
+            return;
+        }
+
+        /*
+        //플레이어로부터 마우스 방향으로 작은 부채꼴을 그려 가까운 것 잡는다
+        Vector2 dir = (Vector2)targetterGO.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
+        float angle = Vector2.SignedAngle(dir, Vector2.up);//마우스 방향
+
+        target = GameTools.FindClosest(transform.position, ProjectileManager.FindInCorn(transform.position, angle, autoAim_cornAngle1, attackRange));
+        //쏠 수 있으면 쏜다
+        if(ShootToTarget(target))
+        {
+            return;
+        }
+        */
+
+        target = GameTools.FindClosest(worldMousePos, ProjectileManager.FindByFunc((Prj)=>
+        {
+            Vector2 pointB = transform.position + ((worldMousePos-transform.position).normalized * autoAim_sqrLength1);
+            return GameTools.IsPointInRhombus(Prj.transform.position, transform.position, pointB, autoAim_sqrWidth1);
+        }));
+        if (ShootToTarget(target))
+        {
+            return;
+        }
+
+        //추가로 오토에임 건다
+
+        //오토에임 안 걸리면 직선으로 쏴서 닿는 것을 목표로 잡는다
+        ShootByRay();
+    }
+
+    //대상에게 탄 충돌 시도, 대상을 쏠 수 있으면 true
+    private bool ShootToTarget(Projectile target)
+    {
         if (target != null && BulletPathCheck(target.transform.position))
         {
             //해당 탄을 찍고 공격한다
-            Debug.Log(1);
-
             var temp = target.GetComponent<TestBulletChecker>();
             if (temp != null)
             {
@@ -335,13 +377,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 }
             }
             StartCoroutine(DrawHitGrapic(ShootStartPos, target.transform.position));
-            return;
+            return true;
         }
-
-        //추가로 오토에임 건다
-
-        //오토에임 안 걸리면 직선으로 쏴서 닿는 것을 목표로 잡는다
-        ShootByRay();
+        return false;
     }
 
     //마우스 방향으로 발사(임시)
@@ -462,7 +500,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         // 충돌 처리
-        Debug.Log(target.gameObject.name);
+        //Debug.Log(target.gameObject.name);
 
         //적 히트박스면
         HitBox hitBox = target.GetComponent<HitBox>();

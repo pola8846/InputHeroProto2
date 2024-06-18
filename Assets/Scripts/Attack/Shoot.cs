@@ -20,6 +20,9 @@ public class Shoot : Projectile
     [SerializeField]
     private bool isNotSlowed = false;
 
+    [SerializeField]
+    private GameObject parryParticle;
+
 
 
     //√ ±‚»≠
@@ -121,6 +124,9 @@ public class Shoot : Projectile
     public override void Parried()
     {
         base.Parried();
+        GameObject go = Instantiate(parryParticle);
+        go.transform.position = transform.position;
+        
         Destroy();
     }
 }

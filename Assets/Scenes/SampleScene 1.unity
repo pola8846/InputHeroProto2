@@ -834,7 +834,7 @@ Transform:
   m_GameObject: {fileID: 536146904}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: -0.023267163, z: 0}
   m_LocalScale: {x: 3.6936417, y: 2.132948, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1304,13 +1304,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.055908605, y: 0, z: 0, w: 0.9984359}
-  m_LocalPosition: {x: 0, y: 5, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 6.41, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1428,7 +1428,7 @@ MonoBehaviour:
   camRotationOffset: {x: 0, y: 0, z: 0}
   snapLocalScale: 0
   snapScaleValue: 0.05
-  lastSnappedPosition: {x: 0, y: 0, z: 0}
+  lastSnappedPosition: {x: 0, y: 4.925925, z: -10.008322}
   skippedSnappedPosition: {x: 0, y: 0, z: 0}
   initialPosition: {x: 0, y: 0, z: 0}
   smoothSnapUI: 1
@@ -1858,11 +1858,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: shootCooltime
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: autoAim_mouse1
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: autoAim_sqrWidth1
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240993601412176969, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: autoAim_cornAngle1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673337096895855894, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalScale.x
@@ -2961,7 +2969,7 @@ MonoBehaviour:
   comboInputsTime:
     _serializedList:
     - Key: 6
-      Value: 2.5
+      Value: 0
     - Key: 2
       Value: 1.5
     - Key: 3
@@ -2970,7 +2978,7 @@ MonoBehaviour:
       Value: 4
     - Key: 8
       Value: 9999
-  maxCombo: 12
+  maxCombo: 9999
 --- !u!114 &1224023501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2986,7 +2994,7 @@ MonoBehaviour:
   slowRate: 0
   slowStartTime: 0.6
   slowEndTime: 0.3
-  slowTime: 15
+  slowTime: 9999
   isSlowed: 0
   isSlowing: 0
   slowSlider: {fileID: 1794393007}
@@ -3311,7 +3319,7 @@ MonoBehaviour:
     orthographicSizeCorrection: {fileID: 0}
   snappables:
   - {fileID: 3662484147837620381}
-  storedCamRotation: {x: 0.055908605, y: 0, z: 0, w: 0.9984359}
+  storedCamRotation: {x: 0, y: 0, z: 0, w: 1}
   storedPixelMultiplier: 3
   origOrthoSize: 0
 --- !u!4 &1777338596
@@ -4212,8 +4220,8 @@ MonoBehaviour:
     orthographicSizeCorrection: {fileID: 963194232}
   snappables:
   - {fileID: 963194233}
-  storedCamRotation: {x: 0, y: 0, z: 0, w: 0}
-  storedPixelMultiplier: 0
+  storedCamRotation: {x: 0.055908605, y: 0, z: 0, w: 0.9984359}
+  storedPixelMultiplier: 3
   origOrthoSize: 3.2037036
 --- !u!4 &2044855567
 Transform:
@@ -4532,8 +4540,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5680242657175762281}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.055908605, y: 0, z: 0, w: 0.9984359}
-  m_LocalPosition: {x: 0, y: 5, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4633,7 +4641,7 @@ MonoBehaviour:
   camRotationOffset: {x: 0, y: 0, z: 0}
   snapLocalScale: 0
   snapScaleValue: 0.05
-  lastSnappedPosition: {x: 0, y: 4.9995356, z: -10.000052}
+  lastSnappedPosition: {x: 0, y: 3, z: -10}
   skippedSnappedPosition: {x: 0, y: 0, z: 0}
   initialPosition: {x: 0, y: 0, z: 0}
   smoothSnapUI: 1
