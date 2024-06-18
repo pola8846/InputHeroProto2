@@ -12,6 +12,6 @@ public class TestCornChecker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(GameTools.IsInCorn(target.transform.position, transform.position, angle, angleSize, distance));
+        //Debug.Log(GameTools.IsInCorn(target.transform.position, transform.position, angle, angleSize, distance));
     }
 }

@@ -51,6 +51,140 @@ public class GameTools
         // 대상 위치가 원뿔 형태의 각도 범위 내에 있는지 확인
         return cosAngleToTarget >= cosHalfAngleSize;
     }
+
+    /// <summary>
+    /// 주어진 점이 두 벡터를 잇는 선분을 중심으로 한 마름모 안에 있는지 검사
+    /// </summary>
+    /// <param name="point">검사할 점</param>
+    /// <param name="a">선분의 한 쪽 점</param>
+    /// <param name="b">선분의 반대 점</param>
+    /// <param name="thickness">마름모의 두께</param>
+    /// <returns>점이 마름모 안에 있는지 여부</returns>
+    public static bool IsPointInRhombus(Vector2 point, Vector2 a, Vector2 b, float thickness)
+    {
+        // 선분 AB의 방향 벡터 및 길이 계산
+        Vector2 direction = b - a;
+
+        // 방향 벡터를 정규화
+        direction.Normalize();
+
+        // 마름모의 꼭짓점 계산 (수직 방향의 벡터)
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x) * thickness;
+
+        // 마름모의 네 꼭짓점 계산
+        Vector2 p1 = a + perpendicular;
+        Vector2 p2 = a - perpendicular;
+        Vector2 p3 = b - perpendicular;
+        Vector2 p4 = b + perpendicular;
+
+        // 점이 마름모 내부에 있는지 검사 (각 변을 기준으로 크로스 프로덕트 검사)
+        if (IsPointInSquare(point, p1, p2, p3, p4))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 볼록 사각형 내부에 점이 있는지 검사하는 함수. 오목 사각형일 땐 작동하지 않음
+    /// </summary>
+    /// <param name="p">검사할 점</param>
+    /// <param name="v1">사각형의 첫 번째 꼭지점</param>
+    /// <param name="v2">사각형의 두 번째 꼭지점</param>
+    /// <param name="v3">사각형의 세 번째 꼭지점</param>
+    /// <param name="v4">사각형의 네 번째 꼭지점</param>
+    /// <returns>점이 사각형 내부에 있는지 여부</returns>
+    public static bool IsPointInSquare(Vector2 p, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    {
+        // 벡터 생성: 각 변에 대한 점의 위치를 기준으로 한 벡터
+        Vector2 d1 = v2 - v1; // 첫 번째 변
+        Vector2 d2 = v3 - v2; // 두 번째 변
+        Vector2 d3 = v4 - v3; // 세 번째 변
+        Vector2 d4 = v1 - v4; // 네 번째 변
+
+        // 각 변에 대한 점과의 외적 계산
+        float cross1 = CrossProduct(d1, p - v1);
+        float cross2 = CrossProduct(d2, p - v2);
+        float cross3 = CrossProduct(d3, p - v3);
+        float cross4 = CrossProduct(d4, p - v4);
+
+        // 모든 외적의 결과가 같은 부호인지 확인
+        return (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) ||
+               (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
+    }
+
+
+    /// <summary>
+    /// 주어진 점이 삼각형 안에 있는지 검사
+    /// </summary>
+    /// <param name="point">검사할 점</param>
+    /// <param name="a">삼각형의 첫 번째 점</param>
+    /// <param name="b">삼각형의 두 번째 점</param>
+    /// <param name="c">삼각형의 세 번째 점</param>
+    /// <returns>점이 삼각형 안에 있는지 여부</returns>
+    private static bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
+    {
+        // 벡터 간의 크로스 프로덕트를 사용하여 점이 삼각형 내부에 있는지 검사
+        bool b1 = CrossProduct(b - a, point - a) < 0.0f;
+        bool b2 = CrossProduct(c - b, point - b) < 0.0f;
+        bool b3 = CrossProduct(a - c, point - c) < 0.0f;
+
+        return ((b1 == b2) && (b2 == b3));
+    }
+
+    /// <summary>
+    /// 2D 벡터의 외적 계산
+    /// </summary>
+    /// <param name="a">첫 번째 벡터</param>
+    /// <param name="b">두 번째 벡터</param>
+    /// <returns>벡터의 외적</returns>
+    private static float CrossProduct(Vector2 a, Vector2 b)
+    {
+        return a.x * b.y - a.y * b.x;
+    }
+
+    /// <summary>
+    /// 가장 가깝거나 먼 좌표 찾아서 반환
+    /// </summary>
+    /// <param name="originPos">찾을 기준 좌표</param>
+    /// <param name="objects">찾을 오브젝트들</param>
+    /// <param name="findFar">먼 것을 찾을 것인가?</param>
+    /// <returns>찾은 오브젝트</returns>
+    public static T FindClosest<T>(Vector3 originPos, List<T> objects, bool findFar = false) where T : MonoBehaviour
+    {
+        if (objects == null)
+        {
+            return null;
+        }
+
+        if (objects.Count > 0)
+        {
+            //찾은 모든 것 중 가장 가까운 것 찾기
+            T target = objects[0];
+            float sqrDist = (target.transform.position - originPos).sqrMagnitude;//target과의 거리
+
+            //나머지 모두와 비교
+            for (int i = 1; i < objects.Count; i++)
+            {
+                float temp = (objects[i].transform.position - originPos).sqrMagnitude;//temp와의 거리
+                if (findFar ? temp > sqrDist : temp < sqrDist)//거리 비교
+                {
+                    target = objects[i];
+                    sqrDist = temp;
+                }
+            }
+
+            return target;
+        }
+        else
+        {
+            //없다면 null 반환
+            //Debug.LogError("FindClosest");
+            return null;
+        }
+    }
+
     #endregion
 
     #region 리스트 비교

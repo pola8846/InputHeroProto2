@@ -332,5 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423a10d1571e73048a94b29cb57668ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeAutoAimed: 1
   damage: 1
   isNotSlowed: 0
+  parryParticle: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}

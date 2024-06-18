@@ -33,7 +33,7 @@ public class ComboManager : MonoBehaviour
     private Queue<PlayerSkill> findedSkills = new();
     private static Queue<PlayerSkill> FindedSkills => instance.findedSkills;
 
-    [SerializeField, Range(1, 12)]
+    [SerializeField]
     private int maxCombo;
 
     /// <summary>
