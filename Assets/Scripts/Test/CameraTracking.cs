@@ -1,17 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
+[RequireComponent(typeof(Camera)), RequireComponent(typeof(SmoothMoving))]
 public class CameraTracking : MonoBehaviour
 {
+    public Vector3 originPos;
+    private SmoothMoving smooth;
     [SerializeField]
-    private Vector3 originPos;
-    public SmoothMoving smooth;
-    public float trackingDistance;//추적 시작할 거리
+    private float trackingDistance;//추적 시작할 거리
+
+
 
     private void Start()
     {
-        originPos = transform.position;
+        //originPos = transform.position;
+        smooth = GetComponent<SmoothMoving>();
     }
     void Update()
     {
@@ -28,5 +33,11 @@ public class CameraTracking : MonoBehaviour
         {
             smooth.move = false;
         }
+    }
+
+    public void Move()
+    {
+        GameObject player = GameObject.Find("Player");
+        transform.position = originPos + player.transform.position;
     }
 }

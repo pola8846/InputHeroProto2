@@ -43,10 +43,10 @@ MonoBehaviour:
   Path: ../../FMOD Studio/testProject/Build/Desktop/TestMusic.bank
   Name: TestMusic
   StudioPath: bank:/TestMusic
-  lastModified: 638544156064322144
+  lastModified: 638544741630943453
   FileSizes:
   - Name: Desktop
-    Value: 9303168
+    Value: 9303296
   Exists: 1
 --- !u!114 &-215990125686248497
 MonoBehaviour:
@@ -63,10 +63,10 @@ MonoBehaviour:
   Path: ../../FMOD Studio/testProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638544073918586128
+  lastModified: 638544166789445617
   FileSizes:
   - Name: Desktop
-    Value: 1036
+    Value: 1194
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -91,7 +91,7 @@ MonoBehaviour:
   - {fileID: -215990125686248497}
   StringsBanks:
   - {fileID: 5465656650166329041}
-  cacheTime: 638544156064322144
+  cacheTime: 638544741630943453
   cacheVersion: 131618
 --- !u!114 &1893772691658195406
 MonoBehaviour:
@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: -4856317276215040266}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters:
   - {fileID: -5911181164406128948}
   - {fileID: 4325810466810996132}
@@ -161,8 +161,8 @@ MonoBehaviour:
   Path: ../../FMOD Studio/testProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638544073918598773
+  lastModified: 638544166789455584
   FileSizes:
   - Name: Desktop
-    Value: 916
+    Value: 952
   Exists: 1

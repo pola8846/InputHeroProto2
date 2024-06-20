@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Label tabindex="-1" text="위치 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+    <ui:Vector3Field label="초기 위치" binding-path="originPos" name="originPos" />
+    <ui:Slider label="최소 추적 거리&#10;" high-value="5" low-value="0.1" binding-path="trackingDistance" show-input-field="true" />
+    <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+    <ui:Foldout text="Default Inspector" name="Default_Inspector" />
+</ui:UXML>
