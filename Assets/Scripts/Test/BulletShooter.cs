@@ -71,6 +71,16 @@ public class BulletShooter : MonoBehaviour
     public Unit Unit;
     public bool isPlayers = false;
 
+    public bool testTriger = false;
+
+    private void Update()
+    {
+        if (testTriger)
+        {
+            Triger();
+            testTriger = false;
+        }
+    }
 
     public void Triger()
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 public class TickTimer
 {
     public float time;
-    private float checkTime;
+    public float checkTime;
     private bool autoReset;
     private bool unscaledTime;
 

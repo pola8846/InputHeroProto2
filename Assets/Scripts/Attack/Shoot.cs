@@ -85,7 +85,8 @@ public class Shoot : Projectile
             return;
         }
 
-        transform.Translate(moveDist);
+        //transform.position  = transform.position + (Vector3)moveDist;
+        transform.Translate(moveDist, Space.World);
         previousPosition = currentPosition;
     }
 

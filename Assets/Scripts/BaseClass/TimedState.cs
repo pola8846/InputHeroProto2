@@ -8,22 +8,23 @@ using UnityEngine;
 public class TimedState : State
 {
     protected TickTimer timer;
+    protected int counter;//½ÇÇàÇÑ È½¼ö
     public TimedState(StateMachine machine):base(machine)
     {
-        unit = machine.Unit;
-        this.machine = machine;
         timer = new(autoReset: true);
     }
 
     public override void Enter()
     {
         timer.Reset();
+        counter = 0;
     }
 
     public override void Execute()
     {
         if (timer.Check())
         {
+            counter++;
             Main();
             timer.Reset();
         }

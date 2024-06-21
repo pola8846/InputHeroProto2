@@ -127,10 +127,6 @@ public class TestEnemy_Boss_1 : Enemy
     private TickTimer time_AreaAttack;
 
 
-    //FSM
-    private StateMachine stateMachine;
-
-
     //기본함수
     protected override void Start()
     {
@@ -146,7 +142,6 @@ public class TestEnemy_Boss_1 : Enemy
         time_BAttack2 = new(isTrigerInstant: true);
         time_AreaAttack = new(isTrigerInstant: true);
 
-        stateMachine = new(this);
         stateMachine.ChangeState<TestEnemy_Boss_1_Idle>();
     }
 
@@ -155,7 +150,6 @@ public class TestEnemy_Boss_1 : Enemy
         PerformanceManager.StartTimer("TestEnemy_Boss_1.Update");
 
         base.Update();
-        stateMachine.Update();
 
         switch (state)
         {
@@ -655,7 +649,7 @@ public class TestEnemy_Boss_1 : Enemy
     public void ShootToPlayer(float angleRange = 0f)
     {
         Vector2 temp = GetDist(GameManager.Player.transform.position + Vector3.up * 0.5f);
-        float temp2 = Vector2.SignedAngle(Vector2.up, temp);
+        float temp2 = Vector2.SignedAngle(Vector2.up, temp) * (IsLookLeft?1:-1);
         shooter.bulletAngleMax = temp2 + angleRange;
         shooter.bulletAngleMin = temp2 - angleRange;
         shooter.Triger();

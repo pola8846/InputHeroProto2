@@ -29,8 +29,8 @@ public class StateMachine
         Type type = typeof(T);
         if (!stateInstances.ContainsKey(type))
         {
-            State state = new(this);
-            stateInstances[type] = state;
+            State state = Activator.CreateInstance(type, this) as State;
+            stateInstances.Add(type, state);
         }
         currentState?.Exit();
         currentState = stateInstances[type];
@@ -43,7 +43,7 @@ public class StateMachine
         if (!stateInstances.ContainsKey(type))
         {
             State s = new(this);
-            stateInstances[type] = s;
+            stateInstances.Add(type, s);
         }
         currentState?.Exit();
         currentState = stateInstances[type];
