@@ -67,6 +67,10 @@ public class MoverByTransform : MonoBehaviour
     private bool isMoving = false;
     public bool IsMoving => isMoving;
 
+    [SerializeField]
+    private bool canMoveOverMapLimit = true;
+    [SerializeField]
+    private float MapLimitExtra = 0;
 
     private void Update()
     {
@@ -95,6 +99,12 @@ public class MoverByTransform : MonoBehaviour
                 default:
                     break;
             }
+        }
+
+
+        if (!canMoveOverMapLimit)
+        {
+            transform.position = GameTools.ClampToRect(transform.position, GameManager.MapLimit, MapLimitExtra);
         }
         PerformanceManager.StopTimer("MoverByTransform.Update");
     }
