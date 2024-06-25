@@ -98,7 +98,7 @@ public class BulletShooter : MonoBehaviour
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
                     Vector2 direction = quat * Vector2.up;
                     //direction.x *= -1;
-                    MakeProjectile(direction);
+                    MakeProjectile(GameTools.GetDirectionFormDegreeAngle(Random.Range(bulletAngleMin, bulletAngleMax)));
                 }
                 break;
 

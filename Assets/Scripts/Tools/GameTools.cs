@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameTools
 {
+
     #region 위치 비교
     /// <summary>
     /// 대상 위치가 특정 지점 주변 일정 거리 내에 있는가?
@@ -463,6 +464,7 @@ public class GameTools
 
     #endregion
 
+    #region 변환
     /// <summary>
     /// 트랜스폼을 Rect로 변환
     /// </summary>
@@ -481,11 +483,37 @@ public class GameTools
         return rect;
     }
 
+    /// <summary>
+    /// 방향 벡터를 Degree(도) 각도로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
+    /// </summary>
+    /// <param name="dir">변환할 방향 벡터</param>
+    /// <returns>변환된 각도</returns>
+    public static float GetDegreeAngleFormDirection(Vector2 dir)
+    {
+        return Vector2.SignedAngle(Vector2.up, dir.normalized);
+    }
+
+    /// <summary>
+    /// Degree(도) 각도를 방향 벡터로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
+    /// </summary>
+    /// <param name="angle">변환할 각도</param>
+    /// <returns>변환된 방향 벡터</returns>
+    public static Vector2 GetDirectionFormDegreeAngle(float angle)
+    {
+        Quaternion quat = Quaternion.Euler(0, 0, angle);
+        return quat * Vector2.up;
+    }
+
+    #endregion
+
+
+
+
     public static Rect GetCameraViewportSize()
     {
         // 카메라의 뷰포트 경계 계산
-        Vector2 bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, -Camera.main.transform.position.z));
-        Vector2 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, -Camera.main.transform.position.z));
+        Vector2 bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, -Camera.main.transform.position.z + GameManager.CameraZPos));
+        Vector2 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, -Camera.main.transform.position.z + GameManager.CameraZPos));
 
         return new(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
     }

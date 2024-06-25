@@ -1,3 +1,4 @@
+using FMOD;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,12 @@ public class GameManager : MonoBehaviour
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
+    public GameObject testObj;
+
+
+    [SerializeField]
+    private float cameraZPos;
+    public static float CameraZPos => instance.cameraZPos;
 
     //맵 경계
     [SerializeField]
@@ -26,8 +33,29 @@ public class GameManager : MonoBehaviour
             {
                 return GameTools.TransformToRect(instance.mapLimit);
             }
-            Debug.LogError("GameManager.MapLimit: mapLimit가 설정되어 있지 않음");
+            UnityEngine.Debug.LogError("GameManager.MapLimit: mapLimit가 설정되어 있지 않음");
             return Rect.zero;
+        }
+    }
+
+    private Vector2 mousePos;
+    private bool isMousePosCashed = false;
+    public static Vector2 MousePos
+    {
+        get
+        {
+            if (!instance.isMousePosCashed)
+            {
+                Vector3 mp = Input.mousePosition;
+                mp.z = Mathf.Abs(Camera.main.transform.position.z);
+                Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mp);
+                worldMousePos.z = 0;
+                instance.mousePos = worldMousePos;
+
+                instance.testObj.transform.position = instance.mousePos;
+                instance.isMousePosCashed = true;
+            }
+            return instance.mousePos;
         }
     }
 
@@ -76,7 +104,7 @@ public class GameManager : MonoBehaviour
 
                 return result;
             }
-            Debug.LogError("GameManager.MapLimit: mapLimit가 설정되어 있지 않음");
+            UnityEngine.Debug.LogError("GameManager.MapLimit: mapLimit가 설정되어 있지 않음");
             return Rect.zero;
         }
     }
@@ -91,6 +119,11 @@ public class GameManager : MonoBehaviour
         }
         else
             instance = this;
+    }
+
+    private void Update()
+    {
+        isMousePosCashed = false;
     }
 
     public static void SetPlayer(PlayerUnit player)
