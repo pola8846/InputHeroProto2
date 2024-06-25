@@ -28,7 +28,11 @@ public class Down_Animator : MonoBehaviour
 
     [SerializeField] bool flip;
 
-    
+    Vector2 mousePos0;
+
+
+
+    [SerializeField] GameObject targetParents;
 
     void Start()
     {
@@ -44,26 +48,44 @@ public class Down_Animator : MonoBehaviour
     private void Update()
     {
 
+        mousePos0 = GameManager.MousePos;
        
         transformChecker();
+        dirSwitcher();
 
-        if (transform0 > maxXValue)
+        if (flip)
         {
-            spriteChanger(transformChange);
+            if (transform0 > maxXValue)
+            {
+                spriteChanger(transformChange);
+            }
+            else if (transform0 < -maxXValue)
+            {
+                spriteChangerReversed(transformChange);
+            }
         }
-        else if (transform0 < -maxXValue)
+        else
         {
-            spriteChangerReversed(transformChange);
+            if (transform0 > maxXValue)
+            {
+                spriteChangerReversed(transformChange);
+            }
+            else if (transform0 < -maxXValue)
+            {
+                spriteChanger(transformChange);
+            }
         }
 
 
+            /*if (GameManager.Player.IsLookLeft)
+            {
+                spriteRenderer.flipX = enabled;
+            } else {spriteRenderer.flipX =!enabled; }*/
 
-        if (GameManager.Player.IsLookLeft)
-        {
-            spriteRenderer.flipX = enabled;
-        } else {spriteRenderer.flipX =!enabled; }
 
-    }
+
+
+        }
 
 
     private void transformChecker()
@@ -127,12 +149,11 @@ public class Down_Animator : MonoBehaviour
                 spriteNum = 31;
                 break;
             case 1:
-                spriteNum--;
+                spriteNum --;
                 break;
             case 2:
                 spriteNum--;
                 break;
-
         }
 
         transformChange = spriteNum;
@@ -149,5 +170,22 @@ public class Down_Animator : MonoBehaviour
     private void setSprite()
     {
         spriteRenderer.sprite = findSprite[transformChange];
+    }
+
+
+    private void dirSwitcher()
+    {
+        if (targetParents.transform.position.x >= mousePos0.x)
+        {
+            spriteRenderer.flipX = !enabled;
+            flip = false;
+        }
+        else
+
+
+        { spriteRenderer.flipX = enabled; 
+        
+               flip = true; 
+        }
     }
 }

@@ -20,9 +20,12 @@ public class Upper_Animator : MonoBehaviour
 
     public Sprite[] findSprite;
 
+   
     [SerializeField, Range(0, 180f)] float nowAnlge;
     float convertedAngle;
-    
+    [SerializeField] bool flip;
+    Vector2 mousePos0;
+    [SerializeField] GameObject targetParents;
 
     private void Awake()
     {
@@ -48,11 +51,22 @@ public class Upper_Animator : MonoBehaviour
     {
 
 
-        if (GameManager.Player.IsLookLeft)
+        mousePos0 = GameManager.MousePos;
+
+        /*if (GameManager.Player.IsLookLeft)
         {
             spriteRenderer.flipX = enabled;
         }
         else { spriteRenderer.flipX = !enabled; }
+        */
+
+        if (targetParents.transform.position.x >= mousePos0.x)
+        {
+            spriteRenderer.flipX = !enabled;
+        }
+        else
+        { spriteRenderer.flipX = enabled; }
+
 
         spriteRenderer.sprite = findSprite[angleScale - 1];
         eulerAngleConverter();
@@ -63,6 +77,11 @@ public class Upper_Animator : MonoBehaviour
 
     void eulerAngleConverter()
     {
+
+        Vector2 nowdir = (mousePos0 - new Vector2(targetParents.transform.position.x, targetParents.transform.position.y)).normalized;
+
+        nowAnlge = GameTools.GetDegreeAngleFormDirection(nowdir);
+
         convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / 5.625f)),0,31);
         
         angleScale = (int)(convertedAngle+1);
