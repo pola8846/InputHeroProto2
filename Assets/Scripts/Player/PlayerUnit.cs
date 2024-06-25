@@ -293,14 +293,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             return;
         }
 
-        //마우스 위치 읽어오기
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = -Camera.main.transform.position.z;
-        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldMousePos.z = 0;
+        ////마우스 위치 읽어오기
+        //Vector3 mousePos = Input.mousePosition;
+        //mousePos.z = -Camera.main.transform.position.z;
+        //Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        //worldMousePos.z = 0;
 
         //거리 구하고 적용
-        Vector2 dir = (worldMousePos - (transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
+        Vector2 dir = (GameManager.MousePos - (Vector2)(transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
         targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
@@ -310,13 +310,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         Projectile target = null;
 
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = -Camera.main.transform.position.z;
-        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldMousePos.z = 0;
+        //Vector3 mousePos = Input.mousePosition;
+        //mousePos.z = -Camera.main.transform.position.z;
+        //Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        //worldMousePos.z = 0;
 
         //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
-        target = GameTools.FindClosest(worldMousePos, ProjectileManager.FindByDistance(worldMousePos, autoAim_mouse1));
+        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByDistance(GameManager.MousePos, autoAim_mouse1));
         //쏠 수 있으면 쏜다
         if (ShootToTarget(target))
         {
@@ -336,9 +336,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
         */
 
-        target = GameTools.FindClosest(worldMousePos, ProjectileManager.FindByFunc((Prj)=>
+        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj)=>
         {
-            Vector2 pointB = transform.position + ((worldMousePos-transform.position).normalized * autoAim_sqrLength1);
+            Vector2 pointB = (Vector2)transform.position + ((GameManager.MousePos - (Vector2)transform.position).normalized * autoAim_sqrLength1);
             return GameTools.IsPointInRhombus(Prj.transform.position, transform.position, pointB, autoAim_sqrWidth1);
         }));
         if (ShootToTarget(target))
