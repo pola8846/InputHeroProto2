@@ -31,6 +31,12 @@ public class Mover : MonoBehaviour
 
     public bool speedCap = true;
 
+    [SerializeField]
+    private bool canMoveOverMapLimit = true;
+
+    [SerializeField]
+    private float MapLimitExtra = 0;
+
     public Vector2 Velocity
     {
         get { return rb.velocity; }
@@ -58,6 +64,11 @@ public class Mover : MonoBehaviour
         if (speedCap)
         {
             MaxSpeedCheck();
+        }
+
+        if (!canMoveOverMapLimit)
+        {
+            transform.position = GameTools.ClampToRect(transform.position, GameManager.MapLimit, MapLimitExtra);
         }
 
         PerformanceManager.StopTimer("Mover.FixedUpdate");

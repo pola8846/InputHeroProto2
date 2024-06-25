@@ -14,6 +14,8 @@ public class SmoothMoving : MonoBehaviour
 
     public bool move = false;
 
+    public bool isLimitByCameraArea = false;
+
     private void FixedUpdate()
     {
         if (!move)
@@ -37,6 +39,12 @@ public class SmoothMoving : MonoBehaviour
             float speedT = Mathf.InverseLerp(minSpeedDistance, maxSpeedDistance, dist);
             Move(Mathf.Lerp(minSpeed, maxSpeed, speedT));
         }
+
+
+        if (isLimitByCameraArea)
+        {
+            transform.position = GameTools.ClampToRect(transform.position, GameManager.CameraLimit);
+        }
     }
 
     private void Move(float speed)
@@ -44,6 +52,6 @@ public class SmoothMoving : MonoBehaviour
         Vector3 temp = transform.position - directionPos;
         temp = temp.normalized;
         temp *= -speed * Time.fixedUnscaledDeltaTime;
-        transform.Translate(temp);
+        transform.Translate(temp, Space.World);
     }
 }

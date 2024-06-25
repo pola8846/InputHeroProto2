@@ -185,6 +185,30 @@ public class GameTools
         }
     }
 
+    /// <summary>
+    /// 두 Rect의 겹치는 부분 반환, 없으면 zero 반환
+    /// </summary>
+    /// <returns>겹치는 영역, 없으면 zero</returns>
+    public static Rect CalculateOverlapRect(Rect rect1, Rect rect2)
+    {
+        // 좌표 정의
+        float overlapLeft = Mathf.Max(rect1.xMin, rect2.xMin);
+        float overlapBottom = Mathf.Max(rect1.yMin, rect2.yMin);
+        float overlapRight = Mathf.Min(rect1.xMax, rect2.xMax);
+        float overlapTop = Mathf.Min(rect1.yMax, rect2.yMax);
+
+        // 겹치는 부분이 있는지 확인
+        if (overlapLeft < overlapRight && overlapBottom < overlapTop)
+        {
+            // 겹치는 영역의 사각형을 반환
+            return new Rect(overlapLeft, overlapBottom, overlapRight - overlapLeft, overlapTop - overlapBottom);
+        }
+        else
+        {
+            // 겹치는 영역이 없을 경우 빈 Rect 반환
+            return Rect.zero;
+        }
+    }
     #endregion
 
     #region 리스트 비교
@@ -438,4 +462,45 @@ public class GameTools
     }
 
     #endregion
+
+    /// <summary>
+    /// 트랜스폼을 Rect로 변환
+    /// </summary>
+    /// <param name="transform">변환할 트랜스폼</param>
+    /// <returns>변환된 Rect</returns>
+    public static Rect TransformToRect(Transform transform)
+    {
+        // Transform의 위치와 스케일을 사용하여 Rect 생성
+        Vector2 position = transform.position;
+        Vector2 size = transform.lossyScale;
+
+        // Rect의 위치는 중심에서 절반 크기를 빼서 계산
+        Vector2 bottomLeftCorner = position - size * 0.5f;
+        Rect rect = new Rect(bottomLeftCorner, size);
+
+        return rect;
+    }
+
+    public static Rect GetCameraViewportSize()
+    {
+        // 카메라의 뷰포트 경계 계산
+        Vector2 bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, -Camera.main.transform.position.z));
+        Vector2 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, -Camera.main.transform.position.z));
+
+        return new(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
+    }
+    public static Vector3 ClampToRect(Vector3 position, Rect rect, float extra = 0)
+    {
+        // x와 y 값을 Rect의 경계 내로 클램핑
+        float clampedX = rect.width > (extra * 2) ?
+            Mathf.Clamp(position.x, rect.xMin + extra, rect.xMax - extra) :
+            rect.xMin + (rect.width / 2);
+
+        float clampedY = rect.height > (extra * 2) ?
+            Mathf.Clamp(position.y, rect.yMin + extra, rect.yMax - extra) :
+            rect.yMin + (rect.height / 2);
+
+        // Vector3를 생성하여 반환 (z 값은 유지)
+        return new Vector3(clampedX, clampedY, position.z);
+    }
 }

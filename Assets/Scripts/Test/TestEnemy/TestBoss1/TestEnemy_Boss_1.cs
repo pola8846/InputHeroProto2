@@ -649,7 +649,7 @@ public class TestEnemy_Boss_1 : Enemy
     public void ShootToPlayer(float angleRange = 0f)
     {
         Vector2 temp = GetDist(GameManager.Player.transform.position + Vector3.up * 0.5f);
-        float temp2 = Vector2.SignedAngle(Vector2.up, temp) * (IsLookLeft?1:-1);
+        float temp2 = Vector2.SignedAngle(Vector2.up, temp);
         shooter.bulletAngleMax = temp2 + angleRange;
         shooter.bulletAngleMin = temp2 - angleRange;
         shooter.Triger();
