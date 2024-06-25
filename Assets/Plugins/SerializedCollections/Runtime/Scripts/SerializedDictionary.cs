@@ -9,10 +9,10 @@ namespace AYellowpaper.SerializedCollections
     public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         [SerializeField]
-        internal List<SerializedKeyValuePair<TKey, TValue>> _serializedList = new List<SerializedKeyValuePair<TKey, TValue>>();
+        public List<SerializedKeyValuePair<TKey, TValue>> _serializedList = new List<SerializedKeyValuePair<TKey, TValue>>();
         
 #if UNITY_EDITOR
-        internal IKeyable LookupTable
+        public IKeyable LookupTable
         {
             get
             {

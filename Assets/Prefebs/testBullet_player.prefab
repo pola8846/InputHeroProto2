@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -6505841511348045109}
   - component: {fileID: -6937278772763246348}
   - component: {fileID: 7116211505738467369}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: testBullet_player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae0c4bf745136442bafc242774f5d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   isNotSlowed: 1
+  hitOnce: 1
+  damage: 1
 --- !u!114 &1824735415699142916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bde544786e53f46b8f07b8a4f2aada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroySelf: 1
 --- !u!50 &7116211505738467369
 Rigidbody2D:
   serializedVersion: 4
@@ -203,7 +205,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!1 &6791660901783029461
 GameObject:
@@ -215,7 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4936310060104544466}
   - component: {fileID: 5274618363244043241}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2705311711037816339}
   - component: {fileID: 8732484691134548574}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,8 +161,7 @@ GameObject:
   - component: {fileID: 1824735415699142916}
   - component: {fileID: -6505841511348045109}
   - component: {fileID: 4541806135516011451}
-  - component: {fileID: 5543008947123157215}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: testBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +281,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae0c4bf745136442bafc242774f5d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   isNotSlowed: 0
+  hitOnce: 1
+  damage: 1
 --- !u!114 &1824735415699142916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,30 +324,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c93ce79afeffb4699461beb57d39e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &5543008947123157215
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6433798773826802276}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
