@@ -483,6 +483,27 @@ public class GameTools
         return rect;
     }
 
+    /// <summary>
+    /// 방향 벡터를 Degree(도) 각도로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
+    /// </summary>
+    /// <param name="dir">변환할 방향 벡터</param>
+    /// <returns>변환된 각도</returns>
+    public static float GetDegreeAngleFormDirection(Vector2 dir)
+    {
+        return Vector2.SignedAngle(Vector2.up, dir.normalized);
+    }
+
+    /// <summary>
+    /// Degree(도) 각도를 방향 벡터로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
+    /// </summary>
+    /// <param name="angle">변환할 각도</param>
+    /// <returns>변환된 방향 벡터</returns>
+    public static Vector2 GetDirectionFormDegreeAngle(float angle)
+    {
+        Quaternion quat = Quaternion.Euler(0, 0, angle);
+        return quat * Vector2.up;
+    }
+
     #endregion
 
 

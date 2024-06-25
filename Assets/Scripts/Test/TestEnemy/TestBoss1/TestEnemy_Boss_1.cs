@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -424,7 +423,7 @@ public class TestEnemy_Boss_1 : Enemy
                     shooter.bulletAngleMin += temp;
                     time_BAttack.Reset();
                     barrageAttack2Counter++;
-        shooter.Triger();
+                    shooter.Triger();
                 }
                 break;
         }
@@ -602,7 +601,7 @@ public class TestEnemy_Boss_1 : Enemy
                 int rand = UnityEngine.Random.Range(0, states.Count);
                 var result = states[rand];
 
-                if (result== typeof(TestEnemy_Boss_1_AtkB1))
+                if (result == typeof(TestEnemy_Boss_1_AtkB1))
                 {
                     targetPlatform = UnityEngine.Random.Range(0, 2) == 0 ? platformL : platformR;
                 }
@@ -648,18 +647,10 @@ public class TestEnemy_Boss_1 : Enemy
     }
     public void ShootToPlayer(float angleRange = 0f)
     {
-        Vector2 temp = GetDist(GameManager.Player.transform.position + Vector3.up * 0.5f);
-        float temp2 = Vector2.SignedAngle(Vector2.up, temp);
+        float temp2 = GameTools.GetDegreeAngleFormDirection(GameManager.Player.transform.position + Vector3.up * 0.5f - transform.position);
         shooter.bulletAngleMax = temp2 + angleRange;
         shooter.bulletAngleMin = temp2 - angleRange;
         shooter.Triger();
-    }
-
-    //대상까지 방향벡터 가져오기
-    private Vector2 GetDist(Vector2 target)
-    {
-        Vector2 temp = target - (Vector2)transform.position;
-        return temp.normalized;
     }
 
     /// <summary>
@@ -675,7 +666,7 @@ public class TestEnemy_Boss_1 : Enemy
                 return true;
             }
         }
-            return false;
+        return false;
     }
 
     private enum State

@@ -46,37 +46,11 @@ public class GameManager : MonoBehaviour
         {
             if (!instance.isMousePosCashed)
             {
-                /*
-                 
-                임시. 일단 1920*1080 해상도 기준으로 맞춰놨는데, 해상도가 달라지면 마우스 위치와 계산된 위치가 달라지는 문제가 있음
-                이것저것 다 해봤는데 왜 오차가 생기는진 모르겠음. 에디터 환경이라 그런가??
-                 
-                 */
                 Vector3 mp = Input.mousePosition;
-                mp.z = Mathf.Abs(Camera.main.transform.position.z) - CameraZPos;
+                mp.z = Mathf.Abs(Camera.main.transform.position.z);
                 Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mp);
                 worldMousePos.z = 0;
                 instance.mousePos = worldMousePos;
-                UnityEngine.Debug.Log(worldMousePos);
-
-                //Vector3 mp = Input.mousePosition;
-                //UnityEngine.Debug.Log(mp);
-                //Ray ray = Camera.main.ScreenPointToRay(mp);
-                //UnityEngine.Debug.DrawRay(ray.origin, ray.origin + ray.direction * 100);
-                //Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
-                //float distance = -ray.origin.z / ray.direction.z;
-                //instance.mousePos = ray.GetPoint(distance);
-                //instance.testObj.transform.position = instance.mousePos;
-                //UnityEngine.Debug.Log(instance.mousePos);
-
-                ////화면 상의 마우스 위치(0~1)
-                //Vector2 mp = Input.mousePosition;
-                //mp.x /= Screen.width;
-                //mp.y /= Screen.height;
-                //UnityEngine.Debug.Log(mp);
-                ////화면에 비치는 실제 영역 크기
-                //Rect viewport = GameTools.GetCameraViewportSize();
-                //instance.mousePos = (Vector2)Camera.main.transform.position + new Vector2((viewport.width) * (mp.x - 0.5f), (viewport.height) * (mp.y - 0.5f));
 
                 instance.testObj.transform.position = instance.mousePos;
                 instance.isMousePosCashed = true;
