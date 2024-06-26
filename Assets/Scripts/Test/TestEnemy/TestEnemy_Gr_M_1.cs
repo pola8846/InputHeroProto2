@@ -70,9 +70,7 @@ public class TestEnemy_Gr_M_1 : Enemy
     {
         base.FixedUpdate();
 
-
-        var player = GameManager.Player;
-        bool isRight = player.transform.position.x >= transform.position.x;//플레이어가 오른쪽에 있는가?
+        bool isRight = GameManager.Player.transform.position.x >= transform.position.x;//플레이어가 오른쪽에 있는가?
         switch (state)
         {
             case 0://평상시
@@ -84,7 +82,6 @@ public class TestEnemy_Gr_M_1 : Enemy
                     {
                         Turn();
                     }
-                    //Debug.Log(movementX);
                     MoverV.SetVelocityX(movementX);
 
                     if (AttackRangeCheck())//공격 사거리 내에 오면 스테이트 1로
@@ -97,7 +94,6 @@ public class TestEnemy_Gr_M_1 : Enemy
                 }
                 else
                 {
-                    //Debug.Log("stop");
                     MoverV.StopMoveX();
                 }
                 break;
@@ -121,8 +117,6 @@ public class TestEnemy_Gr_M_1 : Enemy
     {
         switch (state)
         {
-            case 0:
-                break;
             case 1:
                 SetColor(Color.red);
                 timer2 = Time.time;
@@ -143,19 +137,6 @@ public class TestEnemy_Gr_M_1 : Enemy
 
         state = num;
 
-        switch (state)
-        {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            default:
-                break;
-        }
     }
 
     private bool AttackRangeCheck()

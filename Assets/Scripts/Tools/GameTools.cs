@@ -39,7 +39,7 @@ public class GameTools
 
         // 기준 방향 벡터 계산: Vector2.up을 주어진 각도만큼 회전시킨다.
         float angleInRadians = angle * Mathf.Deg2Rad;
-        Vector2 coneDirection = new Vector2(Mathf.Sin(angleInRadians), Mathf.Cos(angleInRadians));
+        Vector2 coneDirection = new(Mathf.Sin(angleInRadians), Mathf.Cos(angleInRadians));
 
         // 대상 벡터와 기준 벡터 간의 각도 계산
         float halfAngleSizeInRadians = angleSize * 0.5f * Mathf.Deg2Rad;
@@ -478,13 +478,13 @@ public class GameTools
 
         // Rect의 위치는 중심에서 절반 크기를 빼서 계산
         Vector2 bottomLeftCorner = position - size * 0.5f;
-        Rect rect = new Rect(bottomLeftCorner, size);
+        Rect rect = new(bottomLeftCorner, size);
 
         return rect;
     }
 
     /// <summary>
-    /// 방향 벡터를 Degree(도) 각도로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
+    /// 벡터를 Degree(도) 각도로 변환. Up 기준 왼쪽이 음수, 오른쪽이 양수(-180~180)
     /// </summary>
     /// <param name="dir">변환할 방향 벡터</param>
     /// <returns>변환된 각도</returns>

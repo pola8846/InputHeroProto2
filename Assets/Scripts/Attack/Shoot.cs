@@ -42,7 +42,7 @@ public class Shoot : Projectile
         Vector2 moveDist = direction * speed * (isNotSlowed ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime);
 
         //레이 발사로 가장 가까운 적법한 대상 찾기
-        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet"));
+        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
         var ray = Physics2D.LinecastAll(previousPosition, previousPosition + moveDist, layer);
         Collider2D target = null;
         Vector2 hitPos = Vector2.zero;
@@ -53,6 +53,7 @@ public class Shoot : Projectile
             //충돌한 모든 대상 상대로
             foreach (var hit in ray)
             {
+                //Debug.Log(hit.transform.gameObject.name);
                 //본인이거나 적법한 컴포넌트가 없으면 건너뛰기
                 if (hit.collider == target ||
                     (
@@ -80,7 +81,7 @@ public class Shoot : Projectile
         //가로막혔는가?
         if (HitCheck(target))
         {
-            transform.position = hitPos;
+            Debug.Log(target.transform.gameObject.name);
             Destroy();
             return;
         }
@@ -99,6 +100,7 @@ public class Shoot : Projectile
 
 
             // 충돌에 대한 처리 추가
+            return true;
         }
         return false;
     }
