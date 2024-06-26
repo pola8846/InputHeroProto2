@@ -11,16 +11,19 @@ public class CameraTracking : MonoBehaviour
     [SerializeField]
     private float trackingDistance;//추적 시작할 거리
 
-
+    private Transform targetTransform;
 
     private void Start()
     {
         //originPos = transform.position;
         smooth = GetComponent<SmoothMoving>();
+
+        targetTransform = GameManager.Player.transform;
     }
     void Update()
     {
-        Vector3 targetPos = GameManager.Player.transform.position + originPos;
+        Vector3 targetPos = targetTransform.position + originPos;
+
         if (Vector3.Distance(transform.position, targetPos) > trackingDistance)
         {
             Vector3 dist = targetPos - transform.position;
@@ -33,6 +36,11 @@ public class CameraTracking : MonoBehaviour
         {
             smooth.move = false;
         }
+    }
+
+    public void SetTarget(Transform t) // 이벤트매니저의 카메라 함수에 등록
+    {
+        targetTransform = t;
     }
 
     public void Move()
