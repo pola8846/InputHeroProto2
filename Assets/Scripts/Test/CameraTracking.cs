@@ -38,7 +38,8 @@ public class CameraTracking : MonoBehaviour
         }
     }
 
-    public void SetTarget(Transform t) // 이벤트매니저의 카메라 함수에 등록
+    // 지원: 카메라 타겟을 설정할수있는 함수를 따로뺌
+    public void SetTarget(Transform t)
     {
         targetTransform = t;
     }
