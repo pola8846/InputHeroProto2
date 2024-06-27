@@ -14,16 +14,13 @@ public class Shoot_EnemyFast : Shoot
             HitBox hitBox = target.GetComponent<HitBox>();
             if (hitBox != null && target.CompareTag("Player"))
             {
-                Debug.Log("Hit");
                 hitBox.Damage(damage);
-                //Hit(hitBox.Unit);
                 return true;
             }
 
             //∫Æ¿Ã∏È
             if (target.CompareTag("Blocker"))
             {
-                Debug.Log("Hit");
                 return true;
             }
 
