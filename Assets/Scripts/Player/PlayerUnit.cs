@@ -306,6 +306,15 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private void Shoot()
     {
 
+        if (NowBullet <= 0)
+        {
+            return;
+        }
+        else
+        {
+            NowBullet--;
+        }
+
         Projectile target = null;
 
         //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
@@ -378,7 +387,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //마우스 방향으로 발사(임시)
     private void ShootToMouse()
     {
-        PerformanceManager.StartTimer("PlayerUnit.ShootToMouse");
 
         if (NowBullet <= 0)
         {
@@ -397,7 +405,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //방향대로 쏜다
         shooter.BulletAngle = angle;
         shooter.Triger();
-        PerformanceManager.StopTimer("PlayerUnit.ShootToMouse");
     }
 
     private void ShootByRay()
