@@ -85,6 +85,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             UIManager.SetBulletCounter(nowBullet);
         }
     }
+
+    [SerializeField]
+    private float reloadTime = 3f;
+
     private Vector2 ShootStartPos
     {
         get
@@ -639,7 +643,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         canShoot = false;
         Debug.Log("¿Á¿Â¿¸");
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(reloadTime);
         Reload();
         canShoot = true;
     }

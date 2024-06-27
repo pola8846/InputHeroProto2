@@ -81,7 +81,6 @@ public class Shoot : Projectile
         //가로막혔는가?
         if (HitCheck(target))
         {
-            Debug.Log(target.transform.gameObject.name);
             Destroy();
             return;
         }
