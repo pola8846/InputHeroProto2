@@ -20,6 +20,13 @@ public class Shoot_EnemyFast : Shoot
                 return true;
             }
 
+            //벽이면
+            if (target.CompareTag("Blocker"))
+            {
+                Debug.Log("Hit");
+                return true;
+            }
+
             //기타 장애물이면
             if (true)
             {

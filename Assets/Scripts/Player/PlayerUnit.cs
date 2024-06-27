@@ -153,7 +153,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             }
         }
 
-        animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
+        //animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
         PerformanceManager.StopTimer("PlayerUnit.Update");
     }
 
@@ -209,14 +209,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //공격
-        if (canMove && !animator.GetBool("IsJumping"))
-        {
-            if (inputType == InputType.MeleeAttack)
-            {
-                animator.Play("mixamo_com");
-                canMove = false;
-            }
-        }
+        //if (canMove && !animator.GetBool("IsJumping"))
+        //{
+        //    if (inputType == InputType.MeleeAttack)
+        //    {
+        //        animator.Play("mixamo_com");
+        //        canMove = false;
+        //    }
+        //}
         if (inputType == InputType.Shoot && canShoot)
         {
             if (TimeManager.IsSlowed)
@@ -293,12 +293,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             return;
         }
 
-        ////마우스 위치 읽어오기
-        //Vector3 mousePos = Input.mousePosition;
-        //mousePos.z = -Camera.main.transform.position.z;
-        //Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        //worldMousePos.z = 0;
-
         //거리 구하고 적용
         Vector2 dir = (GameManager.MousePos - (Vector2)(transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
         targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
@@ -309,11 +303,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
 
         Projectile target = null;
-
-        //Vector3 mousePos = Input.mousePosition;
-        //mousePos.z = -Camera.main.transform.position.z;
-        //Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        //worldMousePos.z = 0;
 
         //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
         target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByDistance(GameManager.MousePos, autoAim_mouse1));
@@ -415,7 +404,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         Vector2 dir = ((Vector2)targetterGO.transform.position - ShootStartPos).normalized;//총알 방향
 
         //방향대로 쏜다
-        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet"));
+        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
         var ray = Physics2D.RaycastAll(ShootStartPos, dir, attackRange, layer);
         Collider2D target = null;//충돌한 적법하고 가장 가까운 대상
         Vector2 hitPos = Vector2.zero;//충돌한 지점
@@ -576,7 +565,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         if (GroundCheck() && MoverV.Velocity.y <= 0.01f && !isJumping)
         {
             canJumpCounter = stats.jumpCount;
-            animator.SetBool("IsJumping", false);
+            //animator.SetBool("IsJumping", false);
         }
         else if (!GroundCheck() && canJumpCounter == stats.jumpCount)
         {
@@ -636,7 +625,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         MoverV.SetVelocityY(0, true);
         MoverV.AddForceY(JumpPower);
         isJumping = true;
-        animator.SetBool("IsJumping", true);
+        //animator.SetBool("IsJumping", true);
     }
 
 
@@ -675,5 +664,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //ShootToMouse();
         yield return new WaitForSecondsRealtime(shootCooltime);
         canShoot = true;
+    }
+
+    public override void Turn()
+    {
+        isLookLeft = !isLookLeft;
     }
 }

@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
-    public GameObject testObj;
 
 
     [SerializeField]
@@ -52,7 +51,6 @@ public class GameManager : MonoBehaviour
                 worldMousePos.z = 0;
                 instance.mousePos = worldMousePos;
 
-                instance.testObj.transform.position = instance.mousePos;
                 instance.isMousePosCashed = true;
             }
             return instance.mousePos;

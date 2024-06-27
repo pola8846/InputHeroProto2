@@ -33,7 +33,7 @@ public class Enemy : Unit
     /// 플레이어 찾기. 기본 범위는 단순 원형, override하여 사용할 것
     /// </summary>
     /// <returns>플레이어를 찾았는가?</returns>
-    protected virtual bool FindPlayer()
+    public virtual bool FindPlayer()
     {
         bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, findDistance);
         return result;

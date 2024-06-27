@@ -117,13 +117,13 @@ public class Unit : MonoBehaviour
     }
 
 
-    public void Turn()
+    public virtual void Turn()
     {
         isLookLeft = !isLookLeft;
         transform.Rotate(new(0, 180, 0));
     }
 
-    public void Turn(bool lookLeft)
+    public virtual void Turn(bool lookLeft)
     {
         if (isLookLeft!=lookLeft)
         {

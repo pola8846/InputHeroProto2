@@ -10,7 +10,6 @@ public class TestFsmEnemy : Enemy
         base.Start();
 
         stateMachine = new(this);
-        Debug.Log(1);
         stateMachine.ChangeState<TestFsmEnemy_a>();
     }
 

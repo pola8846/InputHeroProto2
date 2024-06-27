@@ -42,8 +42,6 @@ public class Projectile : MonoBehaviour
     /// <param name="lifeDistance">수명(거리)</param>
     public virtual void Initialize(Vector2 dir, float speed, Unit sourceUnit, float lifeTime = -1f, float lifeDistance = -1f)
     {
-        PerformanceManager.StartTimer("Projectile.Initialize");
-
         originPos = transform.position;
         direction = dir;
         this.speed = speed;
@@ -58,21 +56,15 @@ public class Projectile : MonoBehaviour
         {
             StartCoroutine(DestroyDelay());
         }
-
-        PerformanceManager.StopTimer("Projectile.Initialize");
     }
 
     protected virtual void Update()
     {
-        PerformanceManager.StartTimer("Projectile.Update");
         if (lifeDistance > 0 && (originPos - (Vector2)transform.position).sqrMagnitude >= lifeDistance * lifeDistance)
         {
             Destroy();
-            PerformanceManager.StopTimer("Projectile.Update");
             return;
         }
-
-        PerformanceManager.StopTimer("Projectile.Update");
     }
 
     /// <summary>
@@ -80,6 +72,11 @@ public class Projectile : MonoBehaviour
     /// </summary>
     protected virtual void Destroy()
     {
+        if (isDestroyed)
+        {
+            return;
+        }
+
         var da = GetComponent<DamageArea>();
         isDestroyed = true;
         ProjectileManager.Remove(this);
