@@ -26,12 +26,12 @@ public class Upper_Animator : MonoBehaviour
     Vector2 mousePos0;
     [SerializeField] GameObject targetParents;
 
-    TickTimer tickTimer = new TickTimer();
+    TickTimer tickTimer;
 
     private void Awake()
     {
 
-        
+        tickTimer = new();
 
     }
     // Start is called before the first frame update

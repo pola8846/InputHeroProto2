@@ -1324,7 +1324,7 @@ MonoBehaviour:
   originPos: {x: 0, y: 3, z: -10}
   trackingDistance: 1
   mouseTrackingRange: {x: 5, y: 3}
-  mouseTrackingRangeOffset: {x: 0, y: 0}
+  mouseTrackingRangeOffset: {x: 0, y: 3}
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0

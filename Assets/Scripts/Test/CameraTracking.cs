@@ -29,7 +29,6 @@ public class CameraTracking : MonoBehaviour
         mouseDir.x = Mathf.Clamp(mouseDir.x, mouseTrackingRangeOffset.x - Mathf.Abs(mouseTrackingRange.x), mouseTrackingRangeOffset.x + Mathf.Abs(mouseTrackingRange.x));
         mouseDir.y = Mathf.Clamp(mouseDir.y, mouseTrackingRangeOffset.y - Mathf.Abs(mouseTrackingRange.y), mouseTrackingRangeOffset.y + Mathf.Abs(mouseTrackingRange.y));
 
-        Debug.Log(mouseDir);
         Vector3 targetPos = (GameManager.Player.transform.position + (Vector3)mouseDir) + originPos;
         if (Vector3.Distance(transform.position, targetPos) > trackingDistance)
         {
