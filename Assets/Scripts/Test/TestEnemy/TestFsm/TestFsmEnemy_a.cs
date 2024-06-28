@@ -24,7 +24,7 @@ using UnityEngine;
             //Debug.Log("TestFsmEnemy_a.Execute");
             if (_timer != null && _timer.Check(1))
             {
-                machine.ChangeState<TestFsmEnemy_delay>();
+                machine.ChangeState<TestFsmEnemy_b>();
             }
         }
 

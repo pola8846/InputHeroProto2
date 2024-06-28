@@ -36,12 +36,10 @@ public class InputManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(pair.Value))
                 {
-                    Debug.Log(pair.Key);
                     GameManager.Player.KeyDown(pair.Key);
                 }
                 else if (Input.GetKeyUp(pair.Value))
                 {
-                    Debug.Log(pair.Key);
                     GameManager.Player.KeyUp(pair.Key);
                 }
             }
