@@ -137,11 +137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5795801048837654334, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.1
+      value: -5.107
       objectReference: {fileID: 0}
     - target: {fileID: 5795801048837654334, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.87
+      value: 1.492
       objectReference: {fileID: 0}
     - target: {fileID: 5795801048837654334, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -174,6 +174,14 @@ PrefabInstance:
     - target: {fileID: 5795801048837654334, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622020883282897428, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: canMoveOverMapLimit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590341597839160565, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+      propertyPath: canMoveOverMapLimit
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -877,6 +885,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474689876}
   m_CullTransparentMesh: 1
+--- !u!108 &512930106 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 5958438921693756439, guid: a5e786afc8d6c5b46991a379e3e48659, type: 3}
+  m_PrefabInstance: {fileID: 2145711371}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &547942656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1133,6 +1146,53 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &760036930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 760036932}
+  - component: {fileID: 760036931}
+  m_Layer: 0
+  m_Name: WeatherChange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &760036931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760036930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25aa583311c87494bae1ad9c48724103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directionalLight: {fileID: 705507994}
+  pointLight: {fileID: 512930106}
+  changeDuration: 0.7
+--- !u!4 &760036932
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760036930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.135461, y: 4.6291013, z: 10.402317}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &940764934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,7 +1319,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 3.0462964
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4671,3 +4731,4 @@ SceneRoots:
   - {fileID: 2146315147}
   - {fileID: 2647593452414055435}
   - {fileID: 60301724}
+  - {fileID: 760036932}

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -47,12 +46,10 @@ public class EventManager : MonoBehaviour
     }
 
     // Test - 대기열 이벤트에 이벤트 추가
-    public void EnqueueCameraFocusEvent(GameObject o, float eventDuration = 0.0F, float delayTIme = 0.0F)
+    public void EnqueEvent(float eventDuration = 0.0F, float delayTime = 0.0F)
     {
-        GameObject newEventObject = new GameObject("CameraFocusEvent");
-        newEventObject.AddComponent<CameraFocusEvent>();
-        newEventObject.GetComponent<CameraFocusEvent>().Init(eventDuration, delayTIme);
-        eventQueue_test.Enqueue(newEventObject.GetComponent<CameraFocusEvent>());
+        TimedEventBase newEvent = new CameraFocusEvent(eventDuration, delayTime);
+        eventQueue_test.Enqueue(newEvent);
     }
 
     // 테스트용
@@ -61,21 +58,18 @@ public class EventManager : MonoBehaviour
         // test
         if (Input.GetKeyDown(KeyCode.U))
         {
-            EnqueueCameraFocusEvent(GameObject.Find("Boss"), 0.0F, 1.0F);
+            EnqueEvent(1.0F, 1.0F);
         }
 
+        // 큐의 가장 앞쪽의 이벤트만 업데이트시킴
         if (eventQueue_test.Count == 0) return;
-        TimedEventBase frontEvent = eventQueue_test.Peek();
-        if (frontEvent == null) return;
+        TimedEventBase currentEvent = eventQueue_test.Peek();
+        if (currentEvent == null) return;
 
-        // 가장 앞줄의 이벤트가 대기상태이면 풀어 준다
-        if (frontEvent.isWaiting == true)
-        {
-            frontEvent.isWaiting = false;
-        }
+        currentEvent.Update();
         
         // 가장 앞줄의 이벤트가 끝났으면 해제(큐에서 꺼내서 삭제)
-        if (frontEvent.EventEnded == true)
+        if (currentEvent.EventEnded == true)
         {
             eventQueue_test.Dequeue().Release();
         }
