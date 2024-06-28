@@ -11,10 +11,9 @@ public class Upper_Animator : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
     Material material;
-    int row;
-    int col;
-    int x;
-    int y;
+
+
+    [SerializeField] int startReload;
 
     public Texture2D spriteSheet;
 
@@ -27,6 +26,8 @@ public class Upper_Animator : MonoBehaviour
     Vector2 mousePos0;
     [SerializeField] GameObject targetParents;
 
+    TickTimer tickTimer = new TickTimer();
+
     private void Awake()
     {
 
@@ -38,7 +39,6 @@ public class Upper_Animator : MonoBehaviour
     {
 
 
-        row = 11; col = 6;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteSheet = spriteRenderer.sprite.texture;
@@ -68,8 +68,9 @@ public class Upper_Animator : MonoBehaviour
         { spriteRenderer.flipX = enabled; }
 
 
-        spriteRenderer.sprite = findSprite[angleScale - 1];
-        eulerAngleConverter();
+
+        animation_Aim();
+
 
 
     }
@@ -87,4 +88,30 @@ public class Upper_Animator : MonoBehaviour
         angleScale = (int)(convertedAngle+1);
 
     }
+
+    void animation_Aim()
+    {
+        spriteRenderer.sprite = findSprite[angleScale - 1];
+        eulerAngleConverter();
+    }
+
+    /*void reload()
+    {
+        
+        if(GameManager.Player.isReload)
+        {
+            var a = tickTimer.GetRemain(GameManager.Player.reloadTime);
+            
+
+
+            GameManager.Player.reloadTime / 37
+
+
+            spriteRenderer.sprite = findSprite[startReload + 0];
+
+            tickTimer.Check(GameManager.Player.reloadTime)
+        }
+
+        
+    }*/
 }
