@@ -164,6 +164,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     public void KeyDown(InputType inputType)
     {
+        Debug.Log(inputType);
         //입력 검사
         if (TimeManager.IsSlowing)
         {

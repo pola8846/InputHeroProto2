@@ -23,26 +23,26 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private SerializedDictionary<InputType, KeyCode> keyDict = new();
 
-    private PlayerUnit mMoveReceiver;
 
     private void Start()
     {
-        mMoveReceiver = GameManager.Player;
     }
 
     void Update()
     {
-        if (mMoveReceiver != null)
+        if (GameManager.Player != null)
         {
             foreach (var pair in keyDict)
             {
                 if (Input.GetKeyDown(pair.Value))
                 {
-                    mMoveReceiver.KeyDown(pair.Key);
+                    Debug.Log(pair.Key);
+                    GameManager.Player.KeyDown(pair.Key);
                 }
                 else if (Input.GetKeyUp(pair.Value))
                 {
-                    mMoveReceiver.KeyUp(pair.Key);
+                    Debug.Log(pair.Key);
+                    GameManager.Player.KeyUp(pair.Key);
                 }
             }
         }
