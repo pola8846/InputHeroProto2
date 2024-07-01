@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Upper_Animator : MonoBehaviour
 {
-    [SerializeField, Range(1, 32)] int angleScale;
+    [SerializeField, Range(1, 42)] int angleScale;
 
     float angle;
 
@@ -18,8 +18,9 @@ public class Upper_Animator : MonoBehaviour
     public Texture2D spriteSheet;
 
     public Sprite[] findSprite;
+    public Sprite[] reloadSprites;
 
-   
+
     [SerializeField, Range(0, 180f)] float nowAnlge;
     float convertedAngle;
     [SerializeField] bool flip;
@@ -27,6 +28,8 @@ public class Upper_Animator : MonoBehaviour
     [SerializeField] GameObject targetParents;
 
     TickTimer tickTimer;
+
+    public bool tickReload = false;
 
     private void Awake()
     {
@@ -68,8 +71,21 @@ public class Upper_Animator : MonoBehaviour
         { spriteRenderer.flipX = enabled; }
 
 
+        if (!tickReload)
+        {
+            animation_Aim();
+        }
+        else if (tickReload)
+        {
+            reload();
+        }
 
-        animation_Aim();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            tickReload = true;
+        }
+   
+
 
 
 
@@ -83,9 +99,9 @@ public class Upper_Animator : MonoBehaviour
 
         nowAnlge = GameTools.GetDegreeAngleFormDirection(nowdir);
 
-        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / 5.625f)),0,31);
-        
-        angleScale = (int)(convertedAngle+1);
+        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / 4.285714285714286f)), 0, 41);
+
+        angleScale = (int)(convertedAngle + 1);
 
     }
 
@@ -95,23 +111,34 @@ public class Upper_Animator : MonoBehaviour
         eulerAngleConverter();
     }
 
-    /*void reload()
+
+    [SerializeField] int nowReload;
+
+
+    void reload()
     {
-        
-        if(GameManager.Player.isReload)
+        reloadSetSprite();
+
+        spriteRenderer.sprite = reloadSprites[Mathf.Clamp(nowReload - 1,0,reloadSprites.Length)];
+
+    }
+
+    [SerializeField] float nowReloadTime;
+    [SerializeField] float maxReload;
+    [SerializeField] float timeManifulatorReload;
+
+    float convertedReload;
+    void reloadSetSprite()
+    {
+        nowReloadTime = nowReloadTime + Time.deltaTime * timeManifulatorReload;
+        if (nowReloadTime > maxReload)
         {
-            var a = tickTimer.GetRemain(GameManager.Player.reloadTime);
-            
-
-
-            GameManager.Player.reloadTime / 37
-
-
-            spriteRenderer.sprite = findSprite[startReload + 0];
-
-            tickTimer.Check(GameManager.Player.reloadTime)
+            nowReloadTime = 0;
+            tickReload = false;
         }
 
-        
-    }*/
+        convertedReload = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowReloadTime / (maxReload / reloadSprites.Length))), 0, reloadSprites.Length - 1);
+        nowReload = (int)convertedReload + 3;
+    }
+
 }

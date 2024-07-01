@@ -6,7 +6,7 @@ using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Down_Animator : MonoBehaviour
 {
-    [SerializeField, Range(1, 32)] int transformChange;
+    [SerializeField, Range(1, 42)] int transformChange;
     [SerializeField]float transform0;
     [SerializeField] float xPos;
     [SerializeField, Range(0, 2)] float xPosManifulator;
@@ -105,7 +105,7 @@ public class Down_Animator : MonoBehaviour
         if(spriteNum == 0)
         {
             changeType = 0;
-        } else if (spriteNum == 31)
+        } else if (spriteNum == 40)
         {
             changeType = 1;
         } else { changeType = 2; }
@@ -137,7 +137,7 @@ public class Down_Animator : MonoBehaviour
         {
             changeType = 0;
         }
-        else if (spriteNum == 31)
+        else if (spriteNum == 40)
         {
             changeType = 1;
         }
@@ -146,7 +146,7 @@ public class Down_Animator : MonoBehaviour
         switch (changeType)
         {
             case 0:
-                spriteNum = 31;
+                spriteNum = 40;
                 break;
             case 1:
                 spriteNum --;
