@@ -4632,7 +4632,7 @@ Transform:
   m_GameObject: {fileID: 7207569494237735382}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.459, y: 3.17, z: 0}
+  m_LocalPosition: {x: -12.65, y: 1.88, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -4953,6 +4953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79501dc7ddf8a5b479585a92903a1d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Center: {fileID: 4855993210804944487}
   AimAnimationSprites:
   - {fileID: 1707660774, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
   - {fileID: -1518567645, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
@@ -4986,8 +4987,17 @@ MonoBehaviour:
   - {fileID: 816597843, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
   - {fileID: -1169534964, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
   - {fileID: -1963887236, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
-  SampleAnimationSprites: []
-  Center: {fileID: 4855993210804944487}
+  LowerBody: {fileID: 6731306404139952632}
+  SampleAnimation:
+    sprites:
+    - {fileID: 139216985, guid: e256712d9c9f69a40a336b16b89fa2ae, type: 3}
+    - {fileID: 1373679161, guid: e256712d9c9f69a40a336b16b89fa2ae, type: 3}
+    - {fileID: 650943144, guid: e256712d9c9f69a40a336b16b89fa2ae, type: 3}
+    - {fileID: -436675848, guid: e256712d9c9f69a40a336b16b89fa2ae, type: 3}
+    material: {fileID: 0}
+    speed_FPS: 5
+    looping: 0
+    currentIndex: 0
 --- !u!1 &6731306404139952632
 GameObject:
   m_ObjectHideFlags: 0
@@ -5054,7 +5064,6 @@ MonoBehaviour:
   - {fileID: 450643007, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
   StandAnimationSprite: {fileID: -2072930338, guid: bc124e3f4169e6a488222de203fd780d, type: 3}
   Center: {fileID: 4855993210804944487}
-  walkAnimIndex: 0
 --- !u!1 &7207569494237735382
 GameObject:
   m_ObjectHideFlags: 0
