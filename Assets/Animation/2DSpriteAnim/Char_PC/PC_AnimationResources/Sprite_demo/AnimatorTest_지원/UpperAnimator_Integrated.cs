@@ -2,54 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class BasicAnimationInfo
+{
+    public List<Sprite> sprites;
+    public Material material;
+    public float speed_FPS;
+    public bool looping;
+
+    [HideInInspector]
+    public int currentIndex;
+}
+
 // 지원: enum으로 다른 애니메이션도 추가할 수 있게 만든 통합 버전
 public class UpperAnimator_Integrated : MonoBehaviour
 {
-    public enum Animation
+    public enum AnimationType
     {
         AIM,
         SAMPLE
         // ...
     }
 
-    // 애니베이션별로 별도의 스프라이트 리스트 생성
-    public List<Sprite> AimAnimationSprites;
-    public List<Sprite> SampleAnimationSprites;
-    // ...
-
-    Animation currentAnimation;
+    /// 애니메이터 상태
+    AnimationType currentAnimation;
     SpriteRenderer spriteRenderer;
 
-    // 전체 애니메이션 관련
+    /// 모든 애니메이션 공통
     public Transform Center;
     float timeSinceLastFrame = 0.0F;
 
-    // Aim 애니메이션 관련
+    /// 특수 애니메이션
+    // AIM
+    public List<Sprite> AimAnimationSprites;
     public GameObject LowerBody;
     int angleScale = 1;
     Vector2 mousePos0;
 
-    // Sample 애니메이션 관련
-    int sampleCurrentIndex = 0;
-    public float sampleAnimationSpeed; //초당 프레임수(FPS)
+    /// 일반 애니메이션 - 스프라이트 돌리는 것
+    // SAMPLE
+    public BasicAnimationInfo SampleAnimation;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        currentAnimation = Animation.AIM;
+        currentAnimation = AnimationType.AIM;
     }
 
-    public void SetAnimation(Animation anim)
+    public void SetAnimation(AnimationType anim)
     {
-        if (anim == currentAnimation) return;
+        //if (anim == currentAnimation) return; // 이 조건은 고민중..
 
         /// EXIT: 이전 애니메이션에서 나오기 전 설정해줄 것
         switch (currentAnimation)
         {
-            case Animation.AIM:
+            case AnimationType.AIM:
                 LowerBody.SetActive(false);
                 break;
-            case Animation.SAMPLE:
+            case AnimationType.SAMPLE:
                 break;
             // ...
             default:
@@ -60,10 +70,12 @@ public class UpperAnimator_Integrated : MonoBehaviour
         /// ENTER: 새 애니메이션으로 들어올 때 한 번 설정할 것
         switch (anim)
         {
-            case Animation.AIM:
+            case AnimationType.AIM:
                 LowerBody.SetActive(true);
                 break;
-            case Animation.SAMPLE:
+            case AnimationType.SAMPLE:
+                SampleAnimation.currentIndex = 0;
+                spriteRenderer.sprite = SampleAnimation.sprites[SampleAnimation.currentIndex];
                 break;
             // ...
             default:
@@ -77,26 +89,27 @@ public class UpperAnimator_Integrated : MonoBehaviour
 
     void Update()
     {
-        // test
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            SetAnimation(Animation.SAMPLE);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            SetAnimation(Animation.AIM);
-        }
+        //// test
+        //if (Input.GetKeyDown(KeyCode.Alpha8))
+        //{
+        //    SetAnimation(AnimationType.SAMPLE);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Alpha9))
+        //{
+        //    SetAnimation(AnimationType.AIM);
+        //}
 
+        // flip은 아마도 애니메이션 공통이므로..
         FlipUpdate();
 
         /// 각 애니메이션별 UPDATE문 실행
         switch (currentAnimation)
         {
-            case Animation.AIM:
+            case AnimationType.AIM:
                 AimUpdate();
                 break;
-            case Animation.SAMPLE:
-                SampleUpdate();
+            case AnimationType.SAMPLE:
+                BasicAnimationUpdate(SampleAnimation);
                 break;
             // ...
             default:
@@ -111,14 +124,20 @@ public class UpperAnimator_Integrated : MonoBehaviour
         eulerAngleConverter();
     }
 
-    void SampleUpdate()
+    // 스프라이트 쭉 돌려주는 일반 애니메이션은 이 업데이트 함수를 돌려쓰면됨
+    void BasicAnimationUpdate(BasicAnimationInfo anim)
     {
+        if (!anim.looping & anim.currentIndex + 1 >= anim.sprites.Count)
+        {
+            return;
+        }
+
         timeSinceLastFrame += Time.deltaTime;
-        if (timeSinceLastFrame >= 1.0F / sampleAnimationSpeed)
+        if (timeSinceLastFrame >= 1.0F / anim.speed_FPS)
         {
             timeSinceLastFrame = 0.0F;
-            sampleCurrentIndex = (sampleCurrentIndex + 1) % SampleAnimationSprites.Count;
-            spriteRenderer.sprite = SampleAnimationSprites[sampleCurrentIndex];
+            anim.currentIndex = (anim.currentIndex + 1) % anim.sprites.Count;
+            spriteRenderer.sprite = anim.sprites[anim.currentIndex];
         }
     }
 
