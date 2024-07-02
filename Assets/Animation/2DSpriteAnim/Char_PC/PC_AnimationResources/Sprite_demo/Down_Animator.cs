@@ -105,7 +105,7 @@ public class Down_Animator : MonoBehaviour
         if(spriteNum == 0)
         {
             changeType = 0;
-        } else if (spriteNum == 40)
+        } else if (spriteNum == findSprite.Length-1)
         {
             changeType = 1;
         } else { changeType = 2; }
@@ -137,7 +137,7 @@ public class Down_Animator : MonoBehaviour
         {
             changeType = 0;
         }
-        else if (spriteNum == 40)
+        else if (spriteNum == findSprite.Length - 1)
         {
             changeType = 1;
         }
@@ -146,7 +146,7 @@ public class Down_Animator : MonoBehaviour
         switch (changeType)
         {
             case 0:
-                spriteNum = 40;
+                spriteNum = findSprite.Length - 1;
                 break;
             case 1:
                 spriteNum --;
@@ -178,14 +178,15 @@ public class Down_Animator : MonoBehaviour
         if (targetParents.transform.position.x >= mousePos0.x)
         {
             spriteRenderer.flipX = !enabled;
+            
             flip = false;
         }
         else
 
 
-        { spriteRenderer.flipX = enabled; 
-        
-               flip = true; 
+        { spriteRenderer.flipX = enabled;
+            
+            flip = true; 
         }
     }
 }

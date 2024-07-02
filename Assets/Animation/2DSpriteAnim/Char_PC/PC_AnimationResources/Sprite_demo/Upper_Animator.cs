@@ -23,7 +23,7 @@ public class Upper_Animator : MonoBehaviour
 
     [SerializeField, Range(0, 180f)] float nowAnlge;
     float convertedAngle;
-    [SerializeField] bool flip;
+    public bool flip;
     Vector2 mousePos0;
     [SerializeField] GameObject targetParents;
 
@@ -65,10 +65,12 @@ public class Upper_Animator : MonoBehaviour
 
         if (targetParents.transform.position.x >= mousePos0.x)
         {
+            flip = true;
             spriteRenderer.flipX = !enabled;
         }
         else
-        { spriteRenderer.flipX = enabled; }
+        {   flip = false;
+            spriteRenderer.flipX = enabled; }
 
 
         if (!tickReload)
