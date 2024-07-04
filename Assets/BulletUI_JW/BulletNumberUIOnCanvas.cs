@@ -24,6 +24,7 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
 
     float warningDuration = 0.3F;
 
+    bool isReloading = false;
     float reloadingDuration = 1.0F;
     float gaugeValue = 1.0F;
 
@@ -60,7 +61,7 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
             DecreaseOneBulletNum();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !isReloading)
         {
             StartCoroutine(GaugeReloading());
         }
@@ -125,6 +126,8 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
 
     IEnumerator GaugeReloading()
     {
+        isReloading = true;
+
         float elapsedTime = 0.0F;
 
         while (elapsedTime < reloadingDuration)
@@ -139,5 +142,7 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
         gaugeValue = 1.0F;
 
         ReloadBulletNum();
+
+        isReloading = false;
     }
 }
