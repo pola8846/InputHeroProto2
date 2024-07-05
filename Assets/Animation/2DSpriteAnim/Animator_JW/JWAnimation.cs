@@ -20,6 +20,7 @@ public enum JWAnimType
     // LOWER
     PLAYER_LOWER_WALK,
     PLAYER_LOWER_STAND,
+    PLYER_LOWER_JUMP,
 
     /// Enemy
     /// ...

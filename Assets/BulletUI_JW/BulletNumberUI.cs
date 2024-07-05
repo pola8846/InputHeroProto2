@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class BulletNumberUIOnCanvas : MonoBehaviour
+public class BulletNumberUI : MonoBehaviour
 {
     public Transform targetWorldObject;
 

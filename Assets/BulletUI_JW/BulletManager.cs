@@ -80,16 +80,18 @@ public class BulletManager : MonoBehaviour
         OnBulletNumUpdated?.Invoke();
     }
 
-    public void UseOneBullet()
+    public bool UseOneBullet()
     {
         if (currentBullet > 0)
         {
             currentBullet--;
             OnBulletNumUpdated?.Invoke();
+            return true;
         }
         else
         {
             OnBulletUseFailed?.Invoke(); // UI Warning
+            return false;
         }
     }
 
