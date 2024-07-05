@@ -29,6 +29,8 @@ public class TestRangeEnemy : Enemy
 
     public bool FindPlayerInEngage()
     {
+        if (GameManager.Player == null)
+            return false; 
         bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, engageDistance);
         return result;
     }
