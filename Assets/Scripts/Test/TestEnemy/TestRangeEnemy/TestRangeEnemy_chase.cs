@@ -4,7 +4,20 @@ public class TestRangeEnemy_chase : State
 {
 
     private TestRangeEnemy source => (TestRangeEnemy)unit;
-    private bool isRight => GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+    private bool lastDir;
+    private bool isRight
+    {
+        get
+        {
+            if (GameManager.Player == null)
+            {
+                return lastDir;
+            }
+            var result = GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+            lastDir = result;
+            return lastDir;
+        }
+    }
     public TestRangeEnemy_chase(StateMachine machine) : base(machine)
     {
     }

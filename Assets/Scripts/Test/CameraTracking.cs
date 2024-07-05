@@ -24,6 +24,8 @@ public class CameraTracking : MonoBehaviour
     }
     void Update()
     {
+        if (GameManager.Player == null)
+            return;
         Vector2 mouseDir = (Vector3)GameManager.MousePos - GameManager.Player.transform.position;//마우스까지의 거리
         mouseDir /= 2;
         mouseDir.x = Mathf.Clamp(mouseDir.x, mouseTrackingRangeOffset.x - Mathf.Abs(mouseTrackingRange.x), mouseTrackingRangeOffset.x + Mathf.Abs(mouseTrackingRange.x));

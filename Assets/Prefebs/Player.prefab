@@ -1735,9 +1735,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   trail: {fileID: 2046269661112617901, guid: 83dccdab491746f47b11702e3b48b4ec, type: 3}
+  particle: {fileID: 1771294624724570, guid: a999b3a94a022254fa21ccca65248d54, type: 3}
   targetter: {fileID: 9193867861440726170, guid: b0978bb93111ae54d8d47d2682f85794, type: 3}
   maxBullet: 999
   nowBullet: 999
+  reloadTime: 3
+  isDash: 0
 --- !u!114 &6622020883282897428
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -35,6 +35,8 @@ public class Enemy : Unit
     /// <returns>플레이어를 찾았는가?</returns>
     public virtual bool FindPlayer()
     {
+        if (GameManager.Player == null)
+            return false;
         bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, findDistance);
         return result;
     }

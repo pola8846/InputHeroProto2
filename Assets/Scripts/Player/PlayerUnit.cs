@@ -41,6 +41,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private PlatformEffector2D effector2D;
 
     private int canJumpCounter;
+    public int CanJumpCounter => canJumpCounter;
     private bool isJumping = false;
 
 
@@ -54,9 +55,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float shootCooltime;
     private bool canShoot = true;
     [SerializeField]
-    private float attackRange = 50f;
+    private float attackRange = 50f;//사거리
     [SerializeField]
-    private float autoAim_mouse1 = 0.25f;
+    private float autoAim_mouse1 = 0.25f;//자동조준
     [SerializeField]
     private float autoAim_cornAngle1 = 1f;
     [SerializeField]
@@ -67,6 +68,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
     [SerializeField]
     private GameObject trail;
+    [SerializeField]
+    private GameObject particle;
 
     [SerializeField]
     private GameObject targetter;
@@ -166,7 +169,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     public void KeyDown(InputType inputType)
     {
-        Debug.Log(inputType);
         //입력 검사
         if (TimeManager.IsSlowing)
         {
@@ -422,6 +424,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         var ray = Physics2D.RaycastAll(ShootStartPos, dir, attackRange, layer);
         Collider2D target = null;//충돌한 적법하고 가장 가까운 대상
         Vector2 hitPos = Vector2.zero;//충돌한 지점
+        Vector2 normal = Vector2.zero;//법선
 
         //유효하며 가장 가까운 것을 찾는다
         float minDistance = float.MaxValue;
@@ -447,6 +450,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             {
                 target = hit.collider;
                 hitPos = hit.point;
+                normal = hit.normal;
                 minDistance = distance;
             }
         }
@@ -463,9 +467,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //적법한 대상에게 충돌
         //피해 적용
-        HitCheck(target, hitPos);
+        var pgo = HitCheck(target, hitPos);
         //그래픽 표시
         StartCoroutine(DrawHitGrapic(ShootStartPos, hitPos));
+        DrawParticle(pgo, transform.position, hitPos, Vector2.Reflect(dir, normal));
         //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
@@ -494,16 +499,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     /// </summary>
     /// <param name="target"></param>
     /// <param name="hitPos"></param>
-    /// <returns></returns>
-    private bool HitCheck(Collider2D target, Vector2 hitPos)
+    /// <returns>발생할 이펙트 게임오브젝트</returns>
+    private GameObject HitCheck(Collider2D target, Vector2 hitPos)
     {
         if (target == null)
         {
-            return false;
+            return null;
         }
 
         // 충돌 처리
-        //Debug.Log(target.gameObject.name);
+        Debug.Log(target.gameObject.name);
 
         //적 히트박스면
         HitBox hitBox = target.GetComponent<HitBox>();
@@ -511,7 +516,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             hitBox.Damage(1);
             //Hit(hitBox.Unit);
-            return true;
+            return null;
         }
 
         //총알이면
@@ -525,7 +530,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 if (da != null)
                 {
                     da.Destroy();
-                    return true;
+                    return null;
                 }
 
                 var prj = target.GetComponentInChildren<Projectile>();
@@ -533,7 +538,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 {
                     prj.Parried();
                 }
-                return true;
+                return particle;
             }
         }
 
@@ -544,7 +549,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         // 충돌에 대한 처리 추가
-        return false;
+        return particle;
     }
 
     //총알 발사 그래픽 그리기. 표시되긴 하는데 안 이쁨
@@ -557,9 +562,23 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         yield return null;
 
         go.transform.position = target;
+        
         Destroy(go, go.GetComponent<TrailRenderer>().time);
 
+
         //Debug.DrawLine(start, target);
+    }
+
+    private void DrawParticle(GameObject particle, Vector2 start, Vector2 target, Vector2 dir)
+    {
+        Debug.Log(particle);
+        if (particle != null)
+        {
+            GameObject pgo = Instantiate(particle);
+            pgo.transform.position = target + ((Vector2)transform.position - target).normalized * 0.2f;
+            pgo.transform.LookAt(pgo.transform.position + (Vector3)dir);
+            Destroy(pgo, pgo.GetComponent<ParticleSystem>().main.duration);
+        }
     }
 
     public void AttackEnd()
