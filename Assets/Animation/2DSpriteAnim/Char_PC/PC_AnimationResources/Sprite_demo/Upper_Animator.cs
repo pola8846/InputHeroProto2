@@ -99,7 +99,10 @@ public class Upper_Animator : MonoBehaviour
         }
    
 
-     
+     if(!dashing)
+        {
+            nowDashTime = 0;
+        }
 
     }
 

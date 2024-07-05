@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
-using static UnityEngine.Rendering.DebugUI.Table;
+
 
 public class Down_Animator : MonoBehaviour
 {
@@ -23,6 +22,7 @@ public class Down_Animator : MonoBehaviour
     public Texture2D spriteSheet;
 
     public Sprite[] findSprite;
+    public Sprite[] jumpSprite;
 
     public Sprite Stand;
 
@@ -36,6 +36,11 @@ public class Down_Animator : MonoBehaviour
 
     [SerializeField] GameObject targetParents;
 
+    public GameObject player;
+    PlayerUnit playerUnit;
+
+    [SerializeField] int maxJumpcount;
+
     void Start()
     {
 
@@ -44,8 +49,11 @@ public class Down_Animator : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         //spriteSheet = spriteRenderer.sprite.texture;
         material = spriteRenderer.material;
+        playerUnit = player.GetComponent<PlayerUnit>();
 
     }
+
+    public bool jump;
 
     private void Update()
     {
@@ -55,28 +63,52 @@ public class Down_Animator : MonoBehaviour
         transformChecker();
         dirSwitcher();
 
-        if (!flip)
+        if(Input.GetKeyDown(KeyCode.Space)&& !jump)
         {
-            if (transform0 > maxXValue)
+            jump = true;
+
+        }
+
+        if(jump)
+        {
+            jumpingSprite();
+
+            if(playerUnit.CanJumpCounter == maxJumpcount)
             {
-                spriteChanger(transformChange);
+                nowJumpTime = 0;
+                jump = false;
             }
-            else if (transform0 < -maxXValue)
+
+        }
+        else if(!jump)
+        {
+            if (!flip)
             {
-                spriteChangerReversed(transformChange);
+                if (transform0 > maxXValue)
+                {
+                    spriteChanger(transformChange);
+                }
+                else if (transform0 < -maxXValue)
+                {
+                    spriteChangerReversed(transformChange);
+                }
+            }
+            else if (flip)
+            {
+                if (transform0 > maxXValue)
+                {
+                    spriteChangerReversed(transformChange);
+                }
+                else if (transform0 < -maxXValue)
+                {
+                    spriteChanger(transformChange);
+                }
             }
         }
-        else
-        {
-            if (transform0 > maxXValue)
-            {
-                spriteChangerReversed(transformChange);
-            }
-            else if (transform0 < -maxXValue)
-            {
-                spriteChanger(transformChange);
-            }
-        }
+        
+
+
+
 
         if(upper.GetComponent<Upper_Animator>().dashing)
         {
@@ -195,5 +227,23 @@ public class Down_Animator : MonoBehaviour
 
             flip = false;
         }
+    }
+
+
+    [SerializeField] float nowJumpTime;
+    [SerializeField] float maxJump;
+    [SerializeField] float timeManifulatorJump;
+    [SerializeField] int nowJump;
+    [SerializeField] float convertedjump;
+
+
+    void jumpingSprite()
+    {
+        nowJumpTime = nowJumpTime + Time.deltaTime * timeManifulatorJump;
+
+        convertedjump = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowJumpTime / (maxJump /  jumpSprite.Length ))) , 0 , jumpSprite.Length - 1);
+        nowJump = (int)convertedjump + 1;
+
+        spriteRenderer.sprite = jumpSprite[nowJump-1];
     }
 }
