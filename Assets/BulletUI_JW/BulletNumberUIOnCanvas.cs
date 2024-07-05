@@ -22,8 +22,7 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
 
     float warningDuration = 0.3F;
 
-
-    float gaugeValue = 1.0F;
+    float gaugeValue = 0.0F;
 
     void Awake()
     {
@@ -88,8 +87,9 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
 
     void StartGaugeReloading()
     {
-        // 그냥 인보크 함수 쓰자
         gaugeUI.SetActive(true);
+        gaugeValue = 0.0F;
+        DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, BulletManager.Instance.ReloadDuration);
         Invoke("EndGaugeReloading", BulletManager.Instance.ReloadDuration);
     }
 

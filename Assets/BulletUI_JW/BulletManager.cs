@@ -74,14 +74,6 @@ public class BulletManager : MonoBehaviour
         currentBullet = maxBullet;
     }
 
-    //void SetBulletNum(int num)
-    //{
-    //    if (num < 0) num = 0;
-    //    else if (num > maxBullet) num = maxBullet;
-
-    //    currentBullet = num;
-    //}
-
     void ReloadBulletNum()
     {
         currentBullet = maxBullet;
@@ -119,5 +111,19 @@ public class BulletManager : MonoBehaviour
         ReloadBulletNum();
 
         isReloading = false;
+    }
+
+    void Update()
+    {
+        // test
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            UseOneBullet();
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            StartReloading();
+        }
     }
 }
