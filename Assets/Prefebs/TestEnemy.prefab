@@ -574,8 +574,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: -1
   stats:
-    health: 2
-    maxHealth: 2
+    health: 1
+    maxHealth: 1
     attackPower: 0
     defencePower: 0
     defenceRate: 0
@@ -677,7 +677,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -3846018093981099296, guid: 4b26f91bb39a57042839278737c164f6, type: 3}
+  - {fileID: 2100000, guid: 53b423c08be4198448eb51675b39456c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -26,11 +26,13 @@ public class Down_Animator : MonoBehaviour
 
     public Sprite Stand;
 
-    [SerializeField] bool flip;
+    public bool flip;
 
     Vector2 mousePos0;
 
+    public GameObject upper;
 
+    public Sprite skip;
 
     [SerializeField] GameObject targetParents;
 
@@ -40,7 +42,7 @@ public class Down_Animator : MonoBehaviour
 
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteSheet = spriteRenderer.sprite.texture;
+        //spriteSheet = spriteRenderer.sprite.texture;
         material = spriteRenderer.material;
 
     }
@@ -53,7 +55,7 @@ public class Down_Animator : MonoBehaviour
         transformChecker();
         dirSwitcher();
 
-        if (flip)
+        if (!flip)
         {
             if (transform0 > maxXValue)
             {
@@ -76,7 +78,10 @@ public class Down_Animator : MonoBehaviour
             }
         }
 
-
+        if(upper.GetComponent<Upper_Animator>().dashing)
+        {
+            spriteRenderer.sprite = skip;
+        }
             /*if (GameManager.Player.IsLookLeft)
             {
                 spriteRenderer.flipX = enabled;
@@ -165,6 +170,7 @@ public class Down_Animator : MonoBehaviour
     private void standSprite()
     {
         spriteRenderer.sprite = Stand;
+        transform0 = 0;
     }
 
     private void setSprite()
@@ -179,14 +185,15 @@ public class Down_Animator : MonoBehaviour
         {
             spriteRenderer.flipX = !enabled;
             
-            flip = false;
+            
+            flip = true;
         }
         else
 
 
         { spriteRenderer.flipX = enabled;
-            
-            flip = true; 
+
+            flip = false;
         }
     }
 }

@@ -9,6 +9,8 @@ public class paticle_Movement : MonoBehaviour
     public Sprite afterSprite;
     public SpriteRenderer spriteRendererP;
     public ParticleSystemRenderer spriteRendererR;
+    bool branch;
+    
     [SerializeField] Vector3 flipX;
     [SerializeField] bool flip;
 
@@ -18,10 +20,19 @@ public class paticle_Movement : MonoBehaviour
         afterImage = GetComponent<ParticleSystem>();
         spriteRendererP = GetComponentInParent<SpriteRenderer>();
         spriteRendererR = GetComponent<ParticleSystemRenderer>();
-        spriteRendererP.sprite = afterSprite;
-        
-        
-        
+
+        if (GetComponentInParent<Upper_Animator>() == null)
+        {
+            branch = true;
+            flip = GetComponentInParent<Down_Animator>().flip;
+        }
+        else if (GetComponentInParent<Down_Animator>() == null)
+        {
+            branch = false;
+            flip = GetComponentInParent<Upper_Animator>().flip;
+        }
+
+
     }
 
     /// <summary>
@@ -44,7 +55,7 @@ public class paticle_Movement : MonoBehaviour
 
     void setSprite()
     {
-        afterSprite = GetComponentInParent<SpriteRenderer>().sprite;
+        afterSprite = spriteRendererP.sprite;
         afterImage.textureSheetAnimation.RemoveSprite(0);
         afterImage.textureSheetAnimation.AddSprite(afterSprite);
         afterImage.textureSheetAnimation.SetSprite(0, afterSprite);
@@ -53,12 +64,20 @@ public class paticle_Movement : MonoBehaviour
 
     void setflip()
     {
-        flip = GetComponentInParent<Upper_Animator>().flip;
+
+        if (branch)
+        {
+            flip = GetComponentInParent<Down_Animator>().flip;
+        }
+        else
+        {
+            flip = GetComponentInParent<Upper_Animator>().flip;
+        }
 
         if (flip)
         {
             flipX = Vector3.zero;
-        } else
+        } else if (!flip)
         {
             flipX = Vector3.right;
         }

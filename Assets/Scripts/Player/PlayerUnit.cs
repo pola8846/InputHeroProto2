@@ -89,6 +89,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private float reloadTime = 3f;
 
+    public bool isDash;
+
     private Vector2 ShootStartPos
     {
         get
@@ -656,15 +658,19 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShoot = true;
     }
 
+    
+
     //´ë½Ã
     private IEnumerator DoDash()
     {
+        isDash = true;
         canMove = false;
         float speed = Mathf.Max(0, Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
         MoverV.SetVelocityX(speed);
 
         yield return new WaitForSeconds(dashTime);
         canMove = true;
+        isDash = false;
     }
 
 

@@ -19,10 +19,11 @@ public class Upper_Animator : MonoBehaviour
 
     public Sprite[] findSprite;
     public Sprite[] reloadSprites;
-
+    
 
     [SerializeField, Range(0, 180f)] float nowAnlge;
     float convertedAngle;
+    [SerializeField] float dampAngles;
     public bool flip;
     Vector2 mousePos0;
     [SerializeField] GameObject targetParents;
@@ -30,6 +31,9 @@ public class Upper_Animator : MonoBehaviour
     TickTimer tickTimer;
 
     public bool tickReload = false;
+
+    [SerializeField] GameObject player;
+    public bool dashing;
 
     private void Awake()
     {
@@ -44,17 +48,19 @@ public class Upper_Animator : MonoBehaviour
 
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteSheet = spriteRenderer.sprite.texture;
+        //spriteSheet = spriteRenderer.sprite.texture;
         material = spriteRenderer.material;
+       
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        dashing = player.GetComponent<PlayerUnit>().isDash;
 
-
-        mousePos0 = GameManager.MousePos;
+       mousePos0 = GameManager.MousePos;
 
         /*if (GameManager.Player.IsLookLeft)
         {
@@ -72,24 +78,28 @@ public class Upper_Animator : MonoBehaviour
         {   flip = false;
             spriteRenderer.flipX = enabled; }
 
-
-        if (!tickReload)
+        if (dashing)
+        {
+            animation_Dash();
+            Debug.Log("dash?");
+        }
+        else if (!tickReload)
         {
             animation_Aim();
         }
         else if (tickReload)
         {
             reload();
-        }
+        } 
 
-        if (Input.GetKeyDown(KeyCode.R))
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             tickReload = true;
         }
    
 
-
-
+     
 
     }
 
@@ -101,7 +111,9 @@ public class Upper_Animator : MonoBehaviour
 
         nowAnlge = GameTools.GetDegreeAngleFormDirection(nowdir);
 
-        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / 4.285714285714286f)), 0, 41);
+
+
+            convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / (180/ findSprite.Length ))), 0, findSprite.Length - 1);
 
         angleScale = (int)(convertedAngle + 1);
 
@@ -128,6 +140,7 @@ public class Upper_Animator : MonoBehaviour
     [SerializeField] float nowReloadTime;
     [SerializeField] float maxReload;
     [SerializeField] float timeManifulatorReload;
+ 
 
     float convertedReload;
     void reloadSetSprite()
@@ -137,10 +150,40 @@ public class Upper_Animator : MonoBehaviour
         {
             nowReloadTime = 0;
             tickReload = false;
+
         }
 
         convertedReload = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowReloadTime / (maxReload / reloadSprites.Length))), 0, reloadSprites.Length - 1);
-        nowReload = (int)convertedReload + 3;
+        nowReload = (int)convertedReload + 1;
     }
+
+
+    [SerializeField] Sprite[] dashSprite;
+    [SerializeField] float nowDashTime;
+    [SerializeField] float maxDashjTime;
+    [SerializeField] float tMDash;
+    float convertedDash;
+
+    [SerializeField] int nowDash;
+
+
+    void animation_Dash()
+    {
+
+        nowDashTime = nowDashTime + Time.deltaTime * tMDash;
+        if (nowDashTime > maxDashjTime)
+        {
+            nowDashTime = 0;
+        }
+
+        convertedDash = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowDashTime / (maxDashjTime / dashSprite.Length))), 0, dashSprite.Length - 1);
+        nowDash = (int)convertedDash + 1;
+
+        spriteRenderer.sprite = dashSprite[nowDash - 1];
+        Debug.Log(dashSprite[nowDash - 1]);
+
+        
+    }
+
 
 }
