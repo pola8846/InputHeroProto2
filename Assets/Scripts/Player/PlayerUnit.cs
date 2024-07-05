@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
 [RequireComponent(typeof(Mover))]
 public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
@@ -54,10 +53,21 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private float shootCooltime;
     private bool canShoot = true;
+    private bool canShootTemp = true;
+    private bool CanShoot//공격할 수 있는가?
+    {
+        get
+        {
+            Debug.Log($"canShootTemp: {canShootTemp}");
+            return canShootTemp && NowBullet >= 1 && shootTimer != null && shootTimer.Check(shootCooltime);
+        }
+    }
     [SerializeField]
     private float attackRange = 50f;//사거리
+
+    //자동조준
     [SerializeField]
-    private float autoAim_mouse1 = 0.25f;//자동조준
+    private float autoAim_mouse1 = 0.25f;
     [SerializeField]
     private float autoAim_cornAngle1 = 1f;
     [SerializeField]
@@ -67,13 +77,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
     [SerializeField]
-    private GameObject trail;
+    private GameObject trail;//총알 트레일
     [SerializeField]
-    private GameObject particle;
+    private GameObject particle;//충돌 시 파티클
 
+    //타겟 표시용 구체. 테스트용
     [SerializeField]
     private GameObject targetter;
     private GameObject targetterGO;
+
+    //장탄
     [SerializeField]
     private int maxBullet;
     public int MaxBullet => maxBullet;
@@ -89,8 +102,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    //재장전 시간
     [SerializeField]
     private float reloadTime = 3f;
+    private TickTimer reloadTimer;
+    private TickTimer shootTimer;
+    private bool reloading = false;
+    public bool IsReloading => reloading;
 
     public bool isDash;
 
@@ -124,6 +142,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             new PSkill_TestRangeAtk()
         };
         targetterGO = Instantiate(targetter);
+        reloadTimer = new();
+        shootTimer = new();
     }
 
     protected override void Update()
@@ -131,6 +151,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         PerformanceManager.StartTimer("PlayerUnit.Update");
         RotateTargetter();
         JumpCheck();
+        ReloadCheck();
+        //Debug.Log(canShootTemp);
         if (canMove && !TimeManager.IsSlowed)
         {
             if (IsKeyPushing(InputType.MoveLeft))
@@ -154,10 +176,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 MoverV.StopMoveX();
             }
         }
-        if (IsKeyPushing(InputType.Shoot) && canShoot)
+        if (IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
         {
             if (!TimeManager.IsSlowed)
             {
+                shootTimer.Reset();
                 StartCoroutine(DoShoot());
             }
         }
@@ -226,27 +249,19 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //        canMove = false;
         //    }
         //}
-        if (inputType == InputType.Shoot && canShoot)
+        if (inputType == InputType.Shoot && CanShoot)//공격
         {
-            if (TimeManager.IsSlowed)
-            {
-                if (!TimeManager.IsUsingSkills)
-                {
-                    //ShootToMouse();
-                    Shoot();
-                }
-            }
-            else
-            {
-                StartCoroutine(DoShoot());
-            }
+            shootTimer.Reset();
+            StartCoroutine(DoShoot());
         }
 
-        if (inputType == InputType.Reload && canMove && canShoot && !TimeManager.IsUsingSkills)
+        //재장전
+        if (inputType == InputType.Reload && canMove && canShootTemp && !TimeManager.IsUsingSkills)
         {
             if (!TimeManager.IsSlowed)
             {
-                StartCoroutine(Reloading());
+                Reloading();
+                //StartCoroutine(ReloadingTemp());
             }
             else
             {
@@ -257,7 +272,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //슬로우
         if (inputType == InputType.Slow && TimeManager.IsSlowed == false)
         {
-            StopCoroutine(Reloading());
+            Reloading();
+            //StopCoroutine(ReloadingTemp());
             TimeManager.StartSlow();
         }
     }
@@ -343,7 +359,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
         */
 
-        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj)=>
+        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj) =>
         {
             Vector2 pointB = (Vector2)transform.position + ((GameManager.MousePos - (Vector2)transform.position).normalized * autoAim_sqrLength1);
             return GameTools.IsPointInRhombus(Prj.transform.position, transform.position, pointB, autoAim_sqrWidth1);
@@ -508,7 +524,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         // 충돌 처리
-        Debug.Log(target.gameObject.name);
 
         //적 히트박스면
         HitBox hitBox = target.GetComponent<HitBox>();
@@ -562,7 +577,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         yield return null;
 
         go.transform.position = target;
-        
+
         Destroy(go, go.GetComponent<TrailRenderer>().time);
 
 
@@ -571,7 +586,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     private void DrawParticle(GameObject particle, Vector2 start, Vector2 target, Vector2 dir)
     {
-        Debug.Log(particle);
         if (particle != null)
         {
             GameObject pgo = Instantiate(particle);
@@ -668,39 +682,73 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         NowBullet = maxBullet;
     }
 
-    private IEnumerator Reloading()
+    private void Reloading()
     {
-        canShoot = false;
+        canShootTemp = false;
+        reloading = true;
+        reloadTimer.Reset();
+        Debug.Log("재장전완료");
+    }
+
+    private void ReloadCheck()
+    {
+        if (reloading && reloadTimer.Check(reloadTime))
+        {
+            reloading = false;
+            Reload();
+            reloadTimer.Reset();
+            canShootTemp = true;
+            Debug.Log("재장전");
+        }
+    }
+
+    private IEnumerator ReloadingTemp()
+    {
+        canShootTemp = false;
         Debug.Log("재장전");
         yield return new WaitForSeconds(reloadTime);
         Reload();
-        canShoot = true;
+        canShootTemp = true;
     }
 
-    
+    private void CancelReload()
+    {
+        //Reloading();
+
+        //StopCoroutine(ReloadingTemp());
+        Debug.Log("dd");
+        reloading = false;
+        reloadTimer.Reset();
+        canShootTemp = true;
+    }
 
     //대시
     private IEnumerator DoDash()
     {
+        Debug.Log("dash");
+        canShootTemp = false;
         isDash = true;
         canMove = false;
         float speed = Mathf.Max(0, Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
         MoverV.SetVelocityX(speed);
+        if (reloading)
+        {
+            CancelReload();
+        }
 
         yield return new WaitForSeconds(dashTime);
         canMove = true;
         isDash = false;
+        canShootTemp = true;
     }
 
 
     //원거리 평타
     private IEnumerator DoShoot()
     {
-        canShoot = false;
         Shoot();
         //ShootToMouse();
         yield return new WaitForSecondsRealtime(shootCooltime);
-        canShoot = true;
     }
 
     public override void Turn()

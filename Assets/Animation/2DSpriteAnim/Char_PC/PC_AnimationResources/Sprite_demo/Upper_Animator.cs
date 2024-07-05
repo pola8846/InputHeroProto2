@@ -81,7 +81,7 @@ public class Upper_Animator : MonoBehaviour
         if (dashing)
         {
             animation_Dash();
-            Debug.Log("dash?");
+            //Debug.Log("dash?");
         }
         else if (!tickReload)
         {
@@ -183,7 +183,7 @@ public class Upper_Animator : MonoBehaviour
         nowDash = (int)convertedDash + 1;
 
         spriteRenderer.sprite = dashSprite[nowDash - 1];
-        Debug.Log(dashSprite[nowDash - 1]);
+        //Debug.Log(dashSprite[nowDash - 1]);
 
         
     }
