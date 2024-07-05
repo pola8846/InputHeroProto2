@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EncodableAsset" id="{a68a1c94-c524-4345-a2db-c4952ef45285}">
+		<property name="assetPath">
+			<value>Drum/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{887a0d66-1d05-47b1-b2df-f1d0fd7bd36d}</destination>
+		</relationship>
+	</object>
+</objects>
