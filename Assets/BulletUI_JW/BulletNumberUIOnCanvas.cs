@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BulletNumberUIOnCanvas : MonoBehaviour
 {
@@ -19,19 +20,15 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
     // 총알UI 한칸 사이 간격
     float distance = 10F;
 
-    int maxBullet = 8;  // 최대 총알개수
-    int currentBullet;  // 현재 총알개수
-
     float warningDuration = 0.3F;
 
-    bool isReloading = false;
-    float reloadingDuration = 1.0F;
+
     float gaugeValue = 1.0F;
 
-    private void Start()
+    void Awake()
     {
         // maxBullet 개수만큼 총알 UI 생성
-        for (int i = 0; i < maxBullet; i++)
+        for (int i = 0; i < BulletManager.Instance.MaxBullet; i++)
         {
             GameObject go = Instantiate(singleBulletPrefab);
 
@@ -41,13 +38,23 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
             singleBulletUI.Add(go.GetComponent<Image>());
         }
 
+        // 이벤트 함수 구독
+        BulletManager.Instance.OnBulletNumUpdated.AddListener(SetBulletNum);
+        BulletManager.Instance.OnBulletUseFailed.AddListener(StartNoBulletWarning);
+        BulletManager.Instance.OnReload.AddListener(StartGaugeReloading);
+    }
+
+    void Start()
+    {
         // 오른쪽으로만 생성했으니 옆으로 반쯤 밀어준다
         foreach (Image go in singleBulletUI)
         {
-            go.GetComponent<RectTransform>().anchoredPosition -= new Vector2(distance * maxBullet / 2.0F, 0);
+            go.GetComponent<RectTransform>().anchoredPosition -= new Vector2(distance * (BulletManager.Instance.MaxBullet - 1) / 2.0F, 0);
         }
 
-        ReloadBulletNum();
+        gaugeUI.SetActive(false);
+
+        SetBulletNum();
     }
 
     void Update()
@@ -55,28 +62,15 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
         // 위치 업데이트
         GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(targetWorldObject.position);
 
-        //test
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            DecreaseOneBulletNum();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && !isReloading)
-        {
-            StartCoroutine(GaugeReloading());
-        }
-
-        gaugeUI.GetComponent<Image>().fillAmount = gaugeValue;
+        if (gaugeUI.activeSelf) gaugeUI.GetComponent<Image>().fillAmount = gaugeValue;
     }
 
-    void SetBulletNum(int num) // 특정 숫자로 총알개수를 바꿔줍니다
+    // BulletManager의 현재 총알 개수에 맞춰 UI 업데이트
+    void SetBulletNum()
     {
-        if (num < 0) num = 0;
-        else if (num > maxBullet) num = maxBullet;
-
-        for (int i = 0; i < maxBullet; i++)
+        for (int i = 0; i < BulletManager.Instance.MaxBullet; i++)
         {
-            if (i < num)
+            if (i < BulletManager.Instance.CurrentBullet)
             {
                 singleBulletUI[i].sprite = fullBullet;
             }
@@ -85,31 +79,23 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
                 singleBulletUI[i].sprite = emptyBullet;
             }
         }
-
-        currentBullet = num;
     }
 
-    public void ReloadBulletNum() // 총알을 최대숫자로 채워줍니다
+    void StartNoBulletWarning()
     {
-        foreach (Image go in singleBulletUI)
-        {
-            go.sprite = fullBullet;
-        }
-
-        currentBullet = maxBullet;
+        StartCoroutine(NoBulletWarning());
     }
 
-    public void DecreaseOneBulletNum() // 총알을 한개함수 이름 죄송..
+    void StartGaugeReloading()
     {
-        if (currentBullet > 0)
-        {
-            currentBullet--;
-            singleBulletUI[currentBullet].sprite = emptyBullet;
-        }
-        else
-        {
-            StartCoroutine(NoBulletWarning());
-        }
+        // 그냥 인보크 함수 쓰자
+        gaugeUI.SetActive(true);
+        Invoke("EndGaugeReloading", BulletManager.Instance.ReloadDuration);
+    }
+
+    void EndGaugeReloading()
+    {
+        gaugeUI.SetActive(false);
     }
 
     IEnumerator NoBulletWarning()
@@ -121,28 +107,6 @@ public class BulletNumberUIOnCanvas : MonoBehaviour
 
         yield return new WaitForSeconds(warningDuration);
 
-        SetBulletNum(currentBullet);
-    }
-
-    IEnumerator GaugeReloading()
-    {
-        isReloading = true;
-
-        float elapsedTime = 0.0F;
-
-        while (elapsedTime < reloadingDuration)
-        {
-            elapsedTime += Time.deltaTime;
-
-            gaugeValue = Mathf.Lerp(0.0F, 1.0F, elapsedTime / reloadingDuration);
-
-            yield return null;
-        }
-
-        gaugeValue = 1.0F;
-
-        ReloadBulletNum();
-
-        isReloading = false;
+        SetBulletNum();
     }
 }
