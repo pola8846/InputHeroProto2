@@ -587,6 +587,7 @@ MonoBehaviour:
   canDamaged: 1
   findDistance: 10
   engageDistance: 7
+  engageSpeedRate: 0.25
   aimTIme: 1
   shootTime: 1
   shooter: {fileID: 4314347554235300171}

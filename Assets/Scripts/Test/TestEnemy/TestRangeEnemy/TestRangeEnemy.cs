@@ -6,6 +6,7 @@ using UnityEngine;
 public class TestRangeEnemy : Enemy
 {
     public float engageDistance = 1;
+    public float engageSpeedRate = 0.75f;
     public float aimTIme = 1;
     public float shootTime = 0.15f;
     public BulletShooter shooter;

@@ -21,6 +21,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     [SerializeField]
     public GameObject areaAttackPrefab;
+    [SerializeField]
+    private GameObject originPos;
+    public Vector3 OriginPos => originPos.transform.position;
 
     [Header("점프")]
     [SerializeField]
@@ -58,7 +61,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         get
         {
-            Debug.Log($"canShootTemp: {canShootTemp}");
             return canShootTemp && NowBullet >= 1 && shootTimer != null && shootTimer.Check(shootCooltime);
         }
     }
@@ -116,7 +118,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         get
         {
-            return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
+            //return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
+            return OriginPos;
         }
     }
 
@@ -148,7 +151,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     protected override void Update()
     {
-        PerformanceManager.StartTimer("PlayerUnit.Update");
         RotateTargetter();
         JumpCheck();
         ReloadCheck();
@@ -186,7 +188,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
-        PerformanceManager.StopTimer("PlayerUnit.Update");
     }
 
 
@@ -319,8 +320,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //거리 구하고 적용
-        Vector2 dir = (GameManager.MousePos - (Vector2)(transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
-        targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
+        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized * 2;
+        targetterGO.transform.position = dir + ShootStartPos;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
     }
 
@@ -359,10 +360,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
         */
 
+        //찾은 탄 중에서 마우스에 가장 가까운 것을 찾는다
         target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj) =>
         {
-            Vector2 pointB = (Vector2)transform.position + ((GameManager.MousePos - (Vector2)transform.position).normalized * autoAim_sqrLength1);
-            return GameTools.IsPointInRhombus(Prj.transform.position, transform.position, pointB, autoAim_sqrWidth1);
+            //사각형 내에 있는 탄을 찾는다
+            Vector2 pointB = ShootStartPos + ((GameManager.MousePos - ShootStartPos).normalized * autoAim_sqrLength1);
+            return GameTools.IsPointInRhombus(Prj.transform.position, ShootStartPos, pointB, autoAim_sqrWidth1);
         }));
         if (ShootToTarget(target))
         {
@@ -419,7 +422,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //쏠 방향을 구해온다
-        Vector2 dir = (Vector2)targetterGO.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
+        Vector2 dir = (Vector2)targetterGO.transform.position - ShootStartPos;
         float angle = Vector2.SignedAngle(dir, Vector2.up) * (IsLookLeft ? -1 : 1);
 
 
@@ -433,7 +436,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //레이를 쏜다
 
         //쏠 방향을 구해온다
-        Vector2 dir = ((Vector2)targetterGO.transform.position - ShootStartPos).normalized;//총알 방향
+        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized;//총알 방향
 
         //방향대로 쏜다
         int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
@@ -486,7 +489,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         var pgo = HitCheck(target, hitPos);
         //그래픽 표시
         StartCoroutine(DrawHitGrapic(ShootStartPos, hitPos));
-        DrawParticle(pgo, transform.position, hitPos, Vector2.Reflect(dir, normal));
+        DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(dir, normal));
         //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
@@ -589,7 +592,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         if (particle != null)
         {
             GameObject pgo = Instantiate(particle);
-            pgo.transform.position = target + ((Vector2)transform.position - target).normalized * 0.2f;
+            pgo.transform.position = target + (start - target).normalized * 0.2f;
             pgo.transform.LookAt(pgo.transform.position + (Vector3)dir);
             Destroy(pgo, pgo.GetComponent<ParticleSystem>().main.duration);
         }

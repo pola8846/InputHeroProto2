@@ -71,6 +71,9 @@ public class Unit : MonoBehaviour
     protected bool isLookLeft = true;
     public bool IsLookLeft => isLookLeft;
 
+    /// <summary>
+    /// 피해를 받을 수 있는가?
+    /// </summary>
     public bool canDamaged = true;
 
     protected virtual void Start()

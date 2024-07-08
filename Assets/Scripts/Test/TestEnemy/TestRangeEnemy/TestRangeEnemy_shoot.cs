@@ -2,7 +2,18 @@ using UnityEngine;
 public class TestRangeEnemy_shoot : TimedState
 {
     private TestRangeEnemy source => (TestRangeEnemy)unit;
-    private bool isRight => GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+    private bool isRight
+    {
+        get
+        {
+            if (GameManager.Player!=null)
+            {
+                return GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+            }
+            else
+                return false;
+        }
+    }
     public TestRangeEnemy_shoot(StateMachine machine) : base(machine)
     {
     }
@@ -15,15 +26,8 @@ public class TestRangeEnemy_shoot : TimedState
 
     public override void Execute()
     {
-        if (!source.FindPlayerInEngage())
-        {
-            ChangeState<TestRangeEnemy_chase>();
-            return;
-        }
-        else
-        {
-            AimPlayer();
-        }
+        move();
+        AimPlayer();
         base.Execute();
     }
 
@@ -40,6 +44,11 @@ public class TestRangeEnemy_shoot : TimedState
 
     private void AimPlayer()
     {
+        if (GameManager.Player==null)
+        {
+            return;
+        }
+
         if (source.IsLookLeft == isRight)
         {
             source.Turn();
@@ -47,5 +56,16 @@ public class TestRangeEnemy_shoot : TimedState
         var dir = -(GameManager.Player.transform.position - source.transform.position).normalized;
         source.armBox.transform.right = dir;
         source.angle = GameTools.GetDegreeAngleFormDirection(-dir);
+    }
+
+
+    private void move()
+    {
+        float movementX = Mathf.Max(0, unit.Speed) * (isRight ? 1 : -1) * source.engageSpeedRate;
+        if (isRight == unit.IsLookLeft)
+        {
+            unit.Turn();
+        }
+        source.mover.SetVelocityX(movementX);
     }
 }

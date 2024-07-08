@@ -1717,6 +1717,7 @@ MonoBehaviour:
   dashSpeedRate: 2.53
   dashTime: 0.4
   areaAttackPrefab: {fileID: 3111296254964227764, guid: 33a4c7f0ec515ad49b0429ec192171ad, type: 3}
+  originPos: {fileID: 4816503922187960341}
   groundCheckerLT: {fileID: 2342602830879614309}
   groundCheckerRD: {fileID: 8845623891562260064}
   groundChecker: {fileID: 6629434747454537459}
@@ -4168,6 +4169,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+--- !u!1 &4816503922187960341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2319036485449802624, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+  m_PrefabInstance: {fileID: 7131863056093406101}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7239757822583247022 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 468865604435309371, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
