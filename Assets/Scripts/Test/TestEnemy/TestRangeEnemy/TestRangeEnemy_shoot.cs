@@ -39,6 +39,7 @@ public class TestRangeEnemy_shoot : TimedState
 
     public override void Exit()
     {
+        source.mover.StopMove();
         base.Exit();
     }
 
