@@ -42,7 +42,7 @@ MonoBehaviour:
   Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638557958372042342
+  lastModified: 638557950967076778
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -128,7 +128,7 @@ MonoBehaviour:
   - {fileID: -7602297526077434185}
   StringsBanks:
   - {fileID: 2986844290009859911}
-  cacheTime: 638557958372052320
+  cacheTime: 638557950967468797
   cacheVersion: 131618
 --- !u!114 &2446914022336682732
 MonoBehaviour:
@@ -172,7 +172,7 @@ MonoBehaviour:
   Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638557958372052320
+  lastModified: 638557950967086743
   FileSizes:
   - Name: Desktop
     Value: 972
@@ -192,7 +192,7 @@ MonoBehaviour:
   Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/EFX.bank
   Name: EFX
   StudioPath: bank:/EFX
-  lastModified: 638557958372042342
+  lastModified: 638557950967277810
   FileSizes:
   - Name: Desktop
     Value: 193408
@@ -212,7 +212,7 @@ MonoBehaviour:
   Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/BGM.bank
   Name: BGM
   StudioPath: bank:/BGM
-  lastModified: 638557958372027356
+  lastModified: 638557950967468797
   FileSizes:
   - Name: Desktop
     Value: 1734080

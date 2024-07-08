@@ -117,14 +117,14 @@ public class Upper_Animator : MonoBehaviour
 
 
 
-        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / (180/ findSprite.Length ))), 0, findSprite.Length - 1);
+        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / ((float)180/ findSprite.Length))), 0, findSprite.Length - 1);
 
         angleScale = (int)(convertedAngle);
 
-        Debug.Log("현재각도" + nowAnlge);
-        Debug.Log("환산각도 변환 전 : " + nowAnlge / (180 / findSprite.Length));
-        Debug.Log("환산 각도 스프라이트 : " + (angleScale - 1));
-        Debug.DrawLine(targetParents.transform.position, mousePos0);
+        //Debug.Log("현재각도" + nowAnlge);
+        //Debug.Log("환산각도 변환 전 : " + nowAnlge / (180 / findSprite.Length));
+        //Debug.Log("환산 각도 스프라이트 : " + (angleScale - 1));
+        //Debug.DrawLine(targetParents.transform.position, mousePos0);
     }
 
     void animation_Aim()
