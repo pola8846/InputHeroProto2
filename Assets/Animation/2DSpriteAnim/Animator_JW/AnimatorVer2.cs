@@ -1,53 +1,62 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AnimatorVer2 : MonoBehaviour
 {
-    // PUBLIC
+    public enum AnimType
+    {
+        AIM,
+        RELOAD,
+        DASH,
+        DIE
+    }
+
     public string spriteFileName;
 
-    public int startIndex;
-    public int endIndex;
-
-    public bool looping;
-    public float fps;
-
-    // PRIVATE
     SpriteRenderer spriteRenderer;
     Sprite[] sprites;
 
-    float timeSinceLastFrame;
-    int currentIndex;
+    public AnimType currentAnimation;
+    private AnimType cache;
 
-    int GetIndicesCount()
-    {
-        return endIndex - startIndex + 1;
-    }
+    public Dictionary<AnimType, AnimationVer2> animations;
+
+    AnimationVer2 currentAnimationInst;
 
     void Start()
     {
-        currentIndex = 0;
-
         spriteRenderer = GetComponent<SpriteRenderer>();
         sprites = Resources.LoadAll<Sprite>(spriteFileName);
+
+        currentAnimationInst = animations[currentAnimation];
     }
 
     void Update()
     {
-        if (!looping && currentIndex >= GetIndicesCount() - 1) return;
-
-        timeSinceLastFrame += Time.deltaTime;
-
-        if (fps <= 0.0F) return;
-
-        if (timeSinceLastFrame >= 1.0F / fps)
+        // 매 프레임 캐시데이터와 비교해서 현재 애니메이션을 선택
+        if (cache != currentAnimation)
         {
-            timeSinceLastFrame = 0.0F;
-            currentIndex = (currentIndex + 1) % GetIndicesCount();
+            currentAnimationInst?.Exit();
+
+            //currentAnimationInst = FindAnimation(animations, currentAnimation);
+            cache = currentAnimation;
+
+            currentAnimationInst?.Enter();
         }
 
-        spriteRenderer.sprite = sprites[startIndex + currentIndex];
+        currentAnimationInst?.Run();
+
+        SpriteRendererUpdate();
+    }
+
+    // 애니메이션의 정보를 스프라이트 렌더러에 반영합니다
+    void SpriteRendererUpdate()
+    {
+        if (spriteRenderer == null) return;
+
+        // 스프라이트 반영
+        spriteRenderer.sprite = sprites[currentAnimationInst.GetSpriteListIndex()];
     }
 }
