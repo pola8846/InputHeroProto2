@@ -1727,6 +1727,7 @@ MonoBehaviour:
   shooter: {fileID: 4252187768148659530}
   shooter_Big: {fileID: 2800390838904873233}
   shootCooltime: 0.1
+  attackMinRange: 0.55
   attackRange: 50
   autoAim_mouse1: 0.2
   autoAim_cornAngle1: 1

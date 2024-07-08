@@ -65,6 +65,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
     [SerializeField]
+    private float attackMinRange = 0.25f;//최소사거리(총알 표시 시작점)
+    [SerializeField]
     private float attackRange = 50f;//사거리
 
     //자동조준
@@ -146,7 +148,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         };
         targetterGO = Instantiate(targetter);
         reloadTimer = new();
-        shootTimer = new();
+        shootTimer = new(isTrigerInstant:true);
     }
 
     protected override void Update()
@@ -178,15 +180,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 MoverV.StopMoveX();
             }
         }
-        if (IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
+        if (IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
         {
-            if (!TimeManager.IsSlowed)
-            {
-                shootTimer.Reset();
-                StartCoroutine(DoShoot());
-            }
+            InputShoot();
         }
 
+        Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
         //animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
     }
 
@@ -252,8 +251,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //}
         if (inputType == InputType.Shoot && CanShoot)//공격
         {
-            shootTimer.Reset();
-            StartCoroutine(DoShoot());
+            InputShoot();
         }
 
         //재장전
@@ -273,7 +271,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //슬로우
         if (inputType == InputType.Slow && TimeManager.IsSlowed == false)
         {
-            Reloading();
+            //Reloading();
             //StopCoroutine(ReloadingTemp());
             TimeManager.StartSlow();
         }
@@ -323,6 +321,15 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized * 2;
         targetterGO.transform.position = dir + ShootStartPos;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+    }
+
+    private void InputShoot()
+    {
+        if (!TimeManager.IsSlowed)
+        {
+            shootTimer.Reset();
+        }
+        Shoot();
     }
 
     private void Shoot()
@@ -402,7 +409,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                     }
                 }
             }
-            StartCoroutine(DrawHitGrapic(ShootStartPos, target.transform.position));
+            DrawHitGrapicAtMinRange(target.transform.position);
             return true;
         }
         return false;
@@ -479,7 +486,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             //최대 사거리까지 발사
             //그래픽 표시
-            StartCoroutine(DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange)));
+            DrawHitGrapicAtMinRange(ShootStartPos + (dir * attackRange));
             //DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
             return;
         }
@@ -488,7 +495,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //피해 적용
         var pgo = HitCheck(target, hitPos);
         //그래픽 표시
-        StartCoroutine(DrawHitGrapic(ShootStartPos, hitPos));
+        DrawHitGrapicAtMinRange(hitPos);
         DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(dir, normal));
         //DrawHitGrapic(ShootStartPos, hitPos);
     }
@@ -568,6 +575,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         // 충돌에 대한 처리 추가
         return particle;
+    }
+
+    private void DrawHitGrapicAtMinRange(Vector2 target)
+    {
+        var dist = target - ShootStartPos;
+        dist.Normalize();
+
+        StartCoroutine(DrawHitGrapic(ShootStartPos + dist * attackMinRange, target));
     }
 
     //총알 발사 그래픽 그리기. 표시되긴 하는데 안 이쁨
@@ -705,15 +720,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
-    private IEnumerator ReloadingTemp()
-    {
-        canShootTemp = false;
-        Debug.Log("재장전");
-        yield return new WaitForSeconds(reloadTime);
-        Reload();
-        canShootTemp = true;
-    }
-
     private void CancelReload()
     {
         //Reloading();
@@ -743,15 +749,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canMove = true;
         isDash = false;
         canShootTemp = true;
-    }
-
-
-    //원거리 평타
-    private IEnumerator DoShoot()
-    {
-        Shoot();
-        //ShootToMouse();
-        yield return new WaitForSecondsRealtime(shootCooltime);
     }
 
     public override void Turn()
