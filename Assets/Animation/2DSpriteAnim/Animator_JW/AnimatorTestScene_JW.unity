@@ -336,28 +336,14 @@ GameObject:
   m_Component:
   - component: {fileID: 333387229}
   - component: {fileID: 333387230}
-  - component: {fileID: 333387228}
+  - component: {fileID: 333387231}
   m_Layer: 0
   m_Name: Animator2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &333387228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 333387227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7d44a105a8943847b9a7a96565677ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteFileName: Sprite_demo21
-  currentAnimation: 3
+  m_IsActive: 1
 --- !u!4 &333387229
 Transform:
   m_ObjectHideFlags: 0
@@ -425,6 +411,35 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &333387231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333387227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb669be2f6fac4e8339232010abdd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteFileName: 
+  currentAnimation: 1
+  animations:
+  - type: 1
+    anim:
+      rid: 5049855885973389312
+  references:
+    version: 2
+    RefIds:
+    - rid: 5049855885973389312
+      type: {class: BasicSpriteAnimVer2, ns: , asm: Assembly-CSharp}
+      data:
+        startIndex: 0
+        endIndex: 40
+        flip: 0
+        looping: 1
+        fps: 30
 --- !u!1 &345223248
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,7 +5463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
