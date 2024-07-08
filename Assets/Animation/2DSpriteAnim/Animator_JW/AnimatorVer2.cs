@@ -6,17 +6,14 @@ using UnityEngine;
 
 public class AnimatorVer2 : MonoBehaviour
 {
-    public string spriteFileName;
-
+    public SpritesLoader loader;
     protected SpriteRenderer spriteRenderer;
-    protected Sprite[] sprites;
 
     protected AnimationVer2 currentAnimationInst;
 
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        sprites = Resources.LoadAll<Sprite>(spriteFileName);
     }
 
     protected virtual void Update()
@@ -29,7 +26,7 @@ public class AnimatorVer2 : MonoBehaviour
         if (currentAnimationInst == null) return;
 
         // currentAnimationInst의 정보를 스프라이트에 반영
-        spriteRenderer.sprite = sprites[currentAnimationInst.GetSpriteListIndex()];
+        spriteRenderer.sprite = loader.sprites[currentAnimationInst.GetSpriteListIndex()];
         spriteRenderer.flipX = currentAnimationInst.flip;
     }
 }

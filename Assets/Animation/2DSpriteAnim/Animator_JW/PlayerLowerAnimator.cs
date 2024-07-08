@@ -2,22 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerUpperAnimator : AnimatorVer2
+public class PlayerLowerAnimator : AnimatorVer2
 {
     //-------------------------------(상속해서 애니메이터 생성시 바꿔야할 정보)-------------------------------//
     public enum AnimType
     {
-        AIM,
-        RELOAD,
-        DIE,
-        DASH,
+        WALK,
+        JUMP,
         // ...
     }
 
     [ContextMenu("일반 스프라이트 애니메이션 추가")]
-    void AddBasicSpriteAnim() { animations.Add(new SerializablePair(AnimType.AIM, new BasicSpriteAnimVer2())); }
-    [ContextMenu("AIM 애니메이션 추가")]
-    void AddAimAnim() { animations.Add(new SerializablePair(AnimType.AIM, new PlayerUpperAim())); }
+    void AddBasicSpriteAnim() { animations.Add(new SerializablePair(AnimType.WALK, new BasicSpriteAnimVer2())); }
     // ...
     //------------------------------------(아래부터는 그냥 복붙해도됨,,)------------------------------------//
 

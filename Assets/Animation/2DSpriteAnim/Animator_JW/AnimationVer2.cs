@@ -15,7 +15,7 @@ public class AnimationVer2
 
     public int GetSpriteListIndex() // 애니메이션 내부의 인덱스를 스프라이트 기준 인덱스로 뱉어내줌
     {
-        return startIndex + currentIndex;
+        return Mathf.Clamp(startIndex + currentIndex, startIndex, endIndex);
     }
 
     protected int GetIndicesCount() // 이 애니메이션의 스프라이트 개수리턴
