@@ -1727,7 +1727,7 @@ MonoBehaviour:
   shooter: {fileID: 4252187768148659530}
   shooter_Big: {fileID: 2800390838904873233}
   shootCooltime: 0.4
-  attackMinRange: 0.55
+  attackMinRange: 0.8
   attackRange: 50
   autoAim_mouse1: 0.2
   autoAim_cornAngle1: 1
@@ -1741,7 +1741,7 @@ MonoBehaviour:
   targetter: {fileID: 9193867861440726170, guid: b0978bb93111ae54d8d47d2682f85794, type: 3}
   maxBullet: 8
   nowBullet: 8
-  reloadTime: 2
+  reloadTime: 1.5
   isDash: 0
 --- !u!114 &6622020883282897428
 MonoBehaviour:
@@ -4297,7 +4297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: maxReload
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: sourceUnit
@@ -5473,7 +5473,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7065940491719295908, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.182
+      value: 0.201
       objectReference: {fileID: 0}
     - target: {fileID: 7238383384285334257, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: m_StaticEditorFlags

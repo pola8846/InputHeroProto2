@@ -75,7 +75,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
             }
         }
 
-        skip = sourceUnit.isDash;
+       // skip = sourceUnit.isDash;
         base.Update();
     }
 

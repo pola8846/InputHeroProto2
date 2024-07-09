@@ -17,11 +17,12 @@ public class Upper_Animator : SpriteAnimation<PlayerUnit>
         flip = !sourceUnit.IsMouseLeft;
         spriteRenderer.flipX = !flip;
 
-        if (sourceUnit.isDash)
-        {
-            animation_Dash();
-        }
-        else if (!tickReload)
+        //if (sourceUnit.isDash)
+        //{
+        //    animation_Dash();
+        //}
+        //else
+        if (!tickReload)
         {
             animation_Aim();
         }
