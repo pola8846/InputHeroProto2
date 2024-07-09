@@ -52,7 +52,7 @@ public class ComboManager : MonoBehaviour
         {
             //Debug.Log($"ют╥б: {input}");
             Log.Add(input);
-            UIManager.Instance.testActionBar.GetComponent<TestActionBar>().add(input);
+            //UIManager.Instance.testActionBar.GetComponent<TestActionBar>().add(input);
         }
         if (ComboInputsTime.ContainsKey(input))
         {
@@ -105,6 +105,6 @@ public class ComboManager : MonoBehaviour
     {
         Log.Clear();
         FindedSkills.Clear();
-        UIManager.Instance.testActionBar.GetComponent<TestActionBar>().removeAll();
+        //UIManager.Instance.testActionBar.GetComponent<TestActionBar>().removeAll();
     }
 }

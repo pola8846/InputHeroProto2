@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class TimeManager : MonoBehaviour
 {
@@ -53,6 +54,7 @@ public class TimeManager : MonoBehaviour
     private TickTimer slowEnterTimer;//슬로우 진입/해제 시간 타이머
     [SerializeField] private Slider slowSlider;//슬로우 남은 시간 UI
 
+    private StudioEventEmitter eventEmitter;
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -70,6 +72,7 @@ public class TimeManager : MonoBehaviour
         Time.fixedDeltaTime = Time.timeScale / framePerSec;
         slowTimer = new(unscaledTime: true);
         slowEnterTimer = new(unscaledTime: true);
+        eventEmitter = GetComponent<StudioEventEmitter>();
     }
 
     private void Update()
@@ -78,7 +81,7 @@ public class TimeManager : MonoBehaviour
         if (isSlowed && !isUsingSkills && !isSlowing)
         {
             float remainTime = slowTimer.GetRemain(slowTime);
-            slowSlider.value = remainTime / instance.slowTime;//게이지 조절
+            //slowSlider.value = remainTime / instance.slowTime;//게이지 조절
             //슬로우 시간을 다 썼다면
             if (remainTime <= 0)
             {
@@ -144,6 +147,7 @@ public class TimeManager : MonoBehaviour
     private IEnumerator StartingSlow()
     {
         slowEnterTimer.Reset();
+        eventEmitter.SetParameter("Magnet_Ingame", 1);
         while (true)
         {
             float remainTime = slowEnterTimer.GetRemain(slowStartTime);//남은 시간
@@ -164,6 +168,7 @@ public class TimeManager : MonoBehaviour
     private IEnumerator EndingSlow()
     {
         slowEnterTimer.Reset();
+        eventEmitter.SetParameter("Magnet_Ingame", 0);
         while (true)
         {
             float remainTime = slowEnterTimer.GetRemain(slowEndTime);//남은 시간

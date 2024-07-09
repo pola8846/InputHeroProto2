@@ -705,6 +705,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public void Reload()
     {
         NowBullet = maxBullet;
+        RuntimeManager.PlayOneShot("event:/Realod_End");
     }
 
     private void Reloading()
@@ -725,7 +726,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             Reload();
             reloadTimer.Reset();
             canShootTemp = true;
-            RuntimeManager.PlayOneShot("event:/Realod_End");
             //Debug.Log("재장전완료");
         }
     }
