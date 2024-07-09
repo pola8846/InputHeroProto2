@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{8f703df8-9164-49e1-a1c5-95bbe12914ae}">
+		<property name="assetPath">
+			<value>Drum/new/hip-hop-drums-loop-140-bpm-2-131242.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>13.752000000000001</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{887a0d66-1d05-47b1-b2df-f1d0fd7bd36d}</destination>
+		</relationship>
+	</object>
+</objects>

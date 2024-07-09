@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{cc7a1070-b533-4105-ade6-697cc0fab639}">
 		<property name="assetPath">
-			<value>Track-004-bulletDrop4.wav</value>
+			<value>SFX/Bullet/Track-004-bulletDrop4.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{e8280156-dccb-47ba-8f66-8b13e572ac7c}">
+		<property name="assetPath">
+			<value>Sampling/tron-arp-synth-loop-155bpm-cb-minor-191911.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>32.548571428571428</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{887a0d66-1d05-47b1-b2df-f1d0fd7bd36d}</destination>
+		</relationship>
+	</object>
+</objects>

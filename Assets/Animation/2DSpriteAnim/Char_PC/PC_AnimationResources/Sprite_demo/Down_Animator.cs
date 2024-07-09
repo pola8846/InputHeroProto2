@@ -246,4 +246,6 @@ public class Down_Animator : MonoBehaviour
 
         spriteRenderer.sprite = jumpSprite[nowJump-1];
     }
+
+
 }

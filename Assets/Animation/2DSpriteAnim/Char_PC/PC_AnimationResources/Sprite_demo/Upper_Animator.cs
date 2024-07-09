@@ -79,6 +79,7 @@ public class Upper_Animator : MonoBehaviour
         {   flip = false;
             spriteRenderer.flipX = enabled; }
 
+
         if (dashing)
         {
             animation_Dash();
@@ -94,7 +95,7 @@ public class Upper_Animator : MonoBehaviour
         } 
 
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !TimeManager.IsSlowed)
         {
             tickReload = true;
         }
@@ -130,7 +131,7 @@ public class Upper_Animator : MonoBehaviour
     void animation_Aim()
     {
         spriteRenderer.sprite = findSprite[angleScale - 1];
-        eulerAngleConverter();
+        eulerAngleConverter(); 
     }
 
 
