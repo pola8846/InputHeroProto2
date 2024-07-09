@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{e8e5e85a-1265-4895-a572-cf87d255a170}">
 		<property name="name">
-			<value>New Event</value>
+			<value>BulletSlow</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -52,11 +52,7 @@
 	</object>
 	<object class="EventAutomatableProperties" id="{e038cfd4-fe45-4828-836b-0cc25370eb63}" />
 	<object class="MarkerTrack" id="{a8f309de-a146-4eb0-949e-3b779206fbe1}" />
-	<object class="Timeline" id="{66bc85a0-33eb-4c1b-a2c8-4d258a910d21}">
-		<property name="isProxyEnabled">
-			<value>false</value>
-		</property>
-	</object>
+	<object class="Timeline" id="{66bc85a0-33eb-4c1b-a2c8-4d258a910d21}" />
 	<object class="EventMixerMaster" id="{693ecd2b-d2f4-4058-99b3-255fa5fd72a5}">
 		<relationship name="effectChain">
 			<destination>{6cbccd22-d99c-4c55-8b5f-3b338d5a4ff3}</destination>
