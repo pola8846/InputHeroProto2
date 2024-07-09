@@ -26,7 +26,7 @@ public class AnimatorVer2 : MonoBehaviour
         if (currentAnimationInst == null) return;
 
         // currentAnimationInst의 정보를 스프라이트에 반영
-        spriteRenderer.sprite = loader.sprites[currentAnimationInst.GetSpriteListIndex()];
+        //spriteRenderer.sprite = loader.sprites[currentAnimationInst.GetSpriteListIndex()];
         spriteRenderer.flipX = currentAnimationInst.flip;
     }
 }
