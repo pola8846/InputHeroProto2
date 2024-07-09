@@ -13,6 +13,11 @@ public class TestRangeEnemy : Enemy
     public Mover mover => GetComponent<Mover>();
     public GameObject armBox;
     public float angle;
+    [Range(0f, 45f)]
+    public float angleRange;
+
+    public TestRangeEnemy_Animation_Top _Top;
+    public TestRangeEnemy_Animation_Bottom _Bottom;
 
     protected override void Start()
     {

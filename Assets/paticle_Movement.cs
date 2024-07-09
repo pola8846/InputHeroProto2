@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class paticle_Movement : MonoBehaviour
 {
@@ -10,7 +7,7 @@ public class paticle_Movement : MonoBehaviour
     public SpriteRenderer spriteRendererP;
     public ParticleSystemRenderer spriteRendererR;
     bool branch;
-    
+
     [SerializeField] Vector3 flipX;
     [SerializeField] bool flip;
 
@@ -59,7 +56,7 @@ public class paticle_Movement : MonoBehaviour
         afterImage.textureSheetAnimation.RemoveSprite(0);
         afterImage.textureSheetAnimation.AddSprite(afterSprite);
         afterImage.textureSheetAnimation.SetSprite(0, afterSprite);
-        
+
     }
 
     void setflip()
@@ -77,7 +74,8 @@ public class paticle_Movement : MonoBehaviour
         if (flip)
         {
             flipX = Vector3.zero;
-        } else if (!flip)
+        }
+        else if (!flip)
         {
             flipX = Vector3.right;
         }
