@@ -21,6 +21,7 @@ public class TestRangeEnemy_shoot : TimedState
     public override void Enter()
     {
         base.Enter();
+        source._Top.SetTargetSprite("Move");
         timer.checkTime = source.aimTIme;
     }
 

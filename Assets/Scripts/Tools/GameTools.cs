@@ -462,6 +462,46 @@ public class GameTools
         return Vector2.zero;
     }
 
+    /// <summary>
+    /// 리스트에서 특정 구간에 해당하는 값을 반환하는 선형 그래프
+    /// </summary>
+    /// <typeparam name="T">찾을 자료형</typeparam>
+    /// <param name="graph">찾을 데이터</param>
+    /// <param name="delta">찾을 값</param>
+    /// <param name="min">탐색 범위 최대값</param>
+    /// <param name="max">탐색 범위 최소값</param>
+    public static T GetlinearGraphInList<T>(List<T> graph, float delta, float min, float max)
+    {
+        if (delta <= min)
+        {
+            return graph[0];
+        }
+        if (delta >= max)
+        {
+            return graph[graph.Count - 1];
+        }
+
+        float rate = Mathf.InverseLerp(min, max, delta);
+        int target = Mathf.RoundToInt(Mathf.Lerp(0, graph.Count - 1, rate));
+        return graph[target];
+    }
+
+    public static int GetlinearGraphInCount(int Count, float delta, float min, float max)
+    {
+        if (delta <= min)
+        {
+            return 0;
+        }
+        if (delta >= max)
+        {
+            return Count - 1;
+        }
+
+        float rate = Mathf.InverseLerp(min, max, delta);
+        int target = Mathf.RoundToInt(Mathf.Lerp(0, Count, rate));
+        return target;
+    }
+
     #endregion
 
     #region 변환

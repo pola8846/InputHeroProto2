@@ -1,88 +1,25 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
-public class Upper_Animator : MonoBehaviour
+public class Upper_Animator : SpriteAnimation<PlayerUnit>
 {
-    [SerializeField, Range(1, 42)] int angleScale;
-
-    float angle;
-
-    SpriteRenderer spriteRenderer;
-    Material material;
-
-
-    [SerializeField] int startReload;
-
-    public Texture2D spriteSheet;
-
-    public Sprite[] findSprite;
-    public Sprite[] reloadSprites;
-    
-
-    [SerializeField, Range(0, 180f)] float nowAnlge;
-    float convertedAngle;
-    [SerializeField] float dampAngles;
-    public bool flip;
-    Vector2 mousePos0;
-    [SerializeField] GameObject targetParents;
-
-    TickTimer tickTimer;
-
     public bool tickReload = false;
 
-    [SerializeField] GameObject player;
-    public bool dashing;
+    [SerializeField] float nowDashTime;
+    [SerializeField] float maxDashjTime;
+    [SerializeField] float tMDash;
 
-    private void Awake()
+    [SerializeField] float nowReloadTime;
+    [SerializeField] float maxReload;
+    [SerializeField] float timeManifulatorReload;
+
+    protected override void Update()
     {
+        flip = !sourceUnit.IsMouseLeft;
+        spriteRenderer.flipX = !flip;
 
-        tickTimer = new();
-
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        //spriteSheet = spriteRenderer.sprite.texture;
-        material = spriteRenderer.material;
-       
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        dashing = player.GetComponent<PlayerUnit>().isDash;
-
-       mousePos0 = GameManager.MousePos;
-
-        /*if (GameManager.Player.IsLookLeft)
-        {
-            spriteRenderer.flipX = enabled;
-        }
-        else { spriteRenderer.flipX = !enabled; }
-        */
-
-        if (targetParents.transform.position.x >= mousePos0.x)
-        {
-            flip = true;
-            spriteRenderer.flipX = !enabled;
-        }
-        else
-        {   flip = false;
-            spriteRenderer.flipX = enabled; }
-
-        if (dashing)
+        if (sourceUnit.isDash)
         {
             animation_Dash();
-            //Debug.Log("dash?");
         }
         else if (!tickReload)
         {
@@ -91,67 +28,33 @@ public class Upper_Animator : MonoBehaviour
         else if (tickReload)
         {
             reload();
-        } 
+        }
 
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             tickReload = true;
         }
-   
 
-     if(!dashing)
+        if (!sourceUnit.isDash)
         {
             nowDashTime = 0;
         }
 
-    }
-
-
-    void eulerAngleConverter()
-    {
-
-        Vector2 nowdir = (mousePos0 - new Vector2(targetParents.transform.position.x, targetParents.transform.position.y)).normalized;
-
-        nowAnlge = GameTools.GetDegreeAngleFormDirection(nowdir);
-
-
-
-        convertedAngle = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowAnlge / ((float)180/ findSprite.Length))), 0, findSprite.Length - 1);
-
-        angleScale = (int)(convertedAngle);
-
-        //Debug.Log("현재각도" + nowAnlge);
-        //Debug.Log("환산각도 변환 전 : " + nowAnlge / (180 / findSprite.Length));
-        //Debug.Log("환산 각도 스프라이트 : " + (angleScale - 1));
-        //Debug.DrawLine(targetParents.transform.position, mousePos0);
+        base.Update();
     }
 
     void animation_Aim()
     {
-        spriteRenderer.sprite = findSprite[angleScale - 1];
-        eulerAngleConverter();
+        if (nowSpriteList.name != "Find")
+        {
+            ChangeSpriteList("Find");
+        }
+        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.NowMouseAngle), 0, 180));
     }
-
-
-    [SerializeField] int nowReload;
 
 
     void reload()
-    {
-        reloadSetSprite();
-
-        spriteRenderer.sprite = reloadSprites[Mathf.Clamp(nowReload - 1,0,reloadSprites.Length)];
-
-    }
-
-    [SerializeField] float nowReloadTime;
-    [SerializeField] float maxReload;
-    [SerializeField] float timeManifulatorReload;
- 
-
-    float convertedReload;
-    void reloadSetSprite()
     {
         nowReloadTime = nowReloadTime + Time.deltaTime * timeManifulatorReload;
         if (nowReloadTime > maxReload)
@@ -161,37 +64,26 @@ public class Upper_Animator : MonoBehaviour
 
         }
 
-        convertedReload = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowReloadTime / (maxReload / reloadSprites.Length))), 0, reloadSprites.Length - 1);
-        nowReload = (int)convertedReload + 1;
+        if (nowSpriteList.name != "Reload")
+        {
+            ChangeSpriteList("Reload");
+        }
+        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowReloadTime, 0, maxReload));
     }
-
-
-    [SerializeField] Sprite[] dashSprite;
-    [SerializeField] float nowDashTime;
-    [SerializeField] float maxDashjTime;
-    [SerializeField] float tMDash;
-    float convertedDash;
-
-    [SerializeField] int nowDash;
-
 
     void animation_Dash()
     {
-
         nowDashTime = nowDashTime + Time.deltaTime * tMDash;
         if (nowDashTime > maxDashjTime)
         {
             nowDashTime = 0;
         }
 
-        convertedDash = Mathf.Clamp(Mathf.Ceil(Mathf.Abs(nowDashTime / (maxDashjTime / dashSprite.Length))), 0, dashSprite.Length - 1);
-        nowDash = (int)convertedDash + 1;
 
-        spriteRenderer.sprite = dashSprite[nowDash - 1];
-        //Debug.Log(dashSprite[nowDash - 1]);
-
-        
+        if (nowSpriteList.name != "Dash")
+        {
+            ChangeSpriteList("Dash");
+        }
+        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowDashTime, 0, maxDashjTime));
     }
-
-
 }

@@ -123,7 +123,7 @@ public class Unit : MonoBehaviour
     public virtual void Turn()
     {
         isLookLeft = !isLookLeft;
-        transform.Rotate(new(0, 180, 0));
+        //transform.Rotate(new(0, 180, 0));
     }
 
     public virtual void Turn(bool lookLeft)

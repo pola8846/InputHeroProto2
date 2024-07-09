@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using FMOD.Studio;
 using FMODUnity;
+using UnityEngine;
 
 public class TestSoundChanger : MonoBehaviour
 {
     public StudioEventEmitter emitter;
-    [Range(0,3)]
+    [Range(0, 3)]
     public int i;
 
     // Update is called once per frame

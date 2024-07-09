@@ -10,7 +10,9 @@ public class Mover : MonoBehaviour
 
     //목표 속도
     private float targetSpeedX = 0;
+    public float TargetSpeedX => targetSpeedX;
     private float targetSpeedY = 0;
+    public float TargetSpeedY => targetSpeedY;
 
     //최대 속도
     [SerializeField]

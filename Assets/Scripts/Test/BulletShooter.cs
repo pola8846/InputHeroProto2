@@ -61,7 +61,7 @@ public class BulletShooter : MonoBehaviour
     {
         set
         {
-            bulletAngleMax = bulletAngleMin = value;
+            SetBulletAngle(value, 0);
         }
     }
 
@@ -127,6 +127,7 @@ public class BulletShooter : MonoBehaviour
     private void MakeProjectile(Vector2 direction)
     {
         Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
+        Destroy(attack.gameObject, lifeTime<=0? 10f : lifeTime +1);
         
         GameObject go = Instantiate(GO, transform.position, transform.rotation, attack.transform);
         if (go.GetComponentsInChildren<DamageArea>().Length>=1)
@@ -143,6 +144,12 @@ public class BulletShooter : MonoBehaviour
         projectile?.Initialize(
             direction, Random.Range(bulletSpeedMin, bulletSpeedMax), Unit,
             lifeTime: lifeTime, lifeDistance: lifeDistance);
+    }
+
+    public void SetBulletAngle(float angle, float range = 0)
+    {
+        bulletAngleMax = angle + range;
+        bulletAngleMin = angle - range;
     }
 }
 

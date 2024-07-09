@@ -24,7 +24,7 @@ public class TestRangeEnemy_chase : State
     public override void Enter()
     {
         base.Enter();
-
+        source._Top.SetTargetSprite("Run");
         move();
     }
 

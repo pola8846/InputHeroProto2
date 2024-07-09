@@ -69,6 +69,45 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private float attackRange = 50f;//사거리
 
+    //마우스 각도
+    private Vector2 nowMouseDir;
+    private bool isNowMouseDirCashed = false;
+    public Vector2 NowMouseDir
+    {
+        get
+        {
+            if (isNowMouseDirCashed)
+            {
+                return nowMouseDir;
+            }
+            else
+            {
+                //각도 계산
+                nowMouseDir = (GameManager.MousePos - ShootStartPos).normalized;
+                isNowMouseDirCashed = true;
+                return nowMouseDir;
+            }
+        }
+    }
+    public float NowMouseAngle
+    {
+        get
+        {
+            return GameTools.GetDegreeAngleFormDirection(nowMouseDir);
+        }
+    }
+
+    /// <summary>
+    /// 마우스가 자기 기준 왼쪽에 있는가?
+    /// </summary>
+    public bool IsMouseLeft
+    {
+        get
+        {
+            return ShootStartPos.x < GameManager.MousePos.x;
+        }
+    }
+
     //자동조준
     [SerializeField]
     private float autoAim_mouse1 = 0.25f;
@@ -116,7 +155,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     public bool isDash;
 
-    private Vector2 ShootStartPos
+    public Vector2 ShootStartPos
     {
         get
         {
@@ -148,45 +187,19 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         };
         targetterGO = Instantiate(targetter);
         reloadTimer = new();
-        shootTimer = new(isTrigerInstant:true);
+        shootTimer = new(isTrigerInstant: true);
     }
 
     protected override void Update()
     {
+        isNowMouseDirCashed = false;
+
         RotateTargetter();
         JumpCheck();
         ReloadCheck();
-        //Debug.Log(canShootTemp);
-        if (canMove && !TimeManager.IsSlowed)
-        {
-            if (IsKeyPushing(InputType.MoveLeft))
-            {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);
-                if (!isLookLeft)
-                {
-                    Turn();
-                }
-            }
-            else if (IsKeyPushing(InputType.MoveRight))
-            {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed));
-                if (isLookLeft)
-                {
-                    Turn();
-                }
-            }
-            else
-            {
-                MoverV.StopMoveX();
-            }
-        }
-        if (IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
-        {
-            InputShoot();
-        }
+        InputMoveCheck();
 
-        Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
-        //animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
+        //Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
     }
 
 
@@ -240,15 +253,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
         }
 
-        //공격
-        //if (canMove && !animator.GetBool("IsJumping"))
-        //{
-        //    if (inputType == InputType.MeleeAttack)
-        //    {
-        //        animator.Play("mixamo_com");
-        //        canMove = false;
-        //    }
-        //}
         if (inputType == InputType.Shoot && CanShoot)//공격
         {
             InputShoot();
@@ -306,21 +310,48 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         keyStay.Clear();
     }
 
+    private void InputMoveCheck()
+    {
+        if (canMove && !TimeManager.IsSlowed)
+        {
+            if (IsKeyPushing(InputType.MoveLeft))
+            {
+                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);
+                if (!isLookLeft)
+                {
+                    Turn();
+                }
+            }
+            else if (IsKeyPushing(InputType.MoveRight))
+            {
+                MoverV.SetVelocityX(Mathf.Max(0, Speed));
+                if (isLookLeft)
+                {
+                    Turn();
+                }
+            }
+            else
+            {
+                MoverV.StopMoveX();
+            }
+        }
+        if (IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
+        {
+            InputShoot();
+        }
+    }
+
     #region 원거리 기본공격
     //마우스 방향 표시기 회전(임시)
     private void RotateTargetter()
     {
-        PerformanceManager.StartTimer("PlayerUnit.RotateTargetter");
         if (targetterGO is null)
         {
-            PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
             return;
         }
 
         //거리 구하고 적용
-        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized * 2;
-        targetterGO.transform.position = dir + ShootStartPos;
-        PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+        targetterGO.transform.position = (NowMouseDir * 2) + ShootStartPos;
     }
 
     private void InputShoot()
@@ -371,7 +402,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj) =>
         {
             //사각형 내에 있는 탄을 찾는다
-            Vector2 pointB = ShootStartPos + ((GameManager.MousePos - ShootStartPos).normalized * autoAim_sqrLength1);
+            Vector2 pointB = ShootStartPos + (NowMouseDir * autoAim_sqrLength1);
             return GameTools.IsPointInRhombus(Prj.transform.position, ShootStartPos, pointB, autoAim_sqrWidth1);
         }));
         if (ShootToTarget(target))
@@ -415,39 +446,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return false;
     }
 
-    //마우스 방향으로 발사(임시)
-    private void ShootToMouse()
-    {
-
-        if (NowBullet <= 0)
-        {
-            return;
-        }
-        else
-        {
-            NowBullet--;
-        }
-
-        //쏠 방향을 구해온다
-        Vector2 dir = (Vector2)targetterGO.transform.position - ShootStartPos;
-        float angle = Vector2.SignedAngle(dir, Vector2.up) * (IsLookLeft ? -1 : 1);
-
-
-        //방향대로 쏜다
-        shooter.BulletAngle = angle;
-        shooter.Triger();
-    }
-
     private void ShootByRay()
     {
-        //레이를 쏜다
-
-        //쏠 방향을 구해온다
-        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized;//총알 방향
-
         //방향대로 쏜다
         int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
-        var ray = Physics2D.RaycastAll(ShootStartPos, dir, attackRange, layer);
+        var ray = Physics2D.RaycastAll(ShootStartPos, NowMouseDir, attackRange, layer);
         Collider2D target = null;//충돌한 적법하고 가장 가까운 대상
         Vector2 hitPos = Vector2.zero;//충돌한 지점
         Vector2 normal = Vector2.zero;//법선
@@ -486,7 +489,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             //최대 사거리까지 발사
             //그래픽 표시
-            DrawHitGrapicAtMinRange(ShootStartPos + (dir * attackRange));
+            DrawHitGrapicAtMinRange(ShootStartPos + (NowMouseDir * attackRange));
             //DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
             return;
         }
@@ -496,7 +499,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         var pgo = HitCheck(target, hitPos);
         //그래픽 표시
         DrawHitGrapicAtMinRange(hitPos);
-        DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(dir, normal));
+        DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(NowMouseDir, normal));
         //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
@@ -705,7 +708,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShootTemp = false;
         reloading = true;
         reloadTimer.Reset();
-        Debug.Log("재장전완료");
+        //Debug.Log("재장전");
     }
 
     private void ReloadCheck()
@@ -716,7 +719,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             Reload();
             reloadTimer.Reset();
             canShootTemp = true;
-            Debug.Log("재장전");
+            //Debug.Log("재장전완료");
         }
     }
 

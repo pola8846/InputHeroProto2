@@ -13,7 +13,9 @@ public class TestRangeEnemy_shoot2 : TimedState
     public override void Enter()
     {
         base.Enter();
+        source._Top.SetTargetSprite("Attack");
         timer.checkTime = source.shootTime;
+        source.mover.StopMove();
     }
 
     public override void Execute()
@@ -25,7 +27,7 @@ public class TestRangeEnemy_shoot2 : TimedState
     {
         base.Main();
 
-        source.shooter.BulletAngle = source.angle;
+        source.shooter.SetBulletAngle(source.angle, source.angleRange);
         source.shooter.Triger();
         if (!source.FindPlayerInEngage())
         {
