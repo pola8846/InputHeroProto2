@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -374,6 +375,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             NowBullet--;
         }
+        RuntimeManager.PlayOneShot("event:/Bullet");
+        RuntimeManager.PlayOneShot("event:/Bulletdrop");
 
         Projectile target = null;
 
@@ -612,6 +615,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             GameObject pgo = Instantiate(particle);
             pgo.transform.position = target + (start - target).normalized * 0.2f;
             pgo.transform.LookAt(pgo.transform.position + (Vector3)dir);
+            RuntimeManager.PlayOneShot("event:/BulletBlocked");
             Destroy(pgo, pgo.GetComponent<ParticleSystem>().main.duration);
         }
     }
@@ -708,6 +712,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShootTemp = false;
         reloading = true;
         reloadTimer.Reset();
+        RuntimeManager.PlayOneShot("event:/Reload_start");
+
         //Debug.Log("재장전");
     }
 
@@ -719,6 +725,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             Reload();
             reloadTimer.Reset();
             canShootTemp = true;
+            RuntimeManager.PlayOneShot("event:/Realod_End");
             //Debug.Log("재장전완료");
         }
     }

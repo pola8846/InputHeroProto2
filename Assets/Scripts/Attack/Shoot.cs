@@ -128,7 +128,8 @@ public class Shoot : Projectile
         base.Parried();
         GameObject go = Instantiate(parryParticle);
         go.transform.position = transform.position;
-        
+        FMODUnity.RuntimeManager.PlayOneShot("event:/BulletCrash");
+
         Destroy();
     }
 }
