@@ -11,7 +11,8 @@ public class TestGlitch : MonoBehaviour
     public enum GlitchType
     {
         NONE,
-        TEST
+        Hurt,
+        Death
     }
 
     [Serializable]
@@ -57,6 +58,8 @@ public class TestGlitch : MonoBehaviour
             GlitchOptionSet currentOption = nullableOption.Value;
             ApplyGlitch(currentOption);
         }
+        GameManager.SetGlitchEffect(this);
+        
     }
 
     GlitchOptionSet? GetGlitch(GlitchType type)

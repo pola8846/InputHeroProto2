@@ -106,6 +106,10 @@ public class Unit : MonoBehaviour
 
     }
 
+    protected virtual void OnDamaged()
+    {
+
+    }
     public bool Damage(float damage)
     {
         //예외
@@ -116,6 +120,7 @@ public class Unit : MonoBehaviour
 
         //피해적용
         stats.health -= damage;
+        OnDamaged();
 
         //사망처리
         if (stats.health > 0f)

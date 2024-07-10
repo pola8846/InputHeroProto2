@@ -1545,6 +1545,7 @@ Transform:
   - {fileID: 6424845626897983315}
   - {fileID: 6597023429246771846}
   - {fileID: 7239757822583247022}
+  - {fileID: 7215341855796105474}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2814850484785442322
@@ -2531,6 +2532,37 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.097029865, y: -1.4560865, z: 0.24489367}
     m_Extent: {x: 1.1424787, y: 1.0434586, z: 1.1730858}
   m_DirtyAABB: 0
+--- !u!1 &5262554383592523277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7215341855796105474}
+  m_Layer: 7
+  m_Name: BulletUIPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7215341855796105474
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5262554383592523277}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.23, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5795801048837654334}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5644744403529544343
 GameObject:
   m_ObjectHideFlags: 0

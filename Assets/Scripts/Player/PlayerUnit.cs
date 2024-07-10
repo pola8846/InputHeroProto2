@@ -26,6 +26,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private GameObject originPos;
     public Vector3 OriginPos => originPos.transform.position;
 
+    [SerializeField]
+    private float glitchTime = 0.5f;
+
     [Header("점프")]
     [SerializeField]
     protected Transform groundCheckerLT;
@@ -781,7 +784,20 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     protected override void OnKilled()
     {
         base.OnKilled();
-
+        GameManager.TestGlitch.currentGlitch = TestGlitch.GlitchType.Death;
         //죽을 때 처리 추가
+    }
+    protected override void OnDamaged()
+    {
+        base.OnDamaged();
+        StopCoroutine(DamageEffect());
+        StartCoroutine(DamageEffect());
+    }
+
+    private IEnumerator DamageEffect()
+    {
+        GameManager.TestGlitch.currentGlitch = TestGlitch.GlitchType.Hurt;
+        yield return new WaitForSeconds(glitchTime);
+        GameManager.TestGlitch.currentGlitch = TestGlitch.GlitchType.NONE;
     }
 }

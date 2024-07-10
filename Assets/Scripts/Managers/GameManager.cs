@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
+    private static TestGlitch testGlitch;
+    public static TestGlitch TestGlitch => testGlitch;
+
 
 
     [SerializeField]
@@ -129,5 +132,8 @@ public class GameManager : MonoBehaviour
         GameManager.player = player;
     }
 
-
+    public static void SetGlitchEffect(TestGlitch glitch)
+    {
+        GameManager.testGlitch = glitch;
+    }
 }
