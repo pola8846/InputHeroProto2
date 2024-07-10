@@ -27,8 +27,13 @@ public class TestRangeEnemy_shoot2 : TimedState
 
         source.shooter.BulletAngle = source.angle;
         source.shooter.Triger();
-
-        ChangeState<TestRangeEnemy_shoot>();
+        if (!source.FindPlayerInEngage())
+        {
+            ChangeState<TestRangeEnemy_chase>();
+            return;
+        }
+        else
+            ChangeState<TestRangeEnemy_shoot>();
     }
 
     public override void Exit() 

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
 [RequireComponent(typeof(Mover))]
 public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
@@ -22,6 +21,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     [SerializeField]
     public GameObject areaAttackPrefab;
+    [SerializeField]
+    private GameObject originPos;
+    public Vector3 OriginPos => originPos.transform.position;
 
     [Header("점프")]
     [SerializeField]
@@ -54,10 +56,22 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private float shootCooltime;
     private bool canShoot = true;
+    private bool canShootTemp = true;
+    private bool CanShoot//공격할 수 있는가?
+    {
+        get
+        {
+            return canShootTemp && NowBullet >= 1 && shootTimer != null && shootTimer.Check(shootCooltime);
+        }
+    }
+    [SerializeField]
+    private float attackMinRange = 0.25f;//최소사거리(총알 표시 시작점)
     [SerializeField]
     private float attackRange = 50f;//사거리
+
+    //자동조준
     [SerializeField]
-    private float autoAim_mouse1 = 0.25f;//자동조준
+    private float autoAim_mouse1 = 0.25f;
     [SerializeField]
     private float autoAim_cornAngle1 = 1f;
     [SerializeField]
@@ -67,13 +81,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
     [SerializeField]
-    private GameObject trail;
+    private GameObject trail;//총알 트레일
     [SerializeField]
-    private GameObject particle;
+    private GameObject particle;//충돌 시 파티클
 
+    //타겟 표시용 구체. 테스트용
     [SerializeField]
     private GameObject targetter;
     private GameObject targetterGO;
+
+    //장탄
     [SerializeField]
     private int maxBullet;
     public int MaxBullet => maxBullet;
@@ -89,8 +106,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    //재장전 시간
     [SerializeField]
     private float reloadTime = 3f;
+    private TickTimer reloadTimer;
+    private TickTimer shootTimer;
+    private bool reloading = false;
+    public bool IsReloading => reloading;
 
     public bool isDash;
 
@@ -98,7 +120,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         get
         {
-            return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
+            //return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
+            return OriginPos;
         }
     }
 
@@ -124,13 +147,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             new PSkill_TestRangeAtk()
         };
         targetterGO = Instantiate(targetter);
+        reloadTimer = new();
+        shootTimer = new(isTrigerInstant:true);
     }
 
     protected override void Update()
     {
-        PerformanceManager.StartTimer("PlayerUnit.Update");
         RotateTargetter();
         JumpCheck();
+        ReloadCheck();
+        //Debug.Log(canShootTemp);
         if (canMove && !TimeManager.IsSlowed)
         {
             if (IsKeyPushing(InputType.MoveLeft))
@@ -154,16 +180,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 MoverV.StopMoveX();
             }
         }
-        if (IsKeyPushing(InputType.Shoot) && canShoot)
+        if (IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
         {
-            if (!TimeManager.IsSlowed)
-            {
-                StartCoroutine(DoShoot());
-            }
+            InputShoot();
         }
 
+        Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
         //animator.SetFloat("MoveSpeedRate", Mathf.Abs(MoverV.Velocity.x) / stats.moveSpeed);
-        PerformanceManager.StopTimer("PlayerUnit.Update");
     }
 
 
@@ -226,27 +249,18 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //        canMove = false;
         //    }
         //}
-        if (inputType == InputType.Shoot && canShoot)
+        if (inputType == InputType.Shoot && CanShoot)//공격
         {
-            if (TimeManager.IsSlowed)
-            {
-                if (!TimeManager.IsUsingSkills)
-                {
-                    //ShootToMouse();
-                    Shoot();
-                }
-            }
-            else
-            {
-                StartCoroutine(DoShoot());
-            }
+            InputShoot();
         }
 
-        if (inputType == InputType.Reload && canMove && canShoot && !TimeManager.IsUsingSkills)
+        //재장전
+        if (inputType == InputType.Reload && canMove && canShootTemp && !TimeManager.IsUsingSkills)
         {
             if (!TimeManager.IsSlowed)
             {
-                StartCoroutine(Reloading());
+                Reloading();
+                //StartCoroutine(ReloadingTemp());
             }
             else
             {
@@ -257,7 +271,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //슬로우
         if (inputType == InputType.Slow && TimeManager.IsSlowed == false)
         {
-            StopCoroutine(Reloading());
+            //Reloading();
+            //StopCoroutine(ReloadingTemp());
             TimeManager.StartSlow();
         }
     }
@@ -303,9 +318,18 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //거리 구하고 적용
-        Vector2 dir = (GameManager.MousePos - (Vector2)(transform.position + (Vector3)Vector2.up * .5f)).normalized * 2;
-        targetterGO.transform.position = (Vector3)dir + transform.position + (Vector3)Vector2.up * .5f;
+        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized * 2;
+        targetterGO.transform.position = dir + ShootStartPos;
         PerformanceManager.StopTimer("PlayerUnit.RotateTargetter");
+    }
+
+    private void InputShoot()
+    {
+        if (!TimeManager.IsSlowed)
+        {
+            shootTimer.Reset();
+        }
+        Shoot();
     }
 
     private void Shoot()
@@ -343,10 +367,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
         */
 
-        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj)=>
+        //찾은 탄 중에서 마우스에 가장 가까운 것을 찾는다
+        target = GameTools.FindClosest(GameManager.MousePos, ProjectileManager.FindByFunc((Prj) =>
         {
-            Vector2 pointB = (Vector2)transform.position + ((GameManager.MousePos - (Vector2)transform.position).normalized * autoAim_sqrLength1);
-            return GameTools.IsPointInRhombus(Prj.transform.position, transform.position, pointB, autoAim_sqrWidth1);
+            //사각형 내에 있는 탄을 찾는다
+            Vector2 pointB = ShootStartPos + ((GameManager.MousePos - ShootStartPos).normalized * autoAim_sqrLength1);
+            return GameTools.IsPointInRhombus(Prj.transform.position, ShootStartPos, pointB, autoAim_sqrWidth1);
         }));
         if (ShootToTarget(target))
         {
@@ -383,7 +409,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                     }
                 }
             }
-            StartCoroutine(DrawHitGrapic(ShootStartPos, target.transform.position));
+            DrawHitGrapicAtMinRange(target.transform.position);
             return true;
         }
         return false;
@@ -403,7 +429,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //쏠 방향을 구해온다
-        Vector2 dir = (Vector2)targetterGO.transform.position - ((Vector2)transform.position + Vector2.up * .5f);
+        Vector2 dir = (Vector2)targetterGO.transform.position - ShootStartPos;
         float angle = Vector2.SignedAngle(dir, Vector2.up) * (IsLookLeft ? -1 : 1);
 
 
@@ -417,7 +443,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //레이를 쏜다
 
         //쏠 방향을 구해온다
-        Vector2 dir = ((Vector2)targetterGO.transform.position - ShootStartPos).normalized;//총알 방향
+        Vector2 dir = (GameManager.MousePos - ShootStartPos).normalized;//총알 방향
 
         //방향대로 쏜다
         int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
@@ -460,7 +486,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             //최대 사거리까지 발사
             //그래픽 표시
-            StartCoroutine(DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange)));
+            DrawHitGrapicAtMinRange(ShootStartPos + (dir * attackRange));
             //DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
             return;
         }
@@ -469,8 +495,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //피해 적용
         var pgo = HitCheck(target, hitPos);
         //그래픽 표시
-        StartCoroutine(DrawHitGrapic(ShootStartPos, hitPos));
-        DrawParticle(pgo, transform.position, hitPos, Vector2.Reflect(dir, normal));
+        DrawHitGrapicAtMinRange(hitPos);
+        DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(dir, normal));
         //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
@@ -508,7 +534,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         // 충돌 처리
-        Debug.Log(target.gameObject.name);
 
         //적 히트박스면
         HitBox hitBox = target.GetComponent<HitBox>();
@@ -552,6 +577,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return particle;
     }
 
+    private void DrawHitGrapicAtMinRange(Vector2 target)
+    {
+        var dist = target - ShootStartPos;
+        dist.Normalize();
+
+        StartCoroutine(DrawHitGrapic(ShootStartPos + dist * attackMinRange, target));
+    }
+
     //총알 발사 그래픽 그리기. 표시되긴 하는데 안 이쁨
     private IEnumerator DrawHitGrapic(Vector2 start, Vector2 target)
     {
@@ -562,7 +595,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         yield return null;
 
         go.transform.position = target;
-        
+
         Destroy(go, go.GetComponent<TrailRenderer>().time);
 
 
@@ -571,11 +604,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     private void DrawParticle(GameObject particle, Vector2 start, Vector2 target, Vector2 dir)
     {
-        Debug.Log(particle);
         if (particle != null)
         {
             GameObject pgo = Instantiate(particle);
-            pgo.transform.position = target + ((Vector2)transform.position - target).normalized * 0.2f;
+            pgo.transform.position = target + (start - target).normalized * 0.2f;
             pgo.transform.LookAt(pgo.transform.position + (Vector3)dir);
             Destroy(pgo, pgo.GetComponent<ParticleSystem>().main.duration);
         }
@@ -668,39 +700,55 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         NowBullet = maxBullet;
     }
 
-    private IEnumerator Reloading()
+    private void Reloading()
     {
-        canShoot = false;
-        Debug.Log("재장전");
-        yield return new WaitForSeconds(reloadTime);
-        Reload();
-        canShoot = true;
+        canShootTemp = false;
+        reloading = true;
+        reloadTimer.Reset();
+        Debug.Log("재장전완료");
     }
 
-    
+    private void ReloadCheck()
+    {
+        if (reloading && reloadTimer.Check(reloadTime))
+        {
+            reloading = false;
+            Reload();
+            reloadTimer.Reset();
+            canShootTemp = true;
+            Debug.Log("재장전");
+        }
+    }
+
+    private void CancelReload()
+    {
+        //Reloading();
+
+        //StopCoroutine(ReloadingTemp());
+        Debug.Log("dd");
+        reloading = false;
+        reloadTimer.Reset();
+        canShootTemp = true;
+    }
 
     //대시
     private IEnumerator DoDash()
     {
+        Debug.Log("dash");
+        canShootTemp = false;
         isDash = true;
         canMove = false;
         float speed = Mathf.Max(0, Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
         MoverV.SetVelocityX(speed);
+        if (reloading)
+        {
+            CancelReload();
+        }
 
         yield return new WaitForSeconds(dashTime);
         canMove = true;
         isDash = false;
-    }
-
-
-    //원거리 평타
-    private IEnumerator DoShoot()
-    {
-        canShoot = false;
-        Shoot();
-        //ShootToMouse();
-        yield return new WaitForSecondsRealtime(shootCooltime);
-        canShoot = true;
+        canShootTemp = true;
     }
 
     public override void Turn()

@@ -70,3 +70,16 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset
+fmod_editor.log
+Assets/VolumetricFog/Demos/Demos.unitypackage.meta
+Assets/VolumetricFog/Demos/StandardAssets.unitypackage.meta
+Assets/VolumetricFog/Extra/DynamicFog/Demos/Demos.unitypackage.meta
+Assets/VolumetricFog/Extra/DynamicFog/PostProcessingSupport/PostProcessingExtensions.unitypackage.meta
+Assets/VolumetricFogBundle/Builtin/VolumetricAndDynamicFog_Builtin.unitypackage.meta
+Assets/VolumetricFogBundle/URP/VolumetricFog2_URP.unitypackage.meta
+Assets/VolumetricLightsBundle/Builtin/VolumetricLights_Builtin.unitypackage.meta
+Assets/VolumetricLightsBundle/URP/VolumetricLights_URP.unitypackage.meta
+Assets/JMO Assets/Cartoon FX FREE (old legacy effects).unitypackage.meta
+fmod_editor.log
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset
