@@ -1727,7 +1727,7 @@ MonoBehaviour:
   shooter: {fileID: 4252187768148659530}
   shooter_Big: {fileID: 2800390838904873233}
   shootCooltime: 0.4
-  attackMinRange: 0.8
+  attackMinRange: 0.9
   attackRange: 50
   autoAim_mouse1: 0.2
   autoAim_cornAngle1: 1
@@ -5489,7 +5489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7065940491719295908, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.201
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7238383384285334257, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: m_StaticEditorFlags

@@ -58,7 +58,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (nowSpriteList.name != "Run")
         {
             ChangeSpriteList("Run");
-            sourceUnit._Bottom.skip = false;
+            sourceUnit._Bottom.skip = true;
         }
         if (timer.Check(animationFrameTime))
         {
@@ -82,7 +82,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (timer.Check(animationFrameTime))
         {
             timer.Reset();
-            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs((sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin) / 2), 0, 180));
         }
     }
     void animation_Aim()
@@ -96,7 +96,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (timer.Check(animationFrameTime))
         {
             timer.Reset();
-            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs((sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin) / 2), 0, 180));
         }
     }
 
