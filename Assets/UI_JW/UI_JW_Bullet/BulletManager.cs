@@ -5,6 +5,18 @@ using UnityEngine.Events;
 
 public class BulletManager : MonoBehaviour
 {
+    // 싱글톤
+    static BulletManager instance = null;
+
+    public static BulletManager Instance
+    {
+        get
+        {
+            if (instance == null) return null;
+            else return instance;
+        }
+    }
+
     // 기본 정보
     int maxBullet = 8;              // 최대 총알개수
     public int MaxBullet
@@ -20,7 +32,7 @@ public class BulletManager : MonoBehaviour
 
     // 재장전 관련
     [SerializeField]
-    float reloadDuration = 1.0F;    // 걸리는 시간
+    float reloadDuration = 8.0F;    // 걸리는 시간
     public float ReloadDuration
     {
         get { return reloadDuration; }
@@ -32,6 +44,8 @@ public class BulletManager : MonoBehaviour
         get { return isReloading; }
     }
 
+    Coroutine reloadingCoroutine;
+
     // UI 이벤트 함수
     [HideInInspector]
     public UnityEvent OnBulletNumUpdated;   // -> 총알 개수가 바뀌면 UI도 업데이트
@@ -42,18 +56,8 @@ public class BulletManager : MonoBehaviour
     [HideInInspector]
     public UnityEvent OnReload;             // -> UI reload gauge
 
-
-    // 싱글톤
-    static BulletManager instance = null;
-
-    public static BulletManager Instance
-    {
-        get
-        {
-            if (instance == null) return null;
-            else return instance;
-        }
-    }
+    [HideInInspector]
+    public UnityEvent OnCancelReload;       // -> UI reload cancel
 
     void Awake()
     {
@@ -99,8 +103,16 @@ public class BulletManager : MonoBehaviour
     {
         if (!isReloading)
         {
-            StartCoroutine(Reloading());
+            reloadingCoroutine = StartCoroutine(Reloading());
         }
+    }
+
+    public void CancelReloading()
+    {
+        if (reloadingCoroutine != null) StopCoroutine(reloadingCoroutine);
+        isReloading = false;
+
+        OnCancelReload?.Invoke();
     }
 
     IEnumerator Reloading()
@@ -123,9 +135,13 @@ public class BulletManager : MonoBehaviour
         {
             UseOneBullet();
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             StartReloading();
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CancelReloading();
         }
     }
 }
