@@ -28,6 +28,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     [SerializeField]
     private float glitchTime = 0.5f;
+    [SerializeField]
+    private GameObject gameoverText;
 
     [Header("점프")]
     [SerializeField]
@@ -785,6 +787,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         base.OnKilled();
         GameManager.TestGlitch.currentGlitch = TestGlitch.GlitchType.Death;
+        gameoverText.SetActive(true);
         //죽을 때 처리 추가
     }
     protected override void OnDamaged()
