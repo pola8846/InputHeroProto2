@@ -149,6 +149,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //재장전 시간
     [SerializeField]
     private float reloadTime = 3f;
+    public float ReloadTime => reloadTime;
     private TickTimer reloadTimer;
     private TickTimer shootTimer;
     private bool reloading = false;
@@ -254,9 +255,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
         }
 
-        if (inputType == InputType.Shoot && CanShoot)//공격
+        if (inputType == InputType.Shoot)//공격
         {
-            InputShoot();
+            if (CanShoot)
+            {
+                InputShoot();
+            }
+            else if (NowBullet <= 0)
+            {
+                UIManager.Instance.OnBulletUseFailed?.Invoke();
+            }
         }
 
         //재장전
@@ -374,6 +382,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         else
         {
             NowBullet--;
+            UIManager.Instance.OnBulletNumUpdated?.Invoke();
         }
         RuntimeManager.PlayOneShot("event:/Bullet");
         RuntimeManager.PlayOneShot("event:/Bulletdrop");
@@ -705,6 +714,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public void Reload()
     {
         NowBullet = maxBullet;
+        UIManager.Instance.OnBulletNumUpdated?.Invoke();
         RuntimeManager.PlayOneShot("event:/Realod_End");
     }
 
@@ -712,6 +722,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         canShootTemp = false;
         reloading = true;
+        UIManager.Instance.OnReload?.Invoke();
         reloadTimer.Reset();
         RuntimeManager.PlayOneShot("event:/Reload_start");
 
@@ -737,6 +748,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //StopCoroutine(ReloadingTemp());
         Debug.Log("dd");
         reloading = false;
+        UIManager.Instance.OnCancelReload?.Invoke();
         reloadTimer.Reset();
         canShootTemp = true;
     }

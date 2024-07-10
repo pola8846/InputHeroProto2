@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 public class BulletNumberUI : MonoBehaviour
 {
+    public PlayerUnit playerScript;
     public Transform targetWorldObject;
 
     public GameObject singleBulletPrefab;
@@ -29,7 +30,7 @@ public class BulletNumberUI : MonoBehaviour
     void Awake()
     {
         // maxBullet 개수만큼 총알 UI 생성
-        for (int i = 0; i < BulletManager.Instance.MaxBullet; i++)
+        for (int i = 0; i < playerScript.MaxBullet; i++)
         {
             GameObject go = Instantiate(singleBulletPrefab);
 
@@ -38,20 +39,20 @@ public class BulletNumberUI : MonoBehaviour
 
             singleBulletUI.Add(go.GetComponent<Image>());
         }
-
-        // 이벤트 함수 구독
-        BulletManager.Instance.OnBulletNumUpdated.AddListener(SetBulletNum);
-        BulletManager.Instance.OnBulletUseFailed.AddListener(StartNoBulletWarning);
-        BulletManager.Instance.OnReload.AddListener(StartGaugeReloading);
-        BulletManager.Instance.OnCancelReload.AddListener(EndGaugeReloading);
     }
 
     void Start()
     {
+        // 이벤트 함수 구독
+        UIManager.Instance.OnBulletNumUpdated.AddListener(SetBulletNum);
+        UIManager.Instance.OnBulletUseFailed.AddListener(StartNoBulletWarning);
+        UIManager.Instance.OnReload.AddListener(StartGaugeReloading);
+        UIManager.Instance.OnCancelReload.AddListener(EndGaugeReloading);
+
         // 오른쪽으로만 생성했으니 옆으로 반쯤 밀어준다
         foreach (Image go in singleBulletUI)
         {
-            go.GetComponent<RectTransform>().anchoredPosition -= new Vector2(distance * (BulletManager.Instance.MaxBullet - 1) / 2.0F, 0);
+            go.GetComponent<RectTransform>().anchoredPosition -= new Vector2(distance * (playerScript.MaxBullet - 1) / 2.0F, 0);
         }
 
         gaugeUI.SetActive(false);
@@ -61,18 +62,19 @@ public class BulletNumberUI : MonoBehaviour
 
     void Update()
     {
+        if (playerScript == null) gameObject.SetActive(false);
+        if (targetWorldObject == null) return;
         // 위치 업데이트
         GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(targetWorldObject.position);
 
         if (gaugeUI.activeSelf) gaugeUI.GetComponent<Image>().fillAmount = gaugeValue;
     }
 
-    // BulletManager의 현재 총알 개수에 맞춰 UI 업데이트
     void SetBulletNum()
     {
-        for (int i = 0; i < BulletManager.Instance.MaxBullet; i++)
+        for (int i = 0; i < playerScript.MaxBullet; i++)
         {
-            if (i < BulletManager.Instance.CurrentBullet)
+            if (i < playerScript.NowBullet)
             {
                 singleBulletUI[i].sprite = fullBullet;
             }
@@ -90,10 +92,11 @@ public class BulletNumberUI : MonoBehaviour
 
     void StartGaugeReloading()
     {
-        gaugeUI.SetActive(true);
         gaugeValue = 0.0F;
-        gaugeTween = DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, BulletManager.Instance.ReloadDuration);
-        Invoke("EndGaugeReloading", BulletManager.Instance.ReloadDuration);
+        gaugeUI.SetActive(true);
+
+        gaugeTween = DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, playerScript.ReloadTime);
+        Invoke("EndGaugeReloading", playerScript.ReloadTime);
     }
 
     void EndGaugeReloading()

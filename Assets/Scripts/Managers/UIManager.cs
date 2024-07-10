@@ -2,12 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
     //½Ì±ÛÅæ
     private static UIManager instance;
     public static UIManager Instance => instance;
+
+    // UI ÀÌº¥Æ® ÇÔ¼ö
+    [HideInInspector]
+    public UnityEvent OnBulletNumUpdated;   // -> ÃÑ¾Ë °³¼ö°¡ ¹Ù²î¸é UIµµ ¾÷µ¥ÀÌÆ®
+
+    [HideInInspector]
+    public UnityEvent OnBulletUseFailed;    // -> UI warning color
+
+    [HideInInspector]
+    public UnityEvent OnReload;             // -> UI reload gauge
+
+    [HideInInspector]
+    public UnityEvent OnCancelReload;             // -> UI reload gauge
 
     //
     [SerializeField]
