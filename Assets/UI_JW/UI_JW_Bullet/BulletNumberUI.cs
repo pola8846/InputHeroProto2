@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.ComponentModel;
 
 public class BulletNumberUI : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class BulletNumberUI : MonoBehaviour
     float distance = 10F;
 
     float warningDuration = 0.3F;
+    Tween gaugeTween;
 
     float gaugeValue = 0.0F;
 
@@ -41,6 +43,7 @@ public class BulletNumberUI : MonoBehaviour
         BulletManager.Instance.OnBulletNumUpdated.AddListener(SetBulletNum);
         BulletManager.Instance.OnBulletUseFailed.AddListener(StartNoBulletWarning);
         BulletManager.Instance.OnReload.AddListener(StartGaugeReloading);
+        BulletManager.Instance.OnCancelReload.AddListener(EndGaugeReloading);
     }
 
     void Start()
@@ -89,13 +92,24 @@ public class BulletNumberUI : MonoBehaviour
     {
         gaugeUI.SetActive(true);
         gaugeValue = 0.0F;
-        DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, BulletManager.Instance.ReloadDuration);
+        gaugeTween = DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, BulletManager.Instance.ReloadDuration);
         Invoke("EndGaugeReloading", BulletManager.Instance.ReloadDuration);
     }
 
     void EndGaugeReloading()
     {
+        CancelGaugeReloading();
+
         gaugeUI.SetActive(false);
+    }
+
+    void CancelGaugeReloading()
+    {
+        if (gaugeTween != null && gaugeTween.IsActive())
+        {
+            gaugeTween.Kill();
+        }
+        CancelInvoke("EndGaugeReloading");
     }
 
     IEnumerator NoBulletWarning()
