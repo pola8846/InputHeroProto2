@@ -594,7 +594,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &390143940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4270,6 +4270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetWorldObject: {fileID: 1928035595}
+  playerScript: {fileID: 2110690610}
   singleBulletPrefab: {fileID: 1570098407226423265, guid: 45e2f8913b9eaba48a47633e769e3167, type: 3}
   singleBulletUI: []
   gaugeUI: {fileID: 1733116606}
@@ -4468,6 +4469,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5795801048837654334, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
   m_PrefabInstance: {fileID: 567639547}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2110690610 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6550207489102445812, guid: af2b3c5de4a670b46985bed3d6e87b02, type: 3}
+  m_PrefabInstance: {fileID: 567639547}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f2cd5963be8c4d48819acb79763e2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2145711371
 PrefabInstance:
   m_ObjectHideFlags: 0
