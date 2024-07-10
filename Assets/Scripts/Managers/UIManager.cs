@@ -10,11 +10,6 @@ public class UIManager : MonoBehaviour
     private static UIManager instance;
     public static UIManager Instance => instance;
 
-    //
-    [SerializeField]
-    private TextMeshProUGUI bulletCounter;
-    public TestActionBar testActionBar;
-
     // UI 이벤트 함수
     [HideInInspector]
     public UnityEvent OnBulletNumUpdated;   // -> 총알 개수가 바뀌면 UI도 업데이트
@@ -26,7 +21,12 @@ public class UIManager : MonoBehaviour
     public UnityEvent OnReload;             // -> UI reload gauge
 
     [HideInInspector]
-    public UnityEvent OnCancelReload;       // -> UI reload gauge cancel
+    public UnityEvent OnCancelReload;             // -> UI reload gauge
+
+    //
+    [SerializeField]
+    private TextMeshProUGUI bulletCounter;
+    public TestActionBar testActionBar;
 
     private void Awake()
     {

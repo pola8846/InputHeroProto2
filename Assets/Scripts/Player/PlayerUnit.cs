@@ -143,7 +143,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             nowBullet = Mathf.Clamp(value, 0, maxBullet);
             UIManager.SetBulletCounter(nowBullet);
-
         }
     }
 
@@ -205,6 +204,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
     }
 
+
     public void KeyDown(InputType inputType)
     {
         //입력 검사
@@ -261,7 +261,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             {
                 InputShoot();
             }
-            else if(NowBullet<=0)
+            else if (NowBullet <= 0)
             {
                 UIManager.Instance.OnBulletUseFailed?.Invoke();
             }
@@ -722,8 +722,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         canShootTemp = false;
         reloading = true;
-        reloadTimer.Reset();
         UIManager.Instance.OnReload?.Invoke();
+        reloadTimer.Reset();
         RuntimeManager.PlayOneShot("event:/Reload_start");
 
         //Debug.Log("재장전");
@@ -747,8 +747,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //StopCoroutine(ReloadingTemp());
         Debug.Log("dd");
-        UIManager.Instance.OnCancelReload?.Invoke();
         reloading = false;
+        UIManager.Instance.OnCancelReload?.Invoke();
         reloadTimer.Reset();
         canShootTemp = true;
     }

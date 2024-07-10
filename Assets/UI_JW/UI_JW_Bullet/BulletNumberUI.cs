@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.ComponentModel;
 
 public class BulletNumberUI : MonoBehaviour
 {
-    public Transform targetWorldObject;
     public PlayerUnit playerScript;
+    public Transform targetWorldObject;
 
     public GameObject singleBulletPrefab;
     public List<Image> singleBulletUI = new List<Image>();
@@ -38,16 +39,16 @@ public class BulletNumberUI : MonoBehaviour
 
             singleBulletUI.Add(go.GetComponent<Image>());
         }
+    }
 
+    void Start()
+    {
         // 이벤트 함수 구독
         UIManager.Instance.OnBulletNumUpdated.AddListener(SetBulletNum);
         UIManager.Instance.OnBulletUseFailed.AddListener(StartNoBulletWarning);
         UIManager.Instance.OnReload.AddListener(StartGaugeReloading);
         UIManager.Instance.OnCancelReload.AddListener(EndGaugeReloading);
-    }
 
-    void Start()
-    {
         // 오른쪽으로만 생성했으니 옆으로 반쯤 밀어준다
         foreach (Image go in singleBulletUI)
         {
@@ -61,19 +62,14 @@ public class BulletNumberUI : MonoBehaviour
 
     void Update()
     {
-        if (playerScript == null) Destroy(gameObject);
-
+        if (playerScript == null) gameObject.SetActive(false);
+        if (targetWorldObject == null) return;
         // 위치 업데이트
-        if (targetWorldObject == null)
-        {
-            return;
-        }
         GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(targetWorldObject.position);
 
         if (gaugeUI.activeSelf) gaugeUI.GetComponent<Image>().fillAmount = gaugeValue;
     }
 
-    // BulletManager의 현재 총알 개수에 맞춰 UI 업데이트
     void SetBulletNum()
     {
         for (int i = 0; i < playerScript.MaxBullet; i++)
@@ -96,9 +92,10 @@ public class BulletNumberUI : MonoBehaviour
 
     void StartGaugeReloading()
     {
-        gaugeUI.SetActive(true);
         gaugeValue = 0.0F;
-        DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, playerScript.ReloadTime);
+        gaugeUI.SetActive(true);
+
+        gaugeTween = DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, playerScript.ReloadTime);
         Invoke("EndGaugeReloading", playerScript.ReloadTime);
     }
 
