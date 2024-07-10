@@ -708,11 +708,11 @@ MonoBehaviour:
     jumpCount: 0
   isLookLeft: 1
   canDamaged: 1
-  findDistance: 10
-  engageDistance: 7
+  findDistance: 17
+  engageDistance: 25
   engageSpeedRate: 0.25
-  aimTIme: 1
-  shootTime: 1
+  aimTIme: 0.5
+  shootTime: 0.5
   shooter: {fileID: 6474131087566846302}
   armBox: {fileID: 6229838117096304827}
   angle: 0
@@ -734,8 +734,8 @@ MonoBehaviour:
   GO: {fileID: 6433798773826802276, guid: 399d6269063175a42b1c231956e954f2, type: 3}
   bulletNum: 1
   shootType: 0
-  bulletSpeedMin: 20
-  bulletSpeedMax: 20
+  bulletSpeedMin: 17
+  bulletSpeedMax: 17
   bulletAngleMin: 90
   bulletAngleMax: 90
   lifeTime: 0
