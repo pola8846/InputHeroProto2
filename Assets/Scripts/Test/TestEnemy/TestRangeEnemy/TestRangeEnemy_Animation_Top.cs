@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
@@ -8,6 +5,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
     [SerializeField]
     private float animationFrameTime;
     private TickTimer timer;
+     
 
     protected override void Start()
     {
@@ -17,7 +15,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
 
     protected override void Update()
     {
-        flip = !sourceUnit.IsLookLeft;
+        flip = sourceUnit.IsLookLeft;
         spriteRenderer.flipX = !flip;
 
         switch (targetSpriteName)
@@ -47,6 +45,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (nowSpriteList.name != "Wait")
         {
             ChangeSpriteList("Wait");
+            sourceUnit._Bottom.skip = true;
         }
         if (timer.Check(animationFrameTime))
         {
@@ -59,6 +58,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (nowSpriteList.name != "Run")
         {
             ChangeSpriteList("Run");
+            sourceUnit._Bottom.skip = false;
         }
         if (timer.Check(animationFrameTime))
         {
@@ -71,21 +71,33 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
         if (nowSpriteList.name != "Move")
         {
             ChangeSpriteList("Move");
+            sourceUnit._Bottom.skip = false;
         }
         //if (timer.Check(animationFrameTime))
         //{
         //    timer.Reset();
         //    ChangeSpriteNext();
         //}
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+
+        if (timer.Check(animationFrameTime))
+        {
+            timer.Reset();
+            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+        }
     }
     void animation_Aim()
     {
         if (nowSpriteList.name != "Attack")
         {
             ChangeSpriteList("Attack");
+            sourceUnit._Bottom.skip = false;
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+
+        if (timer.Check(animationFrameTime))
+        {
+            timer.Reset();
+            ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.shooter.bulletAngleMax + sourceUnit.shooter.bulletAngleMin / 2), 0, 180));
+        }
     }
 
 

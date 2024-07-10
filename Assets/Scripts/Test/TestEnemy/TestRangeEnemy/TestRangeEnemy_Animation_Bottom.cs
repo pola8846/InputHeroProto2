@@ -15,7 +15,7 @@ public class TestRangeEnemy_Animation_Bottom : SpriteAnimation<TestRangeEnemy>
 
     protected override void Update()
     {
-        flip = !sourceUnit.IsLookLeft;
+        flip = sourceUnit.IsLookLeft;
         spriteRenderer.flipX = !flip;
 
         horizontal += speed * xPosManifulator * Time.deltaTime;
