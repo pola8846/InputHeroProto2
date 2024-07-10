@@ -71,15 +71,4 @@ public class TestRangeEnemy_shoot : TimedState
         }
         source.mover.SetVelocityX(movementX);
     }
-
-
-    private void move()
-    {
-        float movementX = Mathf.Max(0, unit.Speed) * (isRight ? 1 : -1) * source.engageSpeedRate;
-        if (isRight == unit.IsLookLeft)
-        {
-            unit.Turn();
-        }
-        source.mover.SetVelocityX(movementX);
-    }
 }
