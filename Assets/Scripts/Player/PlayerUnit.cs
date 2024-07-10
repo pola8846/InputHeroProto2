@@ -143,14 +143,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             nowBullet = Mathf.Clamp(value, 0, maxBullet);
             UIManager.SetBulletCounter(nowBullet);
-
         }
     }
 
     //재장전 시간
     [SerializeField]
     private float reloadTime = 3f;
-    public float ReloadTime => reloadTime;
     private TickTimer reloadTimer;
     private TickTimer shootTimer;
     private bool reloading = false;
@@ -205,6 +203,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
     }
 
+
     public void KeyDown(InputType inputType)
     {
         //입력 검사
@@ -255,16 +254,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
         }
 
-        if (inputType == InputType.Shoot)//공격
+        if (inputType == InputType.Shoot && CanShoot)//공격
         {
-            if (CanShoot)
-            {
-                InputShoot();
-            }
-            else if(NowBullet<=0)
-            {
-                UIManager.Instance.OnBulletUseFailed?.Invoke();
-            }
+            InputShoot();
         }
 
         //재장전
@@ -382,7 +374,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         else
         {
             NowBullet--;
-            UIManager.Instance.OnBulletNumUpdated?.Invoke();
         }
         RuntimeManager.PlayOneShot("event:/Bullet");
         RuntimeManager.PlayOneShot("event:/Bulletdrop");
@@ -714,7 +705,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public void Reload()
     {
         NowBullet = maxBullet;
-        UIManager.Instance.OnBulletNumUpdated?.Invoke();
         RuntimeManager.PlayOneShot("event:/Realod_End");
     }
 
@@ -723,7 +713,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShootTemp = false;
         reloading = true;
         reloadTimer.Reset();
-        UIManager.Instance.OnReload?.Invoke();
         RuntimeManager.PlayOneShot("event:/Reload_start");
 
         //Debug.Log("재장전");
@@ -747,7 +736,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         //StopCoroutine(ReloadingTemp());
         Debug.Log("dd");
-        UIManager.Instance.OnCancelReload?.Invoke();
         reloading = false;
         reloadTimer.Reset();
         canShootTemp = true;

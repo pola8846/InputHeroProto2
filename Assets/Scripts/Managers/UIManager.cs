@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,19 +13,6 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI bulletCounter;
     public TestActionBar testActionBar;
-
-    // UI 이벤트 함수
-    [HideInInspector]
-    public UnityEvent OnBulletNumUpdated;   // -> 총알 개수가 바뀌면 UI도 업데이트
-
-    [HideInInspector]
-    public UnityEvent OnBulletUseFailed;    // -> UI warning color
-
-    [HideInInspector]
-    public UnityEvent OnReload;             // -> UI reload gauge
-
-    [HideInInspector]
-    public UnityEvent OnCancelReload;       // -> UI reload gauge cancel
 
     private void Awake()
     {
