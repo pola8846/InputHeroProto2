@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
     public UnityEvent OnReload;             // -> UI reload gauge
 
     [HideInInspector]
-    public UnityEvent OnCancelReload;             // -> UI reload gauge
+    public UnityEvent OnCancelReload;       // -> UI reload gauge
 
     //
     [SerializeField]
