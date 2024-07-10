@@ -765,4 +765,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         isLookLeft = !isLookLeft;
     }
+
+    protected override void OnKilled()
+    {
+        base.OnKilled();
+
+        //죽을 때 처리 추가
+    }
 }

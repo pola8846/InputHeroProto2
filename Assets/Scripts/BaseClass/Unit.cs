@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -95,8 +96,14 @@ public class Unit : MonoBehaviour
 
     public void Kill()
     {
+        OnKilled();
         UnitManager.Instance.RemoveUnit(this);
         Destroy(gameObject);
+    }
+
+    protected virtual void OnKilled()
+    {
+
     }
 
     public bool Damage(float damage)
