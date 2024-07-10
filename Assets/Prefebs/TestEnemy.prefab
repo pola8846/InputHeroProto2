@@ -1,5 +1,61 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3160123036832917732
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 172255033862814891}
+  - component: {fileID: 6474131087566846302}
+  m_Layer: 7
+  m_Name: Shooter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &172255033862814891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3160123036832917732}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.149, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 473047642130324711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6474131087566846302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3160123036832917732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78e2a39d0f0fb149ab7b165e9935428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GO: {fileID: 6433798773826802276, guid: 399d6269063175a42b1c231956e954f2, type: 3}
+  bulletNum: 1
+  shootType: 0
+  bulletSpeedMin: 20
+  bulletSpeedMax: 20
+  bulletAngleMin: 90
+  bulletAngleMax: 90
+  lifeTime: 0
+  lifeDistance: 30
+  Unit: {fileID: 3554425453376588132}
+  isPlayers: 0
+  testTriger: 0
 --- !u!1 &3268973424840036489
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +539,7 @@ Transform:
   - {fileID: 5034763292657476635}
   - {fileID: 8532773515005826451}
   - {fileID: 9037193702580974140}
+  - {fileID: 172255033862814891}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3380549988226162689
@@ -656,7 +713,7 @@ MonoBehaviour:
   engageSpeedRate: 0.25
   aimTIme: 1
   shootTime: 1
-  shooter: {fileID: 4314347554235300171}
+  shooter: {fileID: 6474131087566846302}
   armBox: {fileID: 6229838117096304827}
   angle: 0
   angleRange: 0

@@ -55,7 +55,7 @@ public class TestRangeEnemy_shoot : TimedState
         {
             source.Turn();
         }
-        var dir = -(GameManager.Player.transform.position - source.transform.position).normalized;
+        var dir = -(GameManager.Player.transform.position - source.shooter.transform.position).normalized;
         source.armBox.transform.right = dir;
         source.angle = GameTools.GetDegreeAngleFormDirection(-dir);
         source.shooter.SetBulletAngle(source.angle, source.angleRange);
