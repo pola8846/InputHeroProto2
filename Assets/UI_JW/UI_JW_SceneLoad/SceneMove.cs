@@ -1,16 +1,23 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class SceneMove : MonoBehaviour
 {
     public string sceneNameToLoad;
-    public TextMeshProUGUI text;
+  
 
     void Start()
     {
-        text.text = "Move To " + sceneNameToLoad;
+        
+    }
+
+    private void Update()
+    {
+        if(Input.anyKey)
+        {
+            MoveScene();
+        }
     }
 
     public void MoveScene()

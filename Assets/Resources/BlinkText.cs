@@ -32,7 +32,7 @@ public class BlinkText : MonoBehaviour
         {
             if (time > maxTime)
             {
-                spriteRenderer.material.color =  Color.black;
+                spriteRenderer.material.SetColor("_EmissionColor", Color.grey);
                 timerMode = false;
                 time = 0;
 
@@ -43,7 +43,7 @@ public class BlinkText : MonoBehaviour
         {
             if (time > blinkTime)
             {
-                spriteRenderer.material.color = Color.white;
+                spriteRenderer.material.SetColor("_EmissionColor", Color.white);
                 timerMode = true;
                 time = 0;
             }
