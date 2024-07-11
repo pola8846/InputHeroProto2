@@ -27,7 +27,7 @@ MonoBehaviour:
   - Slow
   - Start
   Exists: 1
---- !u!114 &-8784145440135950635
+--- !u!114 &-4851821812901187799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37,35 +37,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/FX.bank
+  m_Name: bank:/Master.strings.bank
   m_EditorClassIdentifier: 
-  Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/FX.bank
-  Name: FX
-  StudioPath: bank:/FX
-  lastModified: 638562197863694773
+  Path: Assets/Sound/Fmod/IGH_FmodSound/build/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638563172048501415
   FileSizes:
-  - Name: Desktop
-    Value: 216608
-  Exists: 1
---- !u!114 &-7602297526077434185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638561494436698799
-  FileSizes:
-  - Name: Desktop
-    Value: 1036
+  - Name: 
+    Value: 1284
   Exists: 1
 --- !u!114 &-1963403378553355883
 MonoBehaviour:
@@ -86,7 +66,7 @@ MonoBehaviour:
     Data3: 1552799153
     Data4: -1781912562
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -107,10 +87,10 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 2986844290009859911}
-  - {fileID: -7602297526077434185}
-  - {fileID: 5257376589656878705}
-  - {fileID: -8784145440135950635}
+  - {fileID: -4851821812901187799}
+  - {fileID: 2775025837496077685}
+  - {fileID: 3629254559480647966}
+  - {fileID: 4151283991080073441}
   EditorEvents:
   - {fileID: 5115517512741878388}
   - {fileID: 1552204155422065298}
@@ -124,10 +104,10 @@ MonoBehaviour:
   - {fileID: 437298873932603099}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -7602297526077434185}
+  - {fileID: 4151283991080073441}
   StringsBanks:
-  - {fileID: 2986844290009859911}
-  cacheTime: 638562197863694773
+  - {fileID: -4851821812901187799}
+  cacheTime: 638563172048501415
   cacheVersion: 131618
 --- !u!114 &437298873932603099
 MonoBehaviour:
@@ -148,7 +128,7 @@ MonoBehaviour:
     Data3: -1231710582
     Data4: 1032186985
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -175,7 +155,7 @@ MonoBehaviour:
     Data3: 1816349837
     Data4: 2052765799
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -202,7 +182,7 @@ MonoBehaviour:
     Data3: 421742233
     Data4: -1410596082
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -229,7 +209,7 @@ MonoBehaviour:
     Data3: 1471233982
     Data4: -833998186
   Banks:
-  - {fileID: 5257376589656878705}
+  - {fileID: 2775025837496077685}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -238,7 +218,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 78950
---- !u!114 &2986844290009859911
+--- !u!114 &2775025837496077685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,15 +228,49 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
+  m_Name: bank:/BGM.bank
   m_EditorClassIdentifier: 
-  Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638561494436708764
-  FileSizes:
-  - Name: Desktop
-    Value: 1284
+  Path: Assets/Sound/Fmod/IGH_FmodSound/build/BGM.bank
+  Name: BGM
+  StudioPath: bank:/BGM
+  lastModified: 638563172047743038
+  FileSizes: []
+  Exists: 1
+--- !u!114 &3629254559480647966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/FX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Sound/Fmod/IGH_FmodSound/build/FX.bank
+  Name: FX
+  StudioPath: bank:/FX
+  lastModified: 638563172048461430
+  FileSizes: []
+  Exists: 1
+--- !u!114 &4151283991080073441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Sound/Fmod/IGH_FmodSound/build/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638563172048491452
+  FileSizes: []
   Exists: 1
 --- !u!114 &4670401686139366174
 MonoBehaviour:
@@ -277,7 +291,7 @@ MonoBehaviour:
     Data3: -1099252852
     Data4: -2104710555
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -304,7 +318,7 @@ MonoBehaviour:
     Data3: 778884238
     Data4: 1389137879
   Banks:
-  - {fileID: 5257376589656878705}
+  - {fileID: 2775025837496077685}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -312,26 +326,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 57150
---- !u!114 &5257376589656878705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/BGM.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/BGM.bank
-  Name: BGM
-  StudioPath: bank:/BGM
-  lastModified: 638562152040118876
-  FileSizes:
-  - Name: Desktop
-    Value: 2457824
-  Exists: 1
 --- !u!114 &7075345968654565127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,7 +345,7 @@ MonoBehaviour:
     Data3: 1031680674
     Data4: 134558445
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -378,7 +372,7 @@ MonoBehaviour:
     Data3: 1684194744
     Data4: 1026185788
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -405,7 +399,7 @@ MonoBehaviour:
     Data3: 459048378
     Data4: -2052390394
   Banks:
-  - {fileID: -8784145440135950635}
+  - {fileID: 3629254559480647966}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
