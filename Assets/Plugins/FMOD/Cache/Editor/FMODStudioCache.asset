@@ -42,10 +42,10 @@ MonoBehaviour:
   Path: Assets/Sound/Fmod/IGH_FmodSound/Build/Desktop/FX.bank
   Name: FX
   StudioPath: bank:/FX
-  lastModified: 638561494436668899
+  lastModified: 638562197863694773
   FileSizes:
   - Name: Desktop
-    Value: 215872
+    Value: 216608
   Exists: 1
 --- !u!114 &-7602297526077434185
 MonoBehaviour:
@@ -127,7 +127,7 @@ MonoBehaviour:
   - {fileID: -7602297526077434185}
   StringsBanks:
   - {fileID: 2986844290009859911}
-  cacheTime: 638562152040118876
+  cacheTime: 638562197863694773
   cacheVersion: 131618
 --- !u!114 &437298873932603099
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 1960
+  Length: 1180
 --- !u!114 &1039509691139284055
 MonoBehaviour:
   m_ObjectHideFlags: 0

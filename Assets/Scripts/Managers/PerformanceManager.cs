@@ -20,7 +20,7 @@ public class PerformanceManager : MonoBehaviour
     private static Dictionary<string, Stopwatch> Timer => instance.timer;
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         //ΩÃ±€≈Ê
         if (instance != null)
         {

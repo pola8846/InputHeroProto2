@@ -57,7 +57,7 @@ public class TimeManager : MonoBehaviour
     private StudioEventEmitter eventEmitter;
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         //ΩÃ±€≈Ê
         if (instance != null)
         {
