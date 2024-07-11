@@ -1,49 +1,109 @@
 using AYellowpaper.SerializedCollections;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
     //싱글톤
     private static InputManager instance;
-    public static InputManager Instance
+    public static InputManager Instance => instance;
+
+    [SerializeField]
+    private SerializedDictionary<InputType, KeyCode> keyDict;//입력을 받아줄 키
+    private static SerializedDictionary<InputType, KeyCode> KeyDict
     {
-           get
+        get
         {
-            if (instance == null)
+            if (Instance.keyDict == null)
             {
-                instance = new InputManager();
+                Instance.keyDict = new();
             }
-            return instance;
+            return Instance.keyDict;
+        }
+    }
+    private static Dictionary<InputType, bool> keyStay;//현재 눌리고 있는 키
+    private static Dictionary<InputType, bool> KeyStay
+    {
+        get
+        {
+            if (keyStay==null)
+            {
+                keyStay = new();
+            }
+            return keyStay;
         }
     }
 
-    [SerializeField]
-    private SerializedDictionary<InputType, KeyCode> keyDict = new();
-
-
-    private void Start()
+    private void Awake()
     {
+        //싱글톤
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+            instance = this;
     }
 
     void Update()
     {
-        if (GameManager.Player != null)
+        foreach (var pair in KeyDict)
         {
-            foreach (var pair in keyDict)
+            if (Input.GetKeyDown(pair.Value))
             {
-                if (Input.GetKeyDown(pair.Value))
-                {
-                    GameManager.Player.KeyDown(pair.Key);
-                }
-                else if (Input.GetKeyUp(pair.Value))
-                {
-                    GameManager.Player.KeyUp(pair.Key);
-                }
+                OnKeyDown(pair.Key);
+            }
+            else if (Input.GetKeyUp(pair.Value))
+            {
+                OnKeyUp(pair.Key);
             }
         }
+    }
+
+    private void OnKeyDown(InputType inputType)
+    {
+        //입력 검사
+        if (KeyStay.ContainsKey(inputType))
+        {
+            KeyStay[inputType] = true;
+        }
+        else
+        {
+            KeyStay.Add(inputType, true);
+        }
+
+        if (GameManager.Player != null)
+            GameManager.Player.KeyDown(inputType);
+    }
+    private void OnKeyUp(InputType inputType)
+    {
+        //입력 검사
+        if (KeyStay.ContainsKey(inputType))
+        {
+            KeyStay[inputType] = false;
+        }
+        else
+        {
+            KeyStay.Add(inputType, false);
+        }
+
+        if (GameManager.Player != null)
+            GameManager.Player.KeyUp(inputType);
+    }
+
+    public void KeyReset()
+    {
+        foreach (var item in KeyStay)
+        {
+            OnKeyUp(item.Key);
+        }
+        KeyStay.Clear();
+    }
+
+    public static bool IsKeyPushing(InputType inputType)
+    {
+        return KeyStay.ContainsKey(inputType) && KeyStay[inputType];
     }
 }
 
@@ -59,5 +119,4 @@ public enum InputType
     Reload,
     Slow,
     MeleeAttack,
-
 }

@@ -241,7 +241,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //점프
-        if (!isDownJumping && ((inputType == InputType.Jump && IsKeyPushing(InputType.MoveDown)) || (inputType == InputType.MoveDown && IsKeyPushing(InputType.Jump))))
+        if (!isDownJumping && ((inputType == InputType.Jump && InputManager.IsKeyPushing(InputType.MoveDown)) || 
+            (inputType == InputType.MoveDown && InputManager.IsKeyPushing(InputType.Jump))))
         {
             SetHalfDownJump(true);
         }
@@ -254,7 +255,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         //급강하
-        if (GroundCheck() == false && IsKeyPushing(InputType.MoveDown))
+        if (GroundCheck() == false && InputManager.IsKeyPushing(InputType.MoveDown))
         {
             //급강하
             MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
@@ -328,7 +329,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         if (canMove && !TimeManager.IsSlowed)
         {
-            if (IsKeyPushing(InputType.MoveLeft))
+            if (InputManager.IsKeyPushing(InputType.MoveLeft))
             {
                 MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);
                 if (!isLookLeft)
@@ -336,7 +337,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                     Turn();
                 }
             }
-            else if (IsKeyPushing(InputType.MoveRight))
+            else if (InputManager.IsKeyPushing(InputType.MoveRight))
             {
                 MoverV.SetVelocityX(Mathf.Max(0, Speed));
                 if (isLookLeft)
@@ -349,7 +350,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 MoverV.StopMoveX();
             }
         }
-        if (IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
+        if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
         {
             InputShoot();
         }
@@ -643,42 +644,38 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //점프 가능 체크
     private void JumpCheck()
     {
-        PerformanceManager.StartTimer("PlayerUnit.JumpCheck");
         if (isJumping && MoverV.Velocity.y <= -0.01f)
         {
+            //낙하 시작 시
             isJumping = false;
         }
         if (GroundCheck() && MoverV.Velocity.y <= 0.01f && !isJumping)
         {
+            //땅에 있을 때
             canJumpCounter = stats.jumpCount;
-            //animator.SetBool("IsJumping", false);
         }
         else if (!GroundCheck() && canJumpCounter == stats.jumpCount)
         {
+            //점프하지 않고 공중에 있을 때
             canJumpCounter = stats.jumpCount - 1;
         }
-        PerformanceManager.StopTimer("PlayerUnit.JumpCheck");
     }
 
     //땅 체크
     public bool GroundCheck()
     {
-        PerformanceManager.StartTimer("PlayerUnit.GroundCheck");
 
         if (groundChecker == null)
         {
-            PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
             return false;
         }
 
         int layer = LayerMask.GetMask(groundLayer, halfGroundLayer);
         if (groundCheckerCollider.IsTouchingLayers(layer))
         {
-            PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
             return true;
         }
 
-        PerformanceManager.StopTimer("PlayerUnit.GroundCheck");
         return false;
     }
 
