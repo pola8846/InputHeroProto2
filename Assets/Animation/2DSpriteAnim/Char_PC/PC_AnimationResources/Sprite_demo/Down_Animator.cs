@@ -87,7 +87,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
         {
             ChangeSpriteList("Jump");
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowJumpTime, 0, maxJump));
+        ChangeSprite(nowJumpTime, 0, maxJump);
     }
 
 

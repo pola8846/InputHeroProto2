@@ -51,7 +51,7 @@ public class Upper_Animator : SpriteAnimation<PlayerUnit>
         {
             ChangeSpriteList("Find");
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, Mathf.Abs(sourceUnit.NowMouseAngle), 0, 180));
+        ChangeSprite(Mathf.Abs(sourceUnit.NowMouseAngle), 0, 180);
     }
 
 
@@ -69,7 +69,7 @@ public class Upper_Animator : SpriteAnimation<PlayerUnit>
         {
             ChangeSpriteList("Reload");
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowReloadTime, 0, maxReload));
+        ChangeSprite(nowReloadTime, 0, maxReload);
     }
 
     void animation_Dash()
@@ -85,6 +85,6 @@ public class Upper_Animator : SpriteAnimation<PlayerUnit>
         {
             ChangeSpriteList("Dash");
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowDashTime, 0, maxDashjTime));
+        ChangeSprite(nowDashTime, 0, maxDashjTime);
     }
 }

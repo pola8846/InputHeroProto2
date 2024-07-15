@@ -69,7 +69,7 @@ public class SpriteAnimation<T> : MonoBehaviour
 
     public void ChangeSprite(float delta, float min, float max)
     {
-        int num = GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, delta, min, max);
+        int num = GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count - 1, delta, min, max);
         spriteRenderer.sprite = nowSpriteList.sprites[num];
         nowSpriteNum = num;
     }
@@ -85,6 +85,20 @@ public class SpriteAnimation<T> : MonoBehaviour
         spriteRenderer.sprite = nowSpriteList.sprites[nowSpriteNum];
     }
 
+    public void ChangeSpriteNext(int num)
+    {
+        if (num < 0)
+        {
+            ChangeSpritePrevious(-num);
+            return;
+        }
+
+        for (int i = 0; i < num; i++)
+        {
+            ChangeSpriteNext();
+        }
+    }
+
     public void ChangeSpritePrevious()
     {
         if (nowSpriteList.sprites.Count == 0)
@@ -96,15 +110,27 @@ public class SpriteAnimation<T> : MonoBehaviour
             nowSpriteNum = nowSpriteList.sprites.Count - 1;
         spriteRenderer.sprite = nowSpriteList.sprites[nowSpriteNum];
     }
+
+    public void ChangeSpritePrevious(int num)
+    {
+        if (num < 0)
+        {
+            ChangeSpriteNext(-num);
+            return;
+        }
+
+        for (int i = 0; i < num; i++)
+        {
+            ChangeSpritePrevious();
+        }
+    }
 }
 
 [Serializable]
-public struct spriteAnimationList
+public class spriteAnimationList
 {
     public string name;
     public List<Sprite> sprites;
-
-
 
     // == 연산자 오버로딩
     public static bool operator ==(spriteAnimationList sal, string name)

@@ -186,6 +186,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             groundCheckerCollider = groundChecker.GetComponent<Collider2D>();
         }
         GameManager.SetPlayer(this);
+        InputManager.EnrollReciver(this);
         skillList = new List<PlayerSkill>
         {
             new PSkill_TestAreaAtk(),
@@ -219,95 +220,80 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
 
-        if (keyStay.ContainsKey(inputType))
-        {
-            keyStay[inputType] = true;
-        }
-        else
-        {
-            keyStay.Add(inputType, true);
-        }
-
         if (TimeManager.IsSlowed && !TimeManager.IsUsingSkills)
         {
             ComboManager.InputLog(inputType);
         }
 
-        //대시
-        if (inputType == InputType.Dash)
+        switch (inputType)
         {
-            StartCoroutine(DoDash());
-            return;
-        }
+            case InputType.MoveLeft:
+                break;
+            case InputType.MoveRight:
+                break;
+            case InputType.MoveUp:
+                break;
+            case InputType.MoveDown:
+                if (InputManager.IsKeyPushing(InputType.Jump))//아래점프
+                    SetHalfDownJump(true);
 
-        //점프
-        if (!isDownJumping && ((inputType == InputType.Jump && InputManager.IsKeyPushing(InputType.MoveDown)) || 
-            (inputType == InputType.MoveDown && InputManager.IsKeyPushing(InputType.Jump))))
-        {
-            SetHalfDownJump(true);
-        }
-        else if (inputType == InputType.Jump)
-        {
-            if (canJumpCounter > 0 && canMove)
-            {
-                Jump();
-            }
-        }
+                if (GroundCheck() == false)//급강하
+                    MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
+                break;
 
-        //급강하
-        if (GroundCheck() == false && InputManager.IsKeyPushing(InputType.MoveDown))
-        {
-            //급강하
-            MoverV.SetVelocityY(-MoverV.MaxSpeedY, true);
-        }
+            case InputType.Jump://점프
+                if (!isDownJumping && InputManager.IsKeyPushing(InputType.MoveDown))//아래 점프
+                {
+                    SetHalfDownJump(true);
+                }
+                else//점프
+                {
+                    if (canJumpCounter > 0 && canMove)
+                    {
+                        Jump();
+                    }
+                }
+                break;
 
-        if (inputType == InputType.Shoot)//공격
-        {
-            if (CanShoot)
-            {
-                InputShoot();
-            }
-            else if (NowBullet <= 0)
-            {
-                UIManager.Instance.OnBulletUseFailed?.Invoke();
-            }
-        }
+            case InputType.Dash:
+                //대시
+                StartCoroutine(DoDash());
 
-        //재장전
-        if (inputType == InputType.Reload && canMove && canShootTemp && !TimeManager.IsUsingSkills)
-        {
-            if (!TimeManager.IsSlowed)
-            {
-                Reloading();
-                //StartCoroutine(ReloadingTemp());
-            }
-            else
-            {
-                Reload();
-            }
-        }
+                break;
+            case InputType.Shoot:
+                if (CanShoot)//공격
+                    InputShoot();
+                else if (NowBullet <= 0)//총알 부족 시
+                    UIManager.Instance.OnBulletUseFailed?.Invoke();
+                break;
 
-        //슬로우
-        if (inputType == InputType.Slow && TimeManager.IsSlowed == false)
-        {
-            //Reloading();
-            //StopCoroutine(ReloadingTemp());
-            TimeManager.StartSlow();
+            case InputType.Reload:
+                //재장전
+                if (canMove && canShootTemp && !TimeManager.IsUsingSkills)
+                {
+                    if (!TimeManager.IsSlowed)
+                        Reloading();
+                    else
+                        Reload();
+                }
+                break;
+
+            case InputType.Slow:
+                //슬로우
+                if (TimeManager.IsSlowed == false)
+                    TimeManager.StartSlow();
+                break;
+
+            case InputType.MeleeAttack:
+                break;
+            default:
+                break;
         }
     }
 
 
     public void KeyUp(InputType inputType)
     {
-        //입력 검사
-        if (keyStay.ContainsKey(inputType))
-        {
-            keyStay[inputType] = false;
-        }
-        else
-        {
-            keyStay.Add(inputType, false);
-        }
 
         //점프
         if (isDownJumping && (inputType == InputType.Jump || inputType == InputType.MoveDown))
@@ -316,18 +302,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
-    public void KeyReset()
-    {
-        foreach (var item in keyStay)
-        {
-            KeyUp(item.Key);
-        }
-        keyStay.Clear();
-    }
-
     private void InputMoveCheck()
     {
-        if (canMove && !TimeManager.IsSlowed)
+        if (canMove)
         {
             if (InputManager.IsKeyPushing(InputType.MoveLeft))
             {
@@ -380,7 +357,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     private void Shoot()
     {
-
         if (NowBullet <= 0)
         {
             return;
@@ -390,6 +366,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             NowBullet--;
             UIManager.Instance.OnBulletNumUpdated?.Invoke();
         }
+
         RuntimeManager.PlayOneShot("event:/Bullet");
         RuntimeManager.PlayOneShot("event:/Bulletdrop");
 
@@ -427,8 +404,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             return;
         }
-
-        //추가로 오토에임 건다
 
         //오토에임 안 걸리면 직선으로 쏴서 닿는 것을 목표로 잡는다
         ShootByRay();
@@ -508,7 +483,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             //최대 사거리까지 발사
             //그래픽 표시
             DrawHitGrapicAtMinRange(ShootStartPos + (NowMouseDir * attackRange));
-            //DrawHitGrapic(ShootStartPos, ShootStartPos + (dir * attackRange));
             return;
         }
 
@@ -518,7 +492,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         //그래픽 표시
         DrawHitGrapicAtMinRange(hitPos);
         DrawParticle(pgo, ShootStartPos, hitPos, Vector2.Reflect(NowMouseDir, normal));
-        //DrawHitGrapic(ShootStartPos, hitPos);
     }
 
     /// <summary>
@@ -679,12 +652,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return false;
     }
 
-    //키가 눌리고 있는지
-    private bool IsKeyPushing(InputType inputType)
-    {
-        return keyStay.ContainsKey(inputType) && keyStay[inputType];
-    }
-
 
     //아래 점프
     private void SetHalfDownJump(bool isDownJumping)
@@ -745,10 +712,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     private void CancelReload()
     {
-        //Reloading();
-
-        //StopCoroutine(ReloadingTemp());
-        Debug.Log("dd");
         reloading = false;
         UIManager.Instance.OnCancelReload?.Invoke();
         reloadTimer.Reset();
@@ -758,7 +721,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //대시
     private IEnumerator DoDash()
     {
-        Debug.Log("dash");
         canShootTemp = false;
         isDash = true;
         canMove = false;
