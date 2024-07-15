@@ -388,7 +388,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         else
         {
             NowBullet--;
-            UIManager.Instance.OnBulletNumUpdated?.Invoke();
+            //UIManager.Instance.OnBulletNumUpdated?.Invoke();
         }
         RuntimeManager.PlayOneShot("event:/Bullet");
         RuntimeManager.PlayOneShot("event:/Bulletdrop");
