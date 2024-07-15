@@ -94,6 +94,10 @@ public class BulletNumberUI : MonoBehaviour
     {
         gaugeValue = 0.0F;
         gaugeUI.SetActive(true);
+        foreach (Image go in singleBulletUI)
+        {
+            go.enabled = false;
+        }
 
         gaugeTween = DOTween.To(() => gaugeValue, x => gaugeValue = x, 1.0F, playerScript.ReloadTime);
         Invoke("EndGaugeReloading", playerScript.ReloadTime);
@@ -104,6 +108,12 @@ public class BulletNumberUI : MonoBehaviour
         CancelGaugeReloading();
 
         gaugeUI.SetActive(false);
+
+        foreach (Image go in singleBulletUI)
+        {
+            go.enabled = true;
+        }
+        SetBulletNum();
     }
 
     void CancelGaugeReloading()
