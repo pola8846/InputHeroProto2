@@ -23,7 +23,7 @@ public class TestRangeEnemy_Animation_Bottom : SpriteAnimation<TestRangeEnemy>
 
         if (speed == 0)
         {
-            if (nowSpriteList.name != "Wait")
+            if (nowSpriteList.keycode != "Wait")
             {
                 ChangeSpriteList("Wait");
             }
@@ -31,7 +31,7 @@ public class TestRangeEnemy_Animation_Bottom : SpriteAnimation<TestRangeEnemy>
         }
         else if (Mathf.Abs(horizontal) > maxXValue)
         {
-            if (nowSpriteList.name != "Walk")
+            if (nowSpriteList.keycode != "Walk")
             {
                 ChangeSpriteList("Walk");
             }

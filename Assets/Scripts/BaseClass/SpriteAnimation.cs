@@ -6,12 +6,14 @@ public class SpriteAnimation<T> : MonoBehaviour
 {
     protected SpriteRenderer spriteRenderer;
     protected Material material;
+    protected TickTimer timer;
+
 
     [SerializeField]
     protected T sourceUnit;
 
     [SerializeField]
-    protected spriteAnimationList nowSpriteList;
+    protected SpriteAnimationClip nowSpriteList;
     [SerializeField]
     protected int nowSpriteNum;
 
@@ -21,7 +23,7 @@ public class SpriteAnimation<T> : MonoBehaviour
     protected bool isTestMode;
 
     [SerializeField]
-    protected List<spriteAnimationList> spriteList;
+    protected List<SpriteAnimationClip> spriteList;
     [SerializeField]
     protected string startSpriteList;
 
@@ -31,6 +33,7 @@ public class SpriteAnimation<T> : MonoBehaviour
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        timer = new TickTimer();
         material = spriteRenderer.material;
         ChangeSpriteList(startSpriteList);
     }
@@ -49,7 +52,7 @@ public class SpriteAnimation<T> : MonoBehaviour
         {
             if (sprite == null) continue;
 
-            if (name == sprite)
+            if (name == sprite.keycode)
             {
                 nowSpriteList = sprite;
             }

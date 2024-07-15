@@ -13,7 +13,7 @@ public class TestRangeEnemy_shoot2 : TimedState
     public override void Enter()
     {
         base.Enter();
-        source._Top.SetTargetSprite("Attack");
+        //source._Top.SetTargetSprite("Attack");
         timer.checkTime = source.shootTime;
         source.mover.StopMove();
     }

@@ -43,17 +43,17 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
 
             if (Input.GetAxisRaw("Horizontal") == 0)
             {
-                if (nowSpriteList.name != "Stand")
+                if (nowSpriteList.keycode != "Idle")
                 {
-                    ChangeSpriteList("Stand");
+                    ChangeSpriteList("Idle");
                 }
                 horizontal = 0;
             }
             else if (Mathf.Abs(horizontal) > maxXValue)
             {
-                if (nowSpriteList.name != "Find")
+                if (nowSpriteList.keycode != "Move")
                 {
-                    ChangeSpriteList("Find");
+                    ChangeSpriteList("Move");
                 }
 
                 if (horizontal > maxXValue)
@@ -83,7 +83,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
     {
         nowJumpTime = nowJumpTime + Time.deltaTime * timeManifulatorJump;
 
-        if (nowSpriteList.name != "Jump")
+        if (nowSpriteList.keycode != "Jump")
         {
             ChangeSpriteList("Jump");
         }

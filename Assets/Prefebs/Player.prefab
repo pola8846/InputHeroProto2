@@ -1719,6 +1719,8 @@ MonoBehaviour:
   dashTime: 0.4
   areaAttackPrefab: {fileID: 3111296254964227764, guid: 33a4c7f0ec515ad49b0429ec192171ad, type: 3}
   originPos: {fileID: 4816503922187960341}
+  glitchTime: 0.5
+  gameoverText: {fileID: 0}
   groundCheckerLT: {fileID: 2342602830879614309}
   groundCheckerRD: {fileID: 8845623891562260064}
   groundChecker: {fileID: 6629434747454537459}
@@ -4344,6 +4346,10 @@ PrefabInstance:
       value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: nowSpriteList
+      value: 
+      objectReference: {fileID: 11400000, guid: 366db85a4318dfe46a44bc852831a0f7, type: 2}
+    - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: spriteList.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -4351,6 +4357,18 @@ PrefabInstance:
       propertyPath: timeManifulatorReload
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 612506b9f10e4d2428efc7a23f1e35ed, type: 2}
+    - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 366db85a4318dfe46a44bc852831a0f7, type: 2}
+    - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d8838cd9c8e1714388e8e164da64165, type: 2}
     - target: {fileID: 1705918106296613700, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: spriteList.Array.data[0].name
       value: Find
@@ -5140,6 +5158,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6550207489102445812}
     - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: nowSpriteList
+      value: 
+      objectReference: {fileID: 11400000, guid: 5b12f72695af91c40be51da498f5076f, type: 2}
+    - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: xPosManifulator
       value: 2
       objectReference: {fileID: 0}
@@ -5147,6 +5169,18 @@ PrefabInstance:
       propertyPath: spriteList.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5b12f72695af91c40be51da498f5076f, type: 2}
+    - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8a92e2bec2e579c42b5782f0b2ce97eb, type: 2}
+    - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
+      propertyPath: spriteList.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: fa68d95c2834acf4a9462f6c7a74176f, type: 2}
     - target: {fileID: 3627658658895818538, guid: 027ffd084d393e9419bee20fbb45b02e, type: 3}
       propertyPath: spriteList.Array.data[0].name
       value: Find

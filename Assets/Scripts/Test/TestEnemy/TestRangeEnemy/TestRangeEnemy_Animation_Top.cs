@@ -4,13 +4,11 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
 {
     [SerializeField]
     private float animationFrameTime;
-    private TickTimer timer;
      
 
     protected override void Start()
     {
         base.Start();
-        timer = new TickTimer();
     }
 
     protected override void Update()
@@ -42,7 +40,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
 
     void animation_Wait()
     {
-        if (nowSpriteList.name != "Wait")
+        if (nowSpriteList.keycode != "Wait")
         {
             ChangeSpriteList("Wait");
             sourceUnit._Bottom.skip = true;
@@ -55,7 +53,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
     }
     void animation_Run()
     {
-        if (nowSpriteList.name != "Run")
+        if (nowSpriteList.keycode != "Run")
         {
             ChangeSpriteList("Run");
             sourceUnit._Bottom.skip = true;
@@ -68,7 +66,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
     }
     void animation_Move()
     {
-        if (nowSpriteList.name != "Move")
+        if (nowSpriteList.keycode != "Move")
         {
             ChangeSpriteList("Move");
             sourceUnit._Bottom.skip = false;
@@ -87,7 +85,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
     }
     void animation_Aim()
     {
-        if (nowSpriteList.name != "Attack")
+        if (nowSpriteList.keycode != "Attack")
         {
             ChangeSpriteList("Attack");
             sourceUnit._Bottom.skip = false;
