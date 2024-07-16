@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: TestDialoguesSO
   m_EditorClassIdentifier: 
   dialogues:
-  - text: hello
+  - text: <wave>beyond the horizon</wave> of the place we lived when we were young
     rectPosition: {x: 500, y: 300}
-  - text: hi
-    rectPosition: {x: -600, y: 100}
-  - text: ni hao
+    textLocalPosition: {x: 0, y: 0}
+  - text: in a world of <pend>magnets</pend> and <rot>miracles</rot>...
+    rectPosition: {x: -600, y: 100.3}
+    textLocalPosition: {x: 0, y: 0}
+  - text: our thoughts strayed constantly and <incr>without boundaries</incr>
     rectPosition: {x: -400, y: -300}
-  - text: salut
+    textLocalPosition: {x: 0, y: 0}
+  - text: <shake a=0.6>The ringing of the division bell had begun.</shake>
     rectPosition: {x: 0, y: 0}
+    textLocalPosition: {x: 60, y: -10}

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ public class CustomEvent_Test : MonoBehaviour
     int currentHandlerIndex = 0;
 
     // 이벤트의 생명주기 불변수
+    bool isRunning = false;
     public bool isDone = false;
 
     void Start()
@@ -29,12 +29,13 @@ public class CustomEvent_Test : MonoBehaviour
         if (handlers.Count > 0)
         {
             handlers[0].Enter();
+            isRunning = true;
         }
     }
 
     void Update()
     {
-        if (isDone) return;
+        if (!isRunning || isDone) return;
 
         handlers[currentHandlerIndex].Run();
 

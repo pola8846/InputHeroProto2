@@ -60,6 +60,14 @@ public class BulletNumberUI : MonoBehaviour
         SetBulletNum();
     }
 
+    void OnDestroy()
+    {
+        UIManager.Instance.OnBulletNumUpdated.RemoveListener(SetBulletNum);
+        UIManager.Instance.OnBulletUseFailed.RemoveListener(StartNoBulletWarning);
+        UIManager.Instance.OnReload.RemoveListener(StartGaugeReloading);
+        UIManager.Instance.OnCancelReload.RemoveListener(EndGaugeReloading);
+    }
+
     void Update()
     {
         if (playerScript == null) gameObject.SetActive(false);
