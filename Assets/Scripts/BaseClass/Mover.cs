@@ -52,8 +52,6 @@ public class Mover : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PerformanceManager.StartTimer("Mover.FixedUpdate");
-
         if (fixSpeedX)
         {
             SetVelocityX();
@@ -72,13 +70,10 @@ public class Mover : MonoBehaviour
         {
             transform.position = GameTools.ClampToRect(transform.position, GameManager.MapLimit, MapLimitExtra);
         }
-
-        PerformanceManager.StopTimer("Mover.FixedUpdate");
     }
 
     private void MaxSpeedCheck()
     {
-        PerformanceManager.StartTimer("Mover.MaxSpeedCheck");
         if (maxSpeedX >= 0)
         {
             rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxSpeedX, maxSpeedX), rb.velocity.y);
@@ -87,7 +82,6 @@ public class Mover : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -maxSpeedY, maxSpeedY));
         }
-        PerformanceManager.StopTimer("Mover.MaxSpeedCheck");
     }
 
     /// <summary>
@@ -95,13 +89,11 @@ public class Mover : MonoBehaviour
     /// </summary>
     private void SetVelocityX()
     {
-        PerformanceManager.StartTimer("Mover.SetVelocityX");
         rb.velocity = new Vector2(targetSpeedX, rb.velocity.y);
         if (speedCap)
         {
             MaxSpeedCheck();
         }
-        PerformanceManager.StopTimer("Mover.SetVelocityX");
     }
 
     /// <summary>
@@ -120,14 +112,12 @@ public class Mover : MonoBehaviour
     /// </summary>
     public void StopMoveX(bool instant = true)
     {
-        PerformanceManager.StartTimer("Mover.StopMoveX");
         fixSpeedX = false;
         targetSpeedX = 0;
         if (instant)
         {
             SetVelocityX();
         }
-        PerformanceManager.StopTimer("Mover.StopMoveX");
     }
 
     /// <summary>
@@ -135,13 +125,11 @@ public class Mover : MonoBehaviour
     /// </summary>
     private void SetVelocityY()
     {
-        PerformanceManager.StartTimer("Mover.SetVelocityY");
         rb.velocity = new Vector2(rb.velocity.x, targetSpeedY);
         if (speedCap)
         {
             MaxSpeedCheck();
         }
-        PerformanceManager.StopTimer("Mover.SetVelocityY");
     }
 
     /// <summary>
@@ -160,14 +148,12 @@ public class Mover : MonoBehaviour
     /// </summary>
     public void StopMoveY(bool instant = true)
     {
-        PerformanceManager.StartTimer("Mover.StopMoveY");
         fixSpeedY = false;
         targetSpeedY = 0;
         if (instant)
         {
             SetVelocityY();
         }
-        PerformanceManager.StopTimer("Mover.StopMoveY");
     }
 
     /// <summary>
@@ -194,7 +180,6 @@ public class Mover : MonoBehaviour
     /// </summary>
     public void StopMove(bool instant = true)
     {
-        PerformanceManager.StartTimer("Mover.StopMove");
         fixSpeedX = false;
         fixSpeedY = false;
         targetSpeedX = 0;
@@ -203,7 +188,6 @@ public class Mover : MonoBehaviour
         {
             SetVelocity(Vector2.zero, true);
         }
-        PerformanceManager.StopTimer("Mover.StopMove");
     }
 
     /// <summary>
@@ -212,10 +196,8 @@ public class Mover : MonoBehaviour
     /// <param name="force">가할 힘(위 방향)</param>
     public void AddForceX(float force)
     {
-        PerformanceManager.StartTimer("Mover.AddForceX");
         fixSpeedX = true;
         rb.velocity = new Vector2(rb.velocity.x + force, rb.velocity.y);
-        PerformanceManager.StopTimer("Mover.AddForceX");
     }
 
     /// <summary>
@@ -224,10 +206,8 @@ public class Mover : MonoBehaviour
     /// <param name="force">가할 힘(오른쪽 방향)</param>
     public void AddForceY(float force)
     {
-        PerformanceManager.StartTimer("Mover.AddForceY");
         fixSpeedY = false;
         rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + force);
-        PerformanceManager.StopTimer("Mover.AddForceY");
     }
 
     /// <summary>
@@ -236,11 +216,9 @@ public class Mover : MonoBehaviour
     /// <param name="force">가할 힘</param>
     public void AddForce(Vector2 force)
     {
-        PerformanceManager.StartTimer("Mover.AddForce");
         fixSpeedX = false;
         fixSpeedY = false;
         rb.velocity = new Vector2(rb.velocity.x + force.x, rb.velocity.y + force.y);
-        PerformanceManager.StopTimer("Mover.AddForce");
     }
 
     /// <summary>

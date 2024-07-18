@@ -15,19 +15,15 @@ public class Unit : MonoBehaviour
     /// 유닛 아이디
     /// </summary>
     [SerializeField]
-    protected int unitID = -1;
+    protected string unitID;
     /// <summary>
     /// 유닛 아이디
     /// </summary>
-    public int UnitID
+    public string UnitID
     {
         get
         {
             return unitID;
-        }
-        set
-        {
-            unitID = value;
         }
     }
 
@@ -79,14 +75,30 @@ public class Unit : MonoBehaviour
 
     protected virtual void Start()
     {
-        unitID = UnitManager.Instance.EnrollUnit(this);
         moverV = gameObject.GetComponent<Mover>();
         moverT = gameObject.GetComponent<MoverByTransform>();
     }
 
+    protected virtual void OnEnable()
+    {
+        if (unitID.Length == 0)
+        {
+            unitID = UnitManager.EnrollUnit(this);
+        }
+        else
+        {
+            UnitManager.EnrollUnit(this, unitID);
+        }
+    }
+    protected virtual void OnDisable()
+    {
+        // 유닛 매니저에서 자신을 해제
+        UnitManager.RemoveUnit(this);
+    }
+
     protected virtual void Update()
     {
-
+        
     }
 
     protected virtual void FixedUpdate()
@@ -97,7 +109,6 @@ public class Unit : MonoBehaviour
     public void Kill()
     {
         OnKilled();
-        UnitManager.Instance.RemoveUnit(this);
         Destroy(gameObject);
     }
 
