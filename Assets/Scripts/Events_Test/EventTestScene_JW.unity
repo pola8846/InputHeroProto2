@@ -577,41 +577,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handlers:
-  - rid: 5049856042510057473
-  - rid: 5049856042510057474
-  - rid: 5049856042510057475
-  - rid: 5049856042510057476
-  delayTime: 1
+  - rid: 5049856127297126418
+  - rid: 5049856127297126419
+  - rid: 5049856127297126420
+  - rid: 5049856127297126421
+  delayTime: 0
   isDone: 0
   references:
     version: 2
     RefIds:
-    - rid: 5049856042510057473
+    - rid: 5049856127297126418
       type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
       data:
-        handlers: []
+        handlers:
+        - rid: 5049856127297126422
         dialogueIndex: 0
         dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
         boxTypeSO: {fileID: 11400000, guid: fa404e2d6f17cec47af9e192a3259493, type: 2}
-    - rid: 5049856042510057474
+    - rid: 5049856127297126419
       type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
       data:
         handlers: []
         dialogueIndex: 1
         dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
         boxTypeSO: {fileID: 11400000, guid: ddf0ad0cbc2b2b44aaec19b655a54bb2, type: 2}
-    - rid: 5049856042510057475
+    - rid: 5049856127297126420
       type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
       data:
         handlers: []
         dialogueIndex: 2
         dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
         boxTypeSO: {fileID: 11400000, guid: ddf0ad0cbc2b2b44aaec19b655a54bb2, type: 2}
-    - rid: 5049856042510057476
+    - rid: 5049856127297126421
       type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
       data:
         handlers: []
         dialogueIndex: 3
+        dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
+        boxTypeSO: {fileID: 11400000, guid: fa404e2d6f17cec47af9e192a3259493, type: 2}
+    - rid: 5049856127297126422
+      type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
+      data:
+        handlers: []
+        dialogueIndex: 0
         dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
         boxTypeSO: {fileID: 11400000, guid: fa404e2d6f17cec47af9e192a3259493, type: 2}
 --- !u!4 &1463016701
