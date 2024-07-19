@@ -5,11 +5,25 @@ using UnityEngine;
 /// </summary>
 public class TickTimer
 {
+    /// <summary>
+    /// 경과한 시간
+    /// </summary>
     public float time;
+
+    /// <summary>
+    /// 검사할 시간의 기본값
+    /// </summary>
     public float checkTime;
     private bool autoReset;
     private bool unscaledTime;
 
+    //일시정지
+    private bool isPaused;
+    private float pauseTime;
+
+    /// <summary>
+    /// 현재 시간
+    /// </summary>
     private float NowTime
     {
         get
@@ -52,14 +66,25 @@ public class TickTimer
     /// <returns>time만큼 경과하였는가?</returns>
     public bool Check(float time)
     {
-        PerformanceManager.StartTimer("TickTimer.Check");
-        bool result = this.time + time <= NowTime;
-        if (result && autoReset)
+        bool result;
+        if (isPaused)
         {
-            Reset();
+            result = this.time + time <= pauseTime;
+            if (result && autoReset)
+            {
+                Reset();
+            }
+            return result;
         }
-        PerformanceManager.StopTimer("TickTimer.Check");
-        return result;
+        else
+        {
+            result = this.time + time <= NowTime;
+            if (result && autoReset)
+            {
+                Reset();
+            }
+            return result;
+        }
     }
 
     public bool Check()
@@ -74,19 +99,19 @@ public class TickTimer
     /// <returns>남은 시간(s)</returns>
     public float GetRemain(float time)
     {
-        if (this.time + time <= NowTime)
+        if (isPaused)
         {
-            return 0f;
+            return Mathf.Max(0, (this.time + time) - pauseTime);
         }
         else
         {
-            return (this.time + time) - NowTime;
+            return Mathf.Max(0, (this.time + time) - NowTime);
         }
     }
 
     public float GetRemain()
     {
-        return GetRemain(this.checkTime);
+        return GetRemain(checkTime);
     }
 
     /// <summary>
@@ -96,5 +121,29 @@ public class TickTimer
     public void AddOffset(float time)
     {
         this.time -= time;
+    }
+
+    /// <summary>
+    /// 타이머를 일시정지합니다.
+    /// </summary>
+    public void Pause()
+    {
+        if (!isPaused)
+        {
+            pauseTime = NowTime - time;
+            isPaused = true;
+        }
+    }
+
+    /// <summary>
+    /// 일시정지된 타이머를 다시 시작합니다.
+    /// </summary>
+    public void Resume()
+    {
+        if (isPaused)
+        {
+            time = NowTime - pauseTime;
+            isPaused = false;
+        }
     }
 }

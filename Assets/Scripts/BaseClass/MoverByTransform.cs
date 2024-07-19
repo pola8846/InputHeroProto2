@@ -120,14 +120,14 @@ public class MoverByTransform : MonoBehaviour
         switch (type)
         {
             case moveType.LinearByPosWithTime:
-                targetPos = target;
-                targetMoveTime = Mathf.Max(options[0], 0);
+                targetPos = target;//이동할 위치
+                targetMoveTime = Mathf.Max(options[0], 0);//걸리는 시간
 
                 break;
 
             case moveType.LinearByPosWithSpeed:
-                targetPos = target;
-                targetSpeedF = options[0];
+                targetPos = target;//방향 벡터
+                targetSpeedF = options[0];//이동 속도
                 break;
 
             case moveType.LinearBySpeed:

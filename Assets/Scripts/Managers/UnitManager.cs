@@ -1,6 +1,4 @@
 using AYellowpaper.SerializedCollections;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitManager : MonoBehaviour
@@ -60,7 +58,7 @@ public class UnitManager : MonoBehaviour
             id = lastUnitNum.ToString();
         }
         UnitList.Add(id, unit);
-        if (instance.isTestMod)
+        if (Instance != null && Instance.isTestMod)
         {
             Debug.Log($"{unit.name}이 '{id}' ID로 등록됨");
         }
@@ -80,7 +78,7 @@ public class UnitManager : MonoBehaviour
             return;
         }
         UnitList.Add(id, unit);
-        if (instance.isTestMod)
+        if (Instance != null && Instance.isTestMod)
         {
             Debug.Log($"{unit.name}이 '{id}' ID로 등록됨");
         }
@@ -93,7 +91,7 @@ public class UnitManager : MonoBehaviour
     public static void RemoveUnit(Unit unit)
     {
         UnitList.Remove(unit.UnitID);
-        if (instance.isTestMod)
+        if (Instance != null && Instance.isTestMod)
         {
             Debug.Log($"{unit.name}의 ID 등록이 해제됨");
         }
