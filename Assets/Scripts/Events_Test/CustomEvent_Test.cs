@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomEvent_Test : MonoBehaviour
+public class CustomEvent_Test : MonoBehaviour // 리스트로 가진 실행부 클래스들을 순차 실행
 {
     [SerializeReference]
     public List<CustomHandler_Test> handlers = new List<CustomHandler_Test>();
@@ -39,8 +39,9 @@ public class CustomEvent_Test : MonoBehaviour
 
         handlers[currentHandlerIndex].Run();
 
-        if (handlers[currentHandlerIndex].IsDone)
+        if (handlers[currentHandlerIndex].lifeCycleBools.GetIsDone())
         {
+            handlers[currentHandlerIndex].lifeCycleBools.Reset();
             currentHandlerIndex++;
 
             if (currentHandlerIndex >= handlers.Count)
@@ -53,6 +54,6 @@ public class CustomEvent_Test : MonoBehaviour
         }
     }
 
-    [ContextMenu("다이얼로그 실행부 추가")]
-    void AddBasicSpriteAnim() { handlers.Add(new DialogueHandler_Test()); }
+    [ContextMenu("대화창 실행부 추가")]
+    void AddDialogueHandler_Test() { handlers.Add(new DialogueHandler_Test()); }
 }

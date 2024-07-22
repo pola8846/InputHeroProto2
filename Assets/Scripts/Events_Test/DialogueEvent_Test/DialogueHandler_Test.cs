@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 임시로 만든 대화창 이벤트
+[CreateAssetMenu(menuName = "DialogueHandler_Test_JW")]
 public class DialogueHandler_Test : CustomHandler_Test
 {
     public int dialogueIndex;
@@ -31,6 +33,7 @@ public class DialogueHandler_Test : CustomHandler_Test
     public override void Enter()
     {
         base.Enter();
+        skipped = false;
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         UIPrefab = Resources.Load<GameObject>("DialogueBox");
@@ -38,7 +41,7 @@ public class DialogueHandler_Test : CustomHandler_Test
         if (UIPrefab == null || canvas == null)
         {
             Debug.Log("캔버스와 UI 프리팹을 찾지 못함 -> DialogueHandler_Test 강제종료!");
-            isDone_This = true;
+            lifeCycleBools.isDone_This = true;
             return;
         }
 
@@ -74,7 +77,7 @@ public class DialogueHandler_Test : CustomHandler_Test
             }
             else
             {
-                isDone_This = true;
+                lifeCycleBools.isDone_This = true;
             }
         }
     }
@@ -102,5 +105,6 @@ public class DialogueHandler_Test : CustomHandler_Test
         Object.Destroy(inst);
 
         base.Exit();
+        //skipped = false;
     }
 }

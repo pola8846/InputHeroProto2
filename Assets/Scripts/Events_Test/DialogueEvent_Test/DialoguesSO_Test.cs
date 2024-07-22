@@ -13,7 +13,7 @@ public class DialogueInfo
     public Vector2 textLocalPosition;
 }
 
-[CreateAssetMenu(menuName = "DialoguesSO_Test_JW")]
+//[CreateAssetMenu(menuName = "DialoguesSO_Test_JW")]
 public class DialoguesSO_Test : ScriptableObject
 {
     public List<DialogueInfo> dialogues = new List<DialogueInfo>();
