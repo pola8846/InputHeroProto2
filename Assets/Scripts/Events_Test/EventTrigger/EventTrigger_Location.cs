@@ -15,6 +15,7 @@ public class EventTrigger_Location : MonoBehaviour
         if (collision.gameObject == target)
         {
             Debug.Log(eventIDToCall + "번 이벤트 호출");
+            EventManager_Test.Instance.TriggerEventID(eventIDToCall);
         }
     }
 }

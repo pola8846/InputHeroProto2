@@ -6,7 +6,7 @@ using UnityEngine;
 /// 실행부 = Handler
 public class CustomHandler_Test : ScriptableObject // 리스트로 가진 실행부 클래스들을 동시 실행
 {
-    //CustomHandler_Test parent = null; // 아직은 필요 없다
+    //public CustomHandler_Test parent = null; // 아직은 필요 없다
 
     // 실행부 리스트
     [SerializeReference]
@@ -17,8 +17,6 @@ public class CustomHandler_Test : ScriptableObject // 리스트로 가진 실행부 클래�
 
     public virtual void Enter()
     {
-        Debug.Log("Enter and Reset " + this.name);
-
         lifeCycleBools.Reset();
         foreach (CustomHandler_Test handler in handlers)
         {
