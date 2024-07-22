@@ -15,4 +15,4 @@ MonoBehaviour:
   handlers: []
   dialogueIndex: 3
   dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
-  boxTypeSO: {fileID: 11400000, guid: fa404e2d6f17cec47af9e192a3259493, type: 2}
+  UIPrefab: {fileID: 975908402344582112, guid: 14365ee15b17f734aa3c4fceb7e0a82f, type: 3}
