@@ -19,4 +19,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 43b8af8d8aa215943b9d9f87c775a37e, type: 2}
   delayTime: 0
   nextEventIDToCall: 0000000000000000
-  countValue: 0
+  countValue: 1

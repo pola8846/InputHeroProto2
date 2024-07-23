@@ -93,8 +93,8 @@ public class CustomEvent_Test : ScriptableObject // 리스트로 가진 실행부 클래스�
             {
                 bool result = EventManager_Test.Instance.TriggerEventID(nextEventIDToCall[nextIdx]);
 
-                if (result) { Debug.Log(this.name + " 이벤트가 " + nextIdx + "번 이벤트 호출 성공"); }
-                else { Debug.Log(this.name + " 이벤트가 " + nextIdx + "번 이벤트 호출 실패"); }
+                if (result) { Debug.Log(this.name + " 이벤트가 리스트의 " + nextIdx + "번째 이벤트 호출 성공"); }
+                else { Debug.Log(this.name + " 이벤트가 리스트의 " + nextIdx + "번째 이벤트 호출 실패"); }
             }
         }
     }
