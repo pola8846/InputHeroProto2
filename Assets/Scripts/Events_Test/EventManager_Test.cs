@@ -42,31 +42,31 @@ public class EventManager_Test : MonoBehaviour
     {
         foreach (CustomEvent_Test e in events)
         {
-            e.Initialize();
+            //e.Initialize();
         }
     }
 
     void Update()
     {
-        foreach (CustomEvent_Test e in events)
-        {
-            if (e.Stage == CustomEvent_Test.EventStage.INACTIVE)
-            {
-                return;
-            }
-            else
-            {
-                e.Process();
-            }
-        }
+        //foreach (CustomEvent_Test e in events)
+        //{
+        //    if (e.Stage == CustomEvent_Test.EventStage.INACTIVE)
+        //    {
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        e.Process();
+        //    }
+        //}
     }
 
     public bool TriggerEventID(int id)
     {
         if (0 < id || id >= events.Count) return false;
-        if (events[id].Stage != CustomEvent_Test.EventStage.INACTIVE) return false;
+        //if (events[id].Stage != CustomEvent_Test.EventStage.INACTIVE) return false;
 
-        events[id].SetStageEnter();
+        //events[id].SetStageEnter();
         return true;
     }
 }

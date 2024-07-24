@@ -372,8 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e731bccaf9053d44d978f94864fed60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  events:
-  - {fileID: 11400000, guid: 2adebc8777532934ab4f14e4ba3997f5, type: 2}
+  events: []
 --- !u!4 &1351140263
 Transform:
   m_ObjectHideFlags: 0
@@ -607,6 +606,88 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2131955263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2131955264}
+  - component: {fileID: 2131955265}
+  m_Layer: 0
+  m_Name: MonoBehaviourEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2131955264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131955263}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -33.55557, y: 9.4578, z: 0.510332}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2131955265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131955263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d19844e4501af4a91438a0e659064c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handlers:
+  - rid: 5049856246737010688
+  - rid: 5049856246737010689
+  - rid: 5049856246737010690
+  - rid: 5049856246737010691
+  delayTime: 1
+  isDone: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 5049856246737010688
+      type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
+      data:
+        handlers: []
+        dialogueIndex: 0
+        dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
+        UIPrefab: {fileID: 975908402344582112, guid: 828748c821f8cad43a2342abf484e7a5, type: 3}
+    - rid: 5049856246737010689
+      type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
+      data:
+        handlers: []
+        dialogueIndex: 1
+        dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
+        UIPrefab: {fileID: 975908402344582112, guid: e366151a0c5ac1c4195a28261d12942e, type: 3}
+    - rid: 5049856246737010690
+      type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
+      data:
+        handlers: []
+        dialogueIndex: 2
+        dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
+        UIPrefab: {fileID: 975908402344582112, guid: 14365ee15b17f734aa3c4fceb7e0a82f, type: 3}
+    - rid: 5049856246737010691
+      type: {class: DialogueHandler_Test, ns: , asm: Assembly-CSharp}
+      data:
+        handlers: []
+        dialogueIndex: 3
+        dialogueSO: {fileID: 11400000, guid: 8e318be6289f9ce4d8709e493b9381c6, type: 2}
+        UIPrefab: {fileID: 975908402344582112, guid: e366151a0c5ac1c4195a28261d12942e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -616,3 +697,4 @@ SceneRoots:
   - {fileID: 1452120691}
   - {fileID: 1204412149}
   - {fileID: 1351140263}
+  - {fileID: 2131955264}

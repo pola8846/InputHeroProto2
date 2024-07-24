@@ -67,10 +67,6 @@ public class CameraTracking : MonoBehaviour
             isFocusing = false;
             smooth.move = false;
         }
-
-        // test
-        if (Input.GetKeyDown(KeyCode.B)) { SetFocusPoint(GameObject.Find("barrel")); }
-        else if (Input.GetKeyDown(KeyCode.P)) { SetFocusPoint(GameManager.Player.gameObject); }
     }
 
     public void Move()

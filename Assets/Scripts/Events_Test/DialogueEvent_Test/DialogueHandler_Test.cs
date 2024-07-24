@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 임시로 만든 대화창 이벤트
-[CreateAssetMenu(menuName = "DialogueHandler_Test_JW")]
 public class DialogueHandler_Test : CustomHandler_Test
 {
     public int dialogueIndex;
@@ -40,7 +39,7 @@ public class DialogueHandler_Test : CustomHandler_Test
         if (UIPrefab == null || canvas == null)
         {
             Debug.Log("캔버스나 UI 프리팹을 찾지 못함 -> DialogueHandler_Test 강제종료!");
-            lifeCycleBools.isDone_This = true;
+            isDone_This = true;
             return;
         }
 
@@ -74,7 +73,7 @@ public class DialogueHandler_Test : CustomHandler_Test
             }
             else
             {
-                lifeCycleBools.isDone_This = true;
+                isDone_This = true;
             }
         }
     }
