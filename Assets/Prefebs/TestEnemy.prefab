@@ -697,8 +697,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitID: -1
   stats:
-    health: 1
-    maxHealth: 1
+    health: 2
+    maxHealth: 2
     attackPower: 0
     defencePower: 0
     defenceRate: 0
