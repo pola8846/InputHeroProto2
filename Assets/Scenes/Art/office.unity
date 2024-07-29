@@ -2895,7 +2895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 82802444c57530b42ad756b85c2e01fc, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.7952
+      value: 2.376507
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 82802444c57530b42ad756b85c2e01fc, type: 3}
       propertyPath: m_LocalScale.z
@@ -2907,7 +2907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 82802444c57530b42ad756b85c2e01fc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 25.96
+      value: 25.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 82802444c57530b42ad756b85c2e01fc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6685,7 +6685,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 343486076}
+        m_Texture: {fileID: 1270523066}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -6710,7 +6710,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0, g: 0.3851415, b: 0.38212085, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: -0.046457063, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: -3.1698306, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 5, b: 1, a: 1}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -6721,7 +6721,7 @@ Material:
     - _ShadowData: {r: 0.412, g: 0, b: 62500, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.10355826, g: 0.79692644, b: -0.5951336, a: 0}
-    - _WindDirection: {r: -0.046457063, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: -3.1698306, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!1001 &260311034
 PrefabInstance:
@@ -8243,44 +8243,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74e6eaa3fa54ad7489d02ef1c2908a6f, type: 3}
---- !u!84 &343486076
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &345578293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10336,7 +10298,7 @@ Transform:
   m_GameObject: {fileID: 421236463}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -46.678997, y: 32.22, z: -3.9810905}
+  m_LocalPosition: {x: -46.678997, y: 31.97, z: -3.9810905}
   m_LocalScale: {x: 30.022398, y: 5, z: 8.7096195}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11343,6 +11305,44 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffd2803252ddfd74c8efd7a17a61fbec, type: 3}
+--- !u!84 &489938765
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &504196985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13720,7 +13720,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 1745631594}
+        m_Texture: {fileID: 489938765}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -13745,7 +13745,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0, g: 0.3851415, b: 0.38212085, a: 0}
     - _DetailData: {r: 0.5, g: 4, b: -0.5, a: 0}
-    - _DetailWindDirection: {r: -0.046457063, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: -3.1698306, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 5, b: 1, a: 1}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -13756,7 +13756,7 @@ Material:
     - _ShadowData: {r: 0.412, g: 0, b: 62500, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.10355826, g: 0.79692644, b: -0.5951336, a: 0}
-    - _WindDirection: {r: -0.046457063, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: -3.1698306, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!1001 &601866565
 PrefabInstance:
@@ -30437,6 +30437,44 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6e71925fb0cc3946a4ab9c1d535b35f, type: 3}
+--- !u!84 &1270523066
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 256
+  m_Height: 256
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 0
+  m_ColorFormat: 8
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1001 &1272467806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32096,7 +32134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8c187b75c6ecf5438abe24d53ea62c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 23.419
+      value: 20.57
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8c187b75c6ecf5438abe24d53ea62c3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -32132,7 +32170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8c187b75c6ecf5438abe24d53ea62c3, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: f8c187b75c6ecf5438abe24d53ea62c3, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -42010,44 +42048,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 633a314dbfd074b48807f67de5a5ac40, type: 3}
---- !u!84 &1745631594
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 256
-  m_Height: 256
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 0
-  m_ColorFormat: 8
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 0
-    m_WrapV: 0
-    m_WrapW: 0
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1001 &1747050524
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48104,7 +48104,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -48130,13 +48130,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016150803}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9999989, z: -0.001490291, w: 0}
-  m_LocalPosition: {x: -43.17, y: 26.68, z: 6.78}
+  m_LocalRotation: {x: -0, y: 0.99999857, z: 0.0017041616, w: 0}
+  m_LocalPosition: {x: -41.49, y: 26.08, z: 8.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0.171, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.195, y: 180, z: 0}
 --- !u!114 &2016150807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48650,7 +48650,7 @@ Transform:
   m_GameObject: {fileID: 2021470194}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70942473, y: -0.15271363, z: 0.094263546, w: 0.68154943}
-  m_LocalPosition: {x: -36.72, y: 26.67, z: -6.94}
+  m_LocalPosition: {x: -36.72, y: 26.422, z: -6.94}
   m_LocalScale: {x: 0.04515909, y: 0.056448862, z: 0.056448862}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -49699,7 +49699,7 @@ Transform:
   m_GameObject: {fileID: 2089566135}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -43.84, y: 24.5, z: -3.2978592}
+  m_LocalPosition: {x: -41.31, y: 24.5, z: -3.2978592}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
