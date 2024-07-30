@@ -9,7 +9,7 @@ public class InputManager : MonoBehaviour
     private static InputManager instance;
     public static InputManager Instance => instance;
 
-    private static List<IMoveReceiver> receivers = new List<IMoveReceiver>();
+    private List<IMoveReceiver> receivers = new List<IMoveReceiver>();
 
     [SerializeField]
     private float listCheckTime = 1f;
@@ -27,16 +27,16 @@ public class InputManager : MonoBehaviour
             return Instance.keyDict;
         }
     }
-    private static Dictionary<InputType, bool> keyStay;//현재 눌리고 있는 키
+    private  Dictionary<InputType, bool> keyStay;//현재 눌리고 있는 키
     private static Dictionary<InputType, bool> KeyStay
     {
         get
         {
-            if (keyStay == null)
+            if (Instance.keyStay == null)
             {
-                keyStay = new();
+                Instance.keyStay = new();
             }
-            return keyStay;
+            return Instance.keyStay;
         }
     }
 
@@ -53,6 +53,7 @@ public class InputManager : MonoBehaviour
 
     private void Start()
     {
+        KeyReset();
         StartCoroutine(ListNullCheck());
     }
 
@@ -83,7 +84,7 @@ public class InputManager : MonoBehaviour
             KeyStay.Add(inputType, true);
         }
 
-        foreach (var receiver in receivers)
+        foreach (var receiver in Instance.receivers)
         {
             if (receiver!=null)
             {
@@ -106,7 +107,7 @@ public class InputManager : MonoBehaviour
             KeyStay.Add(inputType, false);
         }
 
-        foreach (var receiver in receivers)
+        foreach (var receiver in Instance.receivers)
         {
             if (receiver != null)
             {
@@ -135,17 +136,17 @@ public class InputManager : MonoBehaviour
 
     public static void EnrollReciver(IMoveReceiver receiver)
     {
-        if (receiver != null && !receivers.Contains(receiver))
+        if (receiver != null && !Instance.receivers.Contains(receiver))
         {
-            receivers.Add(receiver);
+            Instance.receivers.Add(receiver);
         }
     }
 
     public static void RemoveReciver(IMoveReceiver receiver)
     {
-        if (receiver != null && receivers.Contains(receiver))
+        if (receiver != null && Instance.receivers.Contains(receiver))
         {
-            receivers.Remove(receiver);
+            Instance.receivers.Remove(receiver);
         }
     }
 

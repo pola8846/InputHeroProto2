@@ -14,12 +14,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private Animator animator;
     private bool canMove = true;
 
-    [SerializeField, Range(1f, 5f)]
-    private float dashSpeedRate = 2f;
-    [SerializeField]
-    private float dashTime = 1f;
-    private bool isDashing = false;
-
     [SerializeField]
     public GameObject areaAttackPrefab;
     [SerializeField]
@@ -30,6 +24,24 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float glitchTime = 0.5f;
     [SerializeField]
     private GameObject gameoverText;
+
+
+    [Header("대시")]
+    [SerializeField, Range(1f, 5f)]
+    private float dashSpeedRate = 2f;
+    [SerializeField]
+    private float dashTime = 1f;
+    private bool isDashing = false;
+    private TickTimer dashTimer;
+
+    
+    // 시간 변화 배율 얼마나 받을지
+    [Header("슬로우")]
+    [SerializeField]
+    private float slowRate_Shoot = 1f;
+    [SerializeField]
+    private float slowRate_Dash = 1f;
+
 
     [Header("점프")]
     [SerializeField]
@@ -51,6 +63,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private int canJumpCounter;
     public int CanJumpCounter => canJumpCounter;
     private bool isJumping = false;
+    public bool IsJumping => isJumping;
 
 
     [Header("원거리 공격")]
@@ -155,6 +168,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private float reloadTime = 3f;
     public float ReloadTime => reloadTime;
+    public float RemainReloadTime => reloadTimer.GetRemain(ReloadTime);
     private TickTimer reloadTimer;
     private TickTimer shootTimer;
     private bool reloading = false;
@@ -177,6 +191,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public List<PlayerSkill> SkillList => skillList;
 
 
+    //애니메이션
+    private Upper_Animator upperAni;
+    private Down_Animator downAni;
+
+
     protected override void Start()
     {
         base.Start();
@@ -195,7 +214,11 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         };
         targetterGO = Instantiate(targetter);
         reloadTimer = new();
+        dashTimer = new();
         shootTimer = new(isTrigerInstant: true);
+
+        upperAni = GetComponentInChildren<Upper_Animator>();
+        downAni = GetComponentInChildren<Down_Animator>();
     }
 
     protected override void Update()
@@ -206,8 +229,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         JumpCheck();
         ReloadCheck();
         InputMoveCheck();
+        Animate();
 
-        //Debug.Log($"{canShootTemp} && {NowBullet >= 1} && {shootTimer != null} && {shootTimer.Check(shootCooltime)}");
+        Debug.Log(TickTimer.GetConvertedTimeRate(slowRate_Dash));
     }
 
 
@@ -269,7 +293,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
             case InputType.Reload:
                 //재장전
-                if (canMove && canShootTemp && !TimeManager.IsUsingSkills)
+                if (canMove && !TimeManager.IsUsingSkills)
                 {
                     if (!TimeManager.IsSlowed)
                         Reloading();
@@ -333,6 +357,18 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    private void Animate()
+    {
+        //
+        if (true)
+        {
+            upperAni.FlipCheck();
+            downAni.FlipCheck();
+        }
+
+
+    }
+
     #region 원거리 기본공격
     //마우스 방향 표시기 회전(임시)
     private void RotateTargetter()
@@ -350,7 +386,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         if (!TimeManager.IsSlowed)
         {
-            shootTimer.Reset();
+            //shootTimer.Reset();
         }
         Shoot();
     }
@@ -365,6 +401,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         {
             NowBullet--;
             UIManager.Instance.OnBulletNumUpdated?.Invoke();
+            CancelReload();
         }
 
         RuntimeManager.PlayOneShot("event:/Bullet");
@@ -637,7 +674,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //땅 체크
     public bool GroundCheck()
     {
-
         if (groundChecker == null)
         {
             return false;
@@ -687,17 +723,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         RuntimeManager.PlayOneShot("event:/Realod_End");
     }
 
+    //재장전 시작
     private void Reloading()
     {
-        canShootTemp = false;
         reloading = true;
         UIManager.Instance.OnReload?.Invoke();
         reloadTimer.Reset();
         RuntimeManager.PlayOneShot("event:/Reload_start");
-
-        //Debug.Log("재장전");
     }
 
+    //재장전 남은 시간 검사
     private void ReloadCheck()
     {
         if (reloading && reloadTimer.Check(reloadTime))
@@ -705,8 +740,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             reloading = false;
             Reload();
             reloadTimer.Reset();
-            canShootTemp = true;
-            //Debug.Log("재장전완료");
         }
     }
 
@@ -715,7 +748,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         reloading = false;
         UIManager.Instance.OnCancelReload?.Invoke();
         reloadTimer.Reset();
-        canShootTemp = true;
     }
 
     //대시
@@ -724,14 +756,23 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShootTemp = false;
         isDash = true;
         canMove = false;
-        float speed = Mathf.Max(0, Speed) * dashSpeedRate * (isLookLeft ? -1 : 1);
-        MoverV.SetVelocityX(speed);
         if (reloading)
         {
             CancelReload();
         }
 
-        yield return new WaitForSeconds(dashTime);
+        dashTimer.Reset();
+
+        while (!dashTimer.Check(dashTime, slowRate_Dash))
+        {
+            //float temp = TickTimer.GetConvertedTimeRate(slowRate_Dash);
+            float speed = (Mathf.Max(0, Speed)) * dashSpeedRate * (isLookLeft ? -1 : 1);
+            MoverV.SetVelocityX(speed);
+            //Debug.Log(dashTimer.GetRemain(dashTime));
+            yield return null;
+        }
+
+        //yield return new WaitForSeconds(dashTime);
         canMove = true;
         isDash = false;
         canShootTemp = true;

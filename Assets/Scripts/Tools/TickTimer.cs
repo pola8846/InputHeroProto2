@@ -6,7 +6,7 @@ using UnityEngine;
 public class TickTimer
 {
     /// <summary>
-    /// 경과한 시간
+    /// 검사 기준 시간
     /// </summary>
     public float time;
 
@@ -20,6 +20,10 @@ public class TickTimer
     //일시정지
     private bool isPaused;
     private float pauseTime;
+
+    //경과 시간 카운트
+    private float elapsedTime;
+    private float lastUpdatedTime;
 
     /// <summary>
     /// 현재 시간
@@ -46,6 +50,8 @@ public class TickTimer
         if (isTrigerInstant)
         {
             time = float.MinValue;
+            elapsedTime = float.MaxValue;
+            lastUpdatedTime = time;
         }
         else
         {
@@ -57,6 +63,8 @@ public class TickTimer
     public void Reset()
     {
         time = NowTime;
+        elapsedTime = 0f;
+        lastUpdatedTime = time;
     }
 
     /// <summary>
@@ -64,12 +72,29 @@ public class TickTimer
     /// </summary>
     /// <param name="time">필요한 경과 시간(s)</param>
     /// <returns>time만큼 경과하였는가?</returns>
-    public bool Check(float time)
+    public bool Check(float time, float timeRate = 1)
     {
         bool result;
+
+        if (timeRate < 0)
+        {
+            timeRate = 1;
+        }
+
+        UpdateElapsedTime(timeRate);
+
+        result = elapsedTime >= time;
+        if (result && autoReset)
+        {
+            Reset();
+        }
+        return result;
+        /*
         if (isPaused)
         {
-            result = this.time + time <= pauseTime;
+            UpdateElapsedTime(timeRate);
+            //result = this.time + time <= pauseTime;
+            result = elapsedTime >= time;
             if (result && autoReset)
             {
                 Reset();
@@ -78,13 +103,17 @@ public class TickTimer
         }
         else
         {
-            result = this.time + time <= NowTime;
+            UpdateElapsedTime(timeRate);
+
+            //result = this.time + time <= NowTime;
+            result = elapsedTime >= time;
             if (result && autoReset)
             {
                 Reset();
             }
             return result;
         }
+        */
     }
 
     public bool Check()
@@ -130,6 +159,7 @@ public class TickTimer
     {
         if (!isPaused)
         {
+            UpdateElapsedTime();
             pauseTime = NowTime - time;
             isPaused = true;
         }
@@ -142,8 +172,53 @@ public class TickTimer
     {
         if (isPaused)
         {
+            UpdateElapsedTime();
             time = NowTime - pauseTime;
             isPaused = false;
         }
+    }
+
+    /// <summary>
+    /// 시간 강제 갱신
+    /// </summary>
+    /// <param name="timeRate">시간 변화 얼마나 적용할지 배율</param>
+    public void UpdateElapsedTime(float timeRate = 1)
+    {
+        //일시정지 중엔 시간이 흐르지 않는다
+        if (isPaused)
+        {
+            lastUpdatedTime = NowTime;
+            return;
+        }
+
+        float result = 0;
+
+        //지난 시간
+        float timeGap = NowTime - lastUpdatedTime;
+
+        if (!unscaledTime)
+        {
+            result = timeGap * GetConvertedTimeRate(timeRate);
+        }
+        else
+        {
+            result = timeGap;
+        }
+
+        elapsedTime += result;
+        lastUpdatedTime = NowTime;
+    }
+
+
+    /// <summary>
+    /// 기존 timeScale 대신 1을 기준으로 Rate 비율만큼만 변한 시간 배율 반환
+    /// </summary>
+    /// <param name="timeRate">배속 적용할 비율</param>
+    /// <returns>실제 적용될 배속 값</returns>
+    public static float GetConvertedTimeRate(float timeRate)
+    {
+        float rateGap = Time.timeScale - 1;
+        float rate = 1 + (rateGap * timeRate);
+        return rate;
     }
 }

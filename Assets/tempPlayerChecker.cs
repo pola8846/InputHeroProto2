@@ -9,7 +9,6 @@ public class tempPlayerChecker : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Å¬¸®¾î");
             t.SetActive(true);
         }
     }
