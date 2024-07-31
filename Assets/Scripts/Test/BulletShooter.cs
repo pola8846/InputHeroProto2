@@ -89,7 +89,6 @@ public class BulletShooter : MonoBehaviour
 
     private void Shoot()
     {
-        PerformanceManager.StartTimer("BulletShooter.Shoot");
         switch (shootType)
         {
             case ShootType.oneWay:
@@ -120,8 +119,6 @@ public class BulletShooter : MonoBehaviour
             default:
                 break;
         }
-
-        PerformanceManager.StopTimer("BulletShooter.Shoot");
     }
 
     private void MakeProjectile(Vector2 direction)

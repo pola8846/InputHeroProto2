@@ -10,8 +10,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     protected Dictionary<InputType, bool> keyStay = new();
 
     [Header("기타")]
-    [SerializeField]
-    private Animator animator;
     private bool canMove = true;
 
     [SerializeField]
@@ -25,23 +23,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private GameObject gameoverText;
 
-
     [Header("대시")]
     [SerializeField, Range(1f, 5f)]
     private float dashSpeedRate = 2f;
     [SerializeField]
     private float dashTime = 1f;
-    private bool isDashing = false;
     private TickTimer dashTimer;
-
-    
-    // 시간 변화 배율 얼마나 받을지
-    [Header("슬로우")]
-    [SerializeField]
-    private float slowRate_Shoot = 1f;
-    [SerializeField]
-    private float slowRate_Dash = 1f;
-
+    [SerializeField, Range(0f, 1f)]
+    private float dashSlowRate = 1f;
 
     [Header("점프")]
     [SerializeField]
@@ -68,19 +57,16 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     [Header("원거리 공격")]
     [SerializeField]
-    private BulletShooter shooter;
-    [SerializeField]
-    private BulletShooter shooter_Big;
-    public BulletShooter Shooter_Big => shooter_Big;
-    [SerializeField]
     private float shootCooltime;
-    private bool canShoot = true;
+    [SerializeField, Range(0, 1)]
+    private float shootSlowRate = 1;
+    private TickTimer shootTimer;
     private bool canShootTemp = true;
     private bool CanShoot//공격할 수 있는가?
     {
         get
         {
-            return canShootTemp && NowBullet >= 1 && shootTimer != null && shootTimer.Check(shootCooltime);
+            return canShootTemp && NowBullet >= 1 && shootTimer != null && shootTimer.Check(shootCooltime, shootSlowRate);
         }
     }
     [SerializeField]
@@ -112,7 +98,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         get
         {
-            return GameTools.GetDegreeAngleFormDirection(nowMouseDir);
+            return GameTools.GetDegreeAngleFormDirection(NowMouseDir);
         }
     }
 
@@ -129,13 +115,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     //자동조준
     [SerializeField]
-    private float autoAim_mouse1 = 0.25f;
+    private float autoAim_mouse1 = 0.25f;//마우스 주변에서 찾을 거리
     [SerializeField]
-    private float autoAim_cornAngle1 = 1f;
+    private float autoAim_cornAngle1 = 1f;//마우스 방향의 찾을 범위 부채꼴 범위
     [SerializeField]
-    private float autoAim_sqrLength1 = 10f;
+    private float autoAim_sqrLength1 = 10f;//마우스 방향의 찾을 범위 사각형 길이
     [SerializeField]
-    private float autoAim_sqrWidth1 = 1f;
+    private float autoAim_sqrWidth1 = 1f;//마우스 방향의 찾을 범위 사각형 두께
     [SerializeField]
     private LayerMask blockLayer;//오토에임을 가로막을 레이어
     [SerializeField]
@@ -143,10 +129,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     private GameObject particle;//충돌 시 파티클
 
-    //타겟 표시용 구체. 테스트용
-    [SerializeField]
-    private GameObject targetter;
-    private GameObject targetterGO;
 
     //장탄
     [SerializeField]
@@ -170,7 +152,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     public float ReloadTime => reloadTime;
     public float RemainReloadTime => reloadTimer.GetRemain(ReloadTime);
     private TickTimer reloadTimer;
-    private TickTimer shootTimer;
+    [SerializeField, Range(0f,1f)]
+    private float reloadSlowRate = 1;
     private bool reloading = false;
     public bool IsReloading => reloading;
 
@@ -180,19 +163,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         get
         {
-            //return (Vector2)transform.position + Vector2.up * .5f;//총알 시작점
             return OriginPos;
         }
     }
 
-
-    //스킬
-    private List<PlayerSkill> skillList;
-    public List<PlayerSkill> SkillList => skillList;
-
-
     //애니메이션
+    [SerializeField]
     private Upper_Animator upperAni;
+    [SerializeField]
     private Down_Animator downAni;
 
 
@@ -206,13 +184,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
         GameManager.SetPlayer(this);
         InputManager.EnrollReciver(this);
-        skillList = new List<PlayerSkill>
-        {
-            new PSkill_TestAreaAtk(),
-            new PSkill_TestDash(),
-            new PSkill_TestRangeAtk()
-        };
-        targetterGO = Instantiate(targetter);
         reloadTimer = new();
         dashTimer = new();
         shootTimer = new(isTrigerInstant: true);
@@ -225,13 +196,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         isNowMouseDirCashed = false;
 
-        RotateTargetter();
         JumpCheck();
         ReloadCheck();
         InputMoveCheck();
         Animate();
 
-        Debug.Log(TickTimer.GetConvertedTimeRate(slowRate_Dash));
+        Debug.Log(TickTimer.GetConvertedTimeRate(shootSlowRate));
     }
 
 
@@ -241,12 +211,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         if (TimeManager.IsSlowing)
         {
             return;
-        }
-
-
-        if (TimeManager.IsSlowed && !TimeManager.IsUsingSkills)
-        {
-            ComboManager.InputLog(inputType);
         }
 
         switch (inputType)
@@ -295,10 +259,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 //재장전
                 if (canMove && !TimeManager.IsUsingSkills)
                 {
-                    if (!TimeManager.IsSlowed)
+                    //if (!TimeManager.IsSlowed)
                         Reloading();
-                    else
-                        Reload();
+                    //else
+                    //    Reload();
                 }
                 break;
 
@@ -306,6 +270,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 //슬로우
                 if (TimeManager.IsSlowed == false)
                     TimeManager.StartSlow();
+                else if(TimeManager.IsSlowing == false)
+                    TimeManager.EndSlow();
                 break;
 
             case InputType.MeleeAttack:
@@ -351,7 +317,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 MoverV.StopMoveX();
             }
         }
-        if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot && !TimeManager.IsSlowed)//총알 발사
+        if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
         {
             InputShoot();
         }
@@ -370,43 +336,25 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     }
 
     #region 원거리 기본공격
-    //마우스 방향 표시기 회전(임시)
-    private void RotateTargetter()
-    {
-        if (targetterGO is null)
-        {
-            return;
-        }
-
-        //거리 구하고 적용
-        targetterGO.transform.position = (NowMouseDir * 2) + ShootStartPos;
-    }
-
     private void InputShoot()
     {
-        if (!TimeManager.IsSlowed)
+        //if (!TimeManager.IsSlowed)
         {
-            //shootTimer.Reset();
+            shootTimer.Reset(); 
         }
         Shoot();
     }
 
     private void Shoot()
     {
-        if (NowBullet <= 0)
-        {
-            return;
-        }
-        else
-        {
-            NowBullet--;
-            UIManager.Instance.OnBulletNumUpdated?.Invoke();
-            CancelReload();
-        }
+        NowBullet--;
+        UIManager.Instance.OnBulletNumUpdated?.Invoke();
+        CancelReload();
 
         RuntimeManager.PlayOneShot("event:/Bullet");
         RuntimeManager.PlayOneShot("event:/Bulletdrop");
 
+        //자동조준
         Projectile target = null;
 
         //마우스 주변 작은 원을 그려 쏠 수 있는 탄이 있으면 가까운 것 잡는다
@@ -628,9 +576,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         go.transform.position = target;
 
         Destroy(go, go.GetComponent<TrailRenderer>().time);
-
-
-        //Debug.DrawLine(start, target);
     }
 
     private void DrawParticle(GameObject particle, Vector2 start, Vector2 target, Vector2 dir)
@@ -711,7 +656,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         MoverV.SetVelocityY(0, true);
         MoverV.AddForceY(JumpPower);
         isJumping = true;
-        //animator.SetBool("IsJumping", true);
     }
 
 
@@ -735,7 +679,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //재장전 남은 시간 검사
     private void ReloadCheck()
     {
-        if (reloading && reloadTimer.Check(reloadTime))
+        if (reloading && reloadTimer.Check(reloadTime, reloadSlowRate))
         {
             reloading = false;
             Reload();
@@ -763,7 +707,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         dashTimer.Reset();
 
-        while (!dashTimer.Check(dashTime, slowRate_Dash))
+        while (!dashTimer.Check(dashTime, dashSlowRate))
         {
             //float temp = TickTimer.GetConvertedTimeRate(slowRate_Dash);
             float speed = (Mathf.Max(0, Speed)) * dashSpeedRate * (isLookLeft ? -1 : 1);

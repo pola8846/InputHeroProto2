@@ -198,7 +198,7 @@ public class TickTimer
 
         if (!unscaledTime)
         {
-            result = timeGap * GetConvertedTimeRate(timeRate);
+            result = timeGap * GetConvertedTimeRate(timeRate) / Time.timeScale;
         }
         else
         {
