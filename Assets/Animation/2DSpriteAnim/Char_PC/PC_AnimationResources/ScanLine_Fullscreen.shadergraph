@@ -292,15 +292,15 @@
     ],
     "m_VertexContext": {
         "m_Position": {
-            "x": 1267.0,
-            "y": -102.00000762939453
+            "x": 1056.0,
+            "y": 13.999971389770508
         },
         "m_Blocks": []
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 1250.0,
-            "y": 21.00002098083496
+            "x": 1039.0001220703125,
+            "y": 137.0
         },
         "m_Blocks": [
             {
@@ -732,7 +732,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "Y",
     "m_StageCapability": 3,
-    "m_Value": 0.009999999776482582,
+    "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": [
         "Y"
@@ -927,7 +927,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "X",
     "m_StageCapability": 3,
-    "m_Value": 0.10000000149011612,
+    "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
 }
@@ -1007,10 +1007,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 814.0001220703125,
-            "y": 238.00006103515626,
-            "width": 188.99981689453126,
-            "height": 33.999908447265628
+            "x": 603.0000610351563,
+            "y": 353.9999694824219,
+            "width": 189.0,
+            "height": 34.000030517578128
         }
     },
     "m_Slots": [
@@ -2022,10 +2022,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 841.0001220703125,
-            "y": 173.9999542236328,
+            "x": 630.0001220703125,
+            "y": 290.0,
             "width": 110.0,
-            "height": 34.00004577636719
+            "height": 33.999969482421878
         }
     },
     "m_Slots": [
