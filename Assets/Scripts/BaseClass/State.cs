@@ -42,4 +42,7 @@ public class State
     {
         machine.ChangeState<T>();
     }
+
+    public virtual void Pause() { }
+    public virtual void Resume() { }
 }

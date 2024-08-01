@@ -52,11 +52,8 @@ public class DamageArea : CollisionChecker
     {
         get
         {
-            PerformanceManager.StartTimer("DamageArea.HitBoxList.get");
-
             if (isCached_HitBoxList)
             {
-                PerformanceManager.StopTimer("DamageArea.HitBoxList.get");
                 return cachedList;
             }
 
@@ -70,7 +67,6 @@ public class DamageArea : CollisionChecker
                 }
             }
             isCached_HitBoxList = true;
-            PerformanceManager.StopTimer("DamageArea.HitBoxList.get");
             return cachedList;
         }
     }

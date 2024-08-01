@@ -11,9 +11,7 @@ GameObject:
   - component: {fileID: 1066842574425924875}
   - component: {fileID: 5598290003045268515}
   - component: {fileID: 4246578182791612912}
-  - component: {fileID: 7294506696107143313}
   - component: {fileID: 8938909514756476143}
-  - component: {fileID: 6716821222481099359}
   - component: {fileID: 2181618448846721400}
   - component: {fileID: 5486589991086115806}
   - component: {fileID: 4456363074799206665}
@@ -66,22 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eae39a7121b8254c971327ace932f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7294506696107143313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3081590848007356716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5660d6ca19eda94989a59c0c3ee8f1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  times:
-    _serializedList: []
-  count:
-    _serializedList: []
+  isTestMod: 0
 --- !u!114 &8938909514756476143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e602016f95d785949972d8ff81ee7a4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listCheckTime: 1
   keyDict:
     _serializedList:
     - Key: 0
@@ -116,32 +100,6 @@ MonoBehaviour:
       Value: 122
     - Key: 7
       Value: 324
---- !u!114 &6716821222481099359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3081590848007356716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 703af0d1d3232404094e8108d682e00c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comboInputs: 060000000200000003000000
-  comboInputsTime:
-    _serializedList:
-    - Key: 6
-      Value: 0
-    - Key: 2
-      Value: 1.5
-    - Key: 3
-      Value: 1.5
-    - Key: 7
-      Value: 4
-    - Key: 8
-      Value: 9999
-  maxCombo: 9999
 --- !u!114 &2181618448846721400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0891c5244c53f5645846443cdaf5d598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowRate: 0.05
+  slowRate: 0.2
   slowStartTime: 0.6
   slowEndTime: 0.3
   slowTime: 9999
@@ -173,6 +131,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a43ae212211d94fbbdf06aa3244a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnBulletNumUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBulletUseFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReload:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCancelReload:
+    m_PersistentCalls:
+      m_Calls: []
   bulletCounter: {fileID: 0}
   testActionBar: {fileID: 0}
 --- !u!114 &4456363074799206665

@@ -87,7 +87,6 @@ public class TimeManager : MonoBehaviour
             {
                 EndSlow();
                 //StartCoroutine(EndingSlow());
-                //StartCoroutine(StartSkillQueue());//스킬 실행 시작
             }
         }
     }
@@ -102,8 +101,6 @@ public class TimeManager : MonoBehaviour
         instance.isSlowing = true;
         instance.isSlowed = true;
         instance.StartCoroutine(instance.StartingSlow());
-
-        //SetTimeScale(instance.slowRate);
     }
 
     /// <summary>
@@ -113,34 +110,6 @@ public class TimeManager : MonoBehaviour
     {
         instance.isSlowing = true;
         instance.StartCoroutine(instance.EndingSlow());
-
-        //SetTimeScale(1);
-    }
-
-    //스킬 사용
-    private IEnumerator StartSkillQueue()
-    {
-        isUsingSkills = true;
-        ComboManager.FindCombos(GameManager.Player.SkillList);
-
-        //스킬 실행부
-        while (true)
-        {
-            PlayerSkill skill = ComboManager.GetFindedSkill();//큐에서 스킬 찾아오기
-            if (skill == null)//남은 스킬이 없다면 끝
-            {
-                break;
-            }
-            else
-            {
-                skill.Invoke();//스킬 실행
-                yield return new WaitUntil(() => !PlayerSkill.IsUsing);//실행한 스킬이 끝날 때까지 대기
-            }
-        }
-
-
-        EndSlow();
-        isUsingSkills = false;
     }
 
     //슬로우 걸기 시작
@@ -181,7 +150,6 @@ public class TimeManager : MonoBehaviour
                 instance.slowTimer.Reset();
                 isSlowing = false;
                 isSlowed = false;
-                ComboManager.Reset();
                 break;
             }
 

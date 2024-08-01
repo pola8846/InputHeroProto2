@@ -1,6 +1,6 @@
 using AYellowpaper.SerializedCollections;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -8,6 +8,11 @@ public class InputManager : MonoBehaviour
     //싱글톤
     private static InputManager instance;
     public static InputManager Instance => instance;
+
+    private List<IMoveReceiver> receivers = new List<IMoveReceiver>();
+
+    [SerializeField]
+    private float listCheckTime = 1f;
 
     [SerializeField]
     private SerializedDictionary<InputType, KeyCode> keyDict;//입력을 받아줄 키
@@ -22,16 +27,16 @@ public class InputManager : MonoBehaviour
             return Instance.keyDict;
         }
     }
-    private static Dictionary<InputType, bool> keyStay;//현재 눌리고 있는 키
+    private  Dictionary<InputType, bool> keyStay;//현재 눌리고 있는 키
     private static Dictionary<InputType, bool> KeyStay
     {
         get
         {
-            if (keyStay==null)
+            if (Instance.keyStay == null)
             {
-                keyStay = new();
+                Instance.keyStay = new();
             }
-            return keyStay;
+            return Instance.keyStay;
         }
     }
 
@@ -44,6 +49,12 @@ public class InputManager : MonoBehaviour
         }
         else
             instance = this;
+    }
+
+    private void Start()
+    {
+        KeyReset();
+        StartCoroutine(ListNullCheck());
     }
 
     void Update()
@@ -73,8 +84,16 @@ public class InputManager : MonoBehaviour
             KeyStay.Add(inputType, true);
         }
 
-        if (GameManager.Player != null)
-            GameManager.Player.KeyDown(inputType);
+        foreach (var receiver in Instance.receivers)
+        {
+            if (receiver!=null)
+            {
+                receiver.KeyDown(inputType);
+            }
+        }
+
+        //if (GameManager.Player != null)
+          //  GameManager.Player.KeyDown(inputType);
     }
     private void OnKeyUp(InputType inputType)
     {
@@ -88,8 +107,16 @@ public class InputManager : MonoBehaviour
             KeyStay.Add(inputType, false);
         }
 
-        if (GameManager.Player != null)
-            GameManager.Player.KeyUp(inputType);
+        foreach (var receiver in Instance.receivers)
+        {
+            if (receiver != null)
+            {
+                receiver.KeyUp(inputType);
+            }
+        }
+
+        //if (GameManager.Player != null)
+        //  GameManager.Player.KeyUp(inputType);
     }
 
     public void KeyReset()
@@ -104,6 +131,39 @@ public class InputManager : MonoBehaviour
     public static bool IsKeyPushing(InputType inputType)
     {
         return KeyStay.ContainsKey(inputType) && KeyStay[inputType];
+    }
+
+
+    public static void EnrollReciver(IMoveReceiver receiver)
+    {
+        if (receiver != null && !Instance.receivers.Contains(receiver))
+        {
+            Instance.receivers.Add(receiver);
+        }
+    }
+
+    public static void RemoveReciver(IMoveReceiver receiver)
+    {
+        if (receiver != null && Instance.receivers.Contains(receiver))
+        {
+            Instance.receivers.Remove(receiver);
+        }
+    }
+
+    private IEnumerator ListNullCheck()
+    {
+        while (true)
+        {
+            // 역순으로 리스트를 순회하면서 null 체크 및 제거
+            for (int i = receivers.Count - 1; i >= 0; i--)
+            {
+                if (receivers[i] == null)
+                {
+                    receivers.RemoveAt(i);
+                }
+            }
+            yield return new WaitForSecondsRealtime(listCheckTime);
+        }
     }
 }
 

@@ -13,11 +13,8 @@ public class CollisionChecker : MonoBehaviour
     {
         get
         {
-            PerformanceManager.StartTimer("CollisionChecker.EnteredColliders.get");
-
             if (isCached_enteredColliders)
             {
-                PerformanceManager.StopTimer("CollisionChecker.EnteredColliders.get");
                 return enteredColliders;
             }
 
@@ -32,7 +29,6 @@ public class CollisionChecker : MonoBehaviour
             enteredColliders = tempList.ToList();
 
             isCached_enteredColliders = true;
-            PerformanceManager.StopTimer("CollisionChecker.EnteredColliders.get");
             return enteredColliders;
         }
     }
@@ -64,8 +60,6 @@ public class CollisionChecker : MonoBehaviour
     /// <returns>찾은 클래스 리스트</returns>
     public List<T> GetListOfClass<T>()
     {
-        PerformanceManager.StartTimer("CollisionChecker.GetListOfClass");
-
         List<T> result = new();
         foreach (var item in EnteredColliders)
         {
@@ -75,8 +69,6 @@ public class CollisionChecker : MonoBehaviour
                 result.Add(temp);
             }
         }
-
-        PerformanceManager.StopTimer("CollisionChecker.GetListOfClass");
         return result;
     }
 

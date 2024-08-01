@@ -146,7 +146,6 @@ public class TestEnemy_Boss_1 : Enemy
 
     protected override void Update()
     {
-        PerformanceManager.StartTimer("TestEnemy_Boss_1.Update");
 
         base.Update();
 
@@ -302,20 +301,17 @@ public class TestEnemy_Boss_1 : Enemy
                 }
                 break;
         }
-        PerformanceManager.StopTimer("TestEnemy_Boss_1.Update");
     }
 
     //상태 변경
     private void SetState(State st)
     {
-        PerformanceManager.StartTimer("TestEnemy_Boss_1.SetState");
         //Debug.Log($"{state.ToString()} 퇴장");
         ExitState(state);
         stateTime.Reset();
         state = st;
         //Debug.Log($"{state.ToString()} 진입");
         EnterState(state);
-        PerformanceManager.StopTimer("TestEnemy_Boss_1.SetState");
     }
 
     private void EnterState(State st)

@@ -15,7 +15,6 @@ public class Bullet : Projectile
 
     public override void Initialize(Vector2 dir, float speed, Unit sourceUnit, float lifeTime = -1f, float lifeDistance = -1f)
     {
-        PerformanceManager.StartTimer("Bullet.Initialize");
         base.Initialize(dir, speed, sourceUnit, lifeTime, lifeDistance);
 
         rb = GetComponent<Rigidbody2D>();
@@ -24,15 +23,11 @@ public class Bullet : Projectile
         {
             TimeManager.OnTimeScaleChanged += TimeScaleChanged;
         }
-        PerformanceManager.StopTimer("Bullet.Initialize");
     }
 
     protected override void Update()
     {
-        PerformanceManager.StartTimer("Bullet.Update");
         base.Update();
-
-        PerformanceManager.StopTimer("Bullet.Update");
     }
 
     private void OnDestroy()

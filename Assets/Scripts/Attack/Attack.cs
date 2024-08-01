@@ -43,11 +43,9 @@ public class Attack : MonoBehaviour
 
     protected virtual void Update()
     {
-        PerformanceManager.StartTimer("Attack.Update");
         //초기화 안했을 때 예외
         if (!isInitialized)
         {
-            PerformanceManager.StopTimer("Attack.Update");
             return;
         }
 
@@ -56,9 +54,6 @@ public class Attack : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        
-        PerformanceManager.StopTimer("Attack.Update");
     }
 
     /// <summary>
@@ -155,7 +150,6 @@ public class Attack : MonoBehaviour
 
     public void DamageEnter()
     {
-        PerformanceManager.StartTimer("Attack.DamageEnter");
         //dealDamageOnEnter 활성화 시 접촉할 때 대미지
         if (dealDamageOnEnter)
         {
@@ -168,7 +162,6 @@ public class Attack : MonoBehaviour
                 }
             }
         }
-        PerformanceManager.StopTimer("Attack.DamageEnter");
     }
 
     public void DamageExit()
@@ -182,7 +175,6 @@ public class Attack : MonoBehaviour
     /// </summary>
     private Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> GetConnectedHitbox()
     {
-        PerformanceManager.StartTimer("Attack.GetConnectedHitbox");
         Dictionary<HitBox, DamageArea> dict = new();//우선권을 고려하여, 어느 히트박스에게 어떤 피해 영역이 충돌한 것으로 볼지 기록
         Dictionary<Unit, KeyValuePair<HitBox, DamageArea>> temp = new();
         //temp 채우기
@@ -216,9 +208,6 @@ public class Attack : MonoBehaviour
         /// 첫 유닛을 찾으면 유닛을 key로, valued에 딕셔너리를 생성, 충돌한 hitbox를 key로, 충돌한 DamageArea를 value로 넣는다
         /// 같은 유닛이라면 hitbox나 damagearea의 우선도를 합산, 높으면 대체함
         ///
-
-        PerformanceManager.StopTimer("Attack.GetConnectedHitbox");
-
         return temp;
     }
 

@@ -7,5 +7,4 @@ public interface IMoveReceiver
 {
     public void KeyDown(InputType inputType);
     public void KeyUp(InputType inputType);
-    public void KeyReset();
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540af8b00e0007b46bd29c07383ad24f, type: 3}
+  m_Name: PlayerLesserJump
+  m_EditorClassIdentifier: 
+  keycode: Jump
+  sprites:
+  - {fileID: 55276704, guid: 34012305e4fe73e44a515f18391b850e, type: 3}
+  - {fileID: 234829530, guid: 34012305e4fe73e44a515f18391b850e, type: 3}
+  - {fileID: -975429627, guid: 34012305e4fe73e44a515f18391b850e, type: 3}
+  - {fileID: 1750054256, guid: 34012305e4fe73e44a515f18391b850e, type: 3}
+  - {fileID: 1898281931, guid: 34012305e4fe73e44a515f18391b850e, type: 3}

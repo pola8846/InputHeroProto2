@@ -57,4 +57,14 @@ public class StateMachine
             currentState.Execute();
         }
     }
+
+    public void Pause()
+    {
+        currentState?.Pause();
+    }
+
+    public void Resume()
+    {
+        currentState?.Resume();
+    }
 }

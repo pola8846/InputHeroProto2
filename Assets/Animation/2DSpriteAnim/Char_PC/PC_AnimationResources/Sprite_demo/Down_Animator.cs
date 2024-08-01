@@ -3,92 +3,86 @@ using UnityEngine;
 
 public class Down_Animator : SpriteAnimation<PlayerUnit>
 {
+    //이동
     [Header("모션 속도")]
     [SerializeField, Range(0, 2)] float xPosManifulator;
     [SerializeField] float maxXValue;
-
-    [SerializeField]
-    private bool jump;
-    private float horizontal;
+    private float MoveCount;
 
 
-    [SerializeField] float nowJumpTime;
-    [SerializeField] float maxJump;
-    [SerializeField] float timeManifulatorJump;
+    //점프
+    [SerializeField] float jumpTime;
+    private TickTimer jumpTimer;
+
+    protected override void Start()
+    {
+        base.Start();
+        jumpTimer = new();
+    }
 
     protected override void Update()
     {
-        flip = !sourceUnit.IsMouseLeft;
-        spriteRenderer.flipX = !flip;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !jump)
-        {
-            jump = true;
-        }
-
-        if (jump)
+        if (sourceUnit.IsJumping)//점프면
         {
             jumpingSprite();
-
-            if (sourceUnit.CanJumpCounter == sourceUnit.Stats.jumpCount)
-            {
-                nowJumpTime = 0;
-                jump = false;
-            }
         }
-        else
+        else if(sourceUnit.GroundCheck())//점프가 아니면(이동)
         {
-            horizontal += Input.GetAxisRaw("Horizontal") * xPosManifulator * Time.deltaTime;
+            //MoveCount를 좌우 조작*배율만큼 변경
+            MoveCount += sourceUnit.MoverV.Velocity.x * xPosManifulator * Time.deltaTime;
 
-
-            if (Input.GetAxisRaw("Horizontal") == 0)
+            //조작이 없으면 idle
+            if (Mathf.Abs(sourceUnit.MoverV.Velocity.x) <= maxXValue)
             {
-                if (nowSpriteList.name != "Stand")
+                if (nowSpriteList.keycode != "Idle")
                 {
-                    ChangeSpriteList("Stand");
+                    ChangeSpriteList("Idle");
                 }
-                horizontal = 0;
-            }
-            else if (Mathf.Abs(horizontal) > maxXValue)
+                MoveCount = 0;
+            }//조작이 있으면
+            else if (Mathf.Abs(MoveCount) > maxXValue)
             {
-                if (nowSpriteList.name != "Find")
+                if (nowSpriteList.keycode != "Move")
                 {
-                    ChangeSpriteList("Find");
+                    ChangeSpriteList("Move");
                 }
 
-                if (horizontal > maxXValue)
+                if (MoveCount > 0)
                 {
                     if (flip)
                         ChangeSpritePrevious();
                     else
                         ChangeSpriteNext();
-                    horizontal = 0;
+                    MoveCount = 0;
                 }
-                else if (horizontal < -maxXValue)
+                else if (MoveCount < 0) 
                 {
                     if (flip)
                         ChangeSpriteNext();
                     else
                         ChangeSpritePrevious();
-                    horizontal = 0;
+                    MoveCount = 0;
                 }
             }
         }
 
-       // skip = sourceUnit.isDash;
         base.Update();
+    }
+
+    public void FlipCheck()
+    {
+        flip = !sourceUnit.IsMouseLeft;
+        spriteRenderer.flipX = !flip;
     }
 
     void jumpingSprite()
     {
-        nowJumpTime = nowJumpTime + Time.deltaTime * timeManifulatorJump;
-
-        if (nowSpriteList.name != "Jump")
+        if (nowSpriteList.keycode != "Jump")
         {
             ChangeSpriteList("Jump");
+            jumpTimer.Reset();
         }
-        ChangeSprite(GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count, nowJumpTime, 0, maxJump));
+        ChangeSprite(jumpTime - jumpTimer.GetRemain(jumpTime), 0, jumpTime);
     }
-
-
 }

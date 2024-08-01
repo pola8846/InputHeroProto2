@@ -1,7 +1,3 @@
-using FMOD;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -23,6 +19,18 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float cameraZPos;
     public static float CameraZPos => instance.cameraZPos;
+    private bool isGamePaused = false;
+    public static bool IsGamePaused
+    {
+        get
+        { 
+        return instance.isGamePaused;
+        }
+        set
+        {
+            instance.isGamePaused = value;
+        }
+    }
 
     //¸Ê °æ°è
     [SerializeField]
@@ -71,7 +79,7 @@ public class GameManager : MonoBehaviour
             {
                 Rect map = GameTools.TransformToRect(instance.mapLimit);
                 Rect result = map;
-                if (instance.cameraLimit !=null)
+                if (instance.cameraLimit != null)
                 {
                     Rect cl = GameTools.TransformToRect(instance.cameraLimit);
                     result = GameTools.CalculateOverlapRect(map, cl);
@@ -79,19 +87,19 @@ public class GameManager : MonoBehaviour
 
                 Rect cameraSize = GameTools.GetCameraViewportSize();
 
-                if (cameraSize.width< result.width)
+                if (cameraSize.width < result.width)
                 {
                     result.xMax -= cameraSize.width / 2;
                     result.xMin += cameraSize.width / 2;
                 }
                 else
                 {
-                    float temp = result.width/2;
+                    float temp = result.width / 2;
                     result.xMax -= temp;
                     result.xMin += temp;
                 }
 
-                if (cameraSize.height<result.height)
+                if (cameraSize.height < result.height)
                 {
                     result.yMax -= cameraSize.height / 2;
                     result.yMin += cameraSize.height / 2;
