@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 /// <summary>
 /// 피해+부가효과를 나타내는 Damage를 입히기 위한 영역(게임 오브젝트)
@@ -48,7 +45,7 @@ public class DamageArea : CollisionChecker
 
     private List<HitBox> cachedList = new();
     private bool isCached_HitBoxList = false;
-    public List<HitBox> HitBoxList
+    public List<HitBox> HitBoxList//매 검사시 찾으면 성능 저하가 심각하여 캐시하여 사용
     {
         get
         {
@@ -86,7 +83,7 @@ public class DamageArea : CollisionChecker
     }
 
     /// <summary>
-    /// 해당 DamageArea로 인해 피해를 주도록 만듬
+    /// 해당 DamageArea로 인해 유닛에게 직접 피해를 주도록 만듬
     /// </summary>
     /// <param name="target">공격받는 대상</param>
     public void DealDamage(Unit target)
@@ -103,6 +100,11 @@ public class DamageArea : CollisionChecker
         }
     }
 
+    /// <summary>
+    /// 해당 DamageArea로 인해 Hitbox를 통해 피해를 주도록 만듬
+    /// Hitbox에 따라 다른 처리를 해야 하는 경우에 사용
+    /// </summary>
+    /// <param name="hitBox">공격받는 대상의 히트박스</param>
     public void DealDamage(HitBox hitBox)
     {
         UnitManager.Instance.DamageUnitToHitbox(hitBox, source.AttackUnit, this);

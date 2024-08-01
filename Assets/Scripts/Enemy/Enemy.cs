@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : Unit
 {
-    protected bool isFindPlayer = false;
-
     /// <summary>
     /// 플레이어 탐색 거리
     /// </summary>

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -31,14 +29,20 @@ public class Mover : MonoBehaviour
     [SerializeField]
     private bool fixSpeedY = false;
 
+    //최대 속도 제한. true면 최대 속도 이상으로 넘지 못함
     public bool speedCap = true;
 
+    //맵 경계를 벗어날 수 있는가?
     [SerializeField]
     private bool canMoveOverMapLimit = true;
 
+    //맵 경계 오프셋
     [SerializeField]
     private float MapLimitExtra = 0;
 
+    /// <summary>
+    /// 속도
+    /// </summary>
     public Vector2 Velocity
     {
         get { return rb.velocity; }
@@ -52,6 +56,7 @@ public class Mover : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //이동
         if (fixSpeedX)
         {
             SetVelocityX();
@@ -61,17 +66,23 @@ public class Mover : MonoBehaviour
         {
             SetVelocityY();
         }
+
+        //최대 속도 체크
         if (speedCap)
         {
             MaxSpeedCheck();
         }
 
+        //맵 경계 체크
         if (!canMoveOverMapLimit)
         {
             transform.position = GameTools.ClampToRect(transform.position, GameManager.MapLimit, MapLimitExtra);
         }
     }
 
+    /// <summary>
+    /// 최대 속도 체크
+    /// </summary>
     private void MaxSpeedCheck()
     {
         if (maxSpeedX >= 0)

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -190,7 +188,8 @@ public class Attack : MonoBehaviour
                     }
                     else//이전에 충돌 검사된 유닛이라면
                     {
-                        if (temp[hitBox.Unit].Key.Priority + temp[hitBox.Unit].Value.Priority < hitBox.Priority + damageArea.Priority)//우선도 합이 더 높으면
+                        //우선도 합이 더 높으면
+                        if (temp[hitBox.Unit].Key.Priority + temp[hitBox.Unit].Value.Priority < hitBox.Priority + damageArea.Priority)
                         {
                             temp[hitBox.Unit] = new KeyValuePair<HitBox, DamageArea>(hitBox, damageArea);//등록한다
                         }

@@ -6,16 +6,16 @@ using UnityEngine;
 /// </summary>
 public class Projectile : MonoBehaviour
 {
-    protected Vector2 originPos;
+    protected Vector2 originPos;//시작 위치
     protected Vector2 direction;//진행 방향
-    protected float speed;
-    protected float lifeTime = -1f;
-    protected float lifeDistance = -1f;
-    protected bool isInitialized = false;
-    protected bool isDestroyed = false;
+    protected float speed;//속도
+    protected float lifeTime = -1f;//수명(시간)
+    protected float lifeDistance = -1f;//수명(거리)
+    protected bool isInitialized = false;//초기화 되었는가?
+    protected bool isDestroyed = false;//파괴 중인가?(중복 파괴 방지용 플래그)
 
     [SerializeField]
-    protected bool canBeAutoAimed = true;
+    protected bool canBeAutoAimed = true;//자동 조준의 대상이 되는가?
 
 
     /// <summary>

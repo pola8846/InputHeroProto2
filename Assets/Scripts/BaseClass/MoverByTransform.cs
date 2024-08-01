@@ -8,6 +8,9 @@ public class MoverByTransform : MonoBehaviour
     /// </summary>
     [SerializeField]
     private bool isSetByLocal = true;
+    /// <summary>
+    /// gameobject.position 대체. isSetByLocal가 true면 로컬 좌표를 사용
+    /// </summary>
     private Vector2 Position
     {
         get
@@ -44,7 +47,6 @@ public class MoverByTransform : MonoBehaviour
         LinearBySpeed,
         ByFunction,
     }
-
     private moveType type;
 
     //위치 기반 이동 시
@@ -62,13 +64,15 @@ public class MoverByTransform : MonoBehaviour
     Func<float, Vector2> MoveFunction;
 
     [SerializeField]
-    private float moveTimer;
+    private float moveTimer;//이동 확인용 타이머. ticktimer 만들기 전에 만들어서 float로 사용 중
     [SerializeField]
-    private bool isMoving = false;
+    private bool isMoving = false;//이동 중인가?
     public bool IsMoving => isMoving;
 
+    //맵 경계를 벗어날 수 있는가?
     [SerializeField]
     private bool canMoveOverMapLimit = true;
+    //맵 경계 오프셋
     [SerializeField]
     private float MapLimitExtra = 0;
 
@@ -126,13 +130,13 @@ public class MoverByTransform : MonoBehaviour
                 break;
 
             case moveType.LinearByPosWithSpeed:
-                targetPos = target;//방향 벡터
+                targetPos = target;//이동할 위치
                 targetSpeedF = options[0];//이동 속도
                 break;
 
             case moveType.LinearBySpeed:
-                targetSpeed = target;
-                targetMoveTime = options[0];
+                targetSpeed = target;//이동할 방향 벡터
+                targetMoveTime = options[0];//이동 속도
 
                 break;
             default:
@@ -141,6 +145,10 @@ public class MoverByTransform : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 전달받은 함수에 따라 지정된 궤도로 이동.
+    /// 패턴 구현 등에 사용할 예정이었으나 기획 변경으로 미사용
+    /// </summary>
     public void StartMove(moveType type, float targetTime, Func<float, Vector2> function)
     {
         moveTimer = 0;

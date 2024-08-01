@@ -42,7 +42,9 @@ public class Shoot : Projectile
         Vector2 moveDist = direction * speed * (isNotSlowed ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime);
 
         //레이 발사로 가장 가까운 적법한 대상 찾기
-        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
+        int layer = (1 << LayerMask.NameToLayer("HitBox")) | 
+            (1 << LayerMask.NameToLayer("Bullet")) | 
+            (1 << LayerMask.NameToLayer("Ground"));
         var ray = Physics2D.LinecastAll(previousPosition, previousPosition + moveDist, layer);
         Collider2D target = null;
         Vector2 hitPos = Vector2.zero;
@@ -69,7 +71,8 @@ public class Shoot : Projectile
 
                 //가장 가까운 타겟 찾기
                 if (target == null ||
-                    ((previousPosition - (Vector2)target.transform.position).sqrMagnitude < (previousPosition - (Vector2)hitGO.transform.position).sqrMagnitude))
+                    ((previousPosition - (Vector2)target.transform.position).sqrMagnitude < 
+                    (previousPosition - (Vector2)hitGO.transform.position).sqrMagnitude))
                 {
                     target = hit.collider;
                     hitPos = hit.point;

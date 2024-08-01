@@ -4,31 +4,31 @@ using UnityEngine;
 
 public class SpriteAnimation<T> : MonoBehaviour
 {
-    protected SpriteRenderer spriteRenderer;
-    protected Material material;
-    protected TickTimer timer;
+    protected SpriteRenderer spriteRenderer;//담당하는 스프라이트 랜더러
+    protected Material material;//적용할 매터리얼
+    protected TickTimer timer;//시간 체크용 타이머
 
 
     [SerializeField]
-    protected T sourceUnit;
+    protected T sourceUnit;//모체 유닛
 
     [SerializeField]
-    protected SpriteAnimationClip nowSpriteList;
+    protected SpriteAnimationClip nowSpriteList;//현재 표시 중인 애니메이션 클립
     [SerializeField]
-    protected int nowSpriteNum;
+    protected int nowSpriteNum;//현재 표시 중인 스프라이트 인덱스
 
     [SerializeField]
-    protected string targetSpriteName;
+    protected string targetSpriteName;//스프라이트 지정용 임시 캐시
     [SerializeField]
     protected bool isTestMode;
 
     [SerializeField]
-    protected List<SpriteAnimationClip> spriteList;
+    protected List<SpriteAnimationClip> spriteList;//재생 가능한 애니메이션 클립 리스트
     [SerializeField]
-    protected string startSpriteList;
+    protected string startSpriteList;//최초에 사용할 애니메이션 클립
 
-    public bool flip;
-    public bool skip;
+    public bool flip;//true면 뒤집혀서 표시
+    public bool skip;//true면 표시하지 않음
 
     protected virtual void Start()
     {
@@ -46,6 +46,7 @@ public class SpriteAnimation<T> : MonoBehaviour
         }
     }
 
+    //해당 클립의 해당 인덱스로 전환
     public void ChangeSpriteList(string name, int num = 0)
     {
         foreach (var sprite in spriteList)
@@ -60,6 +61,7 @@ public class SpriteAnimation<T> : MonoBehaviour
         ChangeSprite(num);
     }
 
+    //해당 인덱스로 전환
     public void ChangeSprite(int num)
     {
         if (nowSpriteList == null || num < 0 || nowSpriteList.sprites.Count <= num)
@@ -70,6 +72,12 @@ public class SpriteAnimation<T> : MonoBehaviour
         nowSpriteNum = num;
     }
 
+    /// <summary>
+    /// 특정 두 범위 사이의 비율을 스프라이트 인덱스로 변환하여 적용. 시간이나 각도 등에 따라 적절한 인덱스를 찾아줌
+    /// </summary>
+    /// <param name="delta">찾을 값</param>
+    /// <param name="min">기준 최소 값</param>
+    /// <param name="max">기준 최대 값</param>
     public void ChangeSprite(float delta, float min, float max)
     {
         int num = GameTools.GetlinearGraphInCount(nowSpriteList.sprites.Count - 1, delta, min, max);
@@ -77,6 +85,9 @@ public class SpriteAnimation<T> : MonoBehaviour
         nowSpriteNum = num;
     }
 
+    /// <summary>
+    /// 다음 스프라이트로 전환
+    /// </summary>
     public void ChangeSpriteNext()
     {
         if (nowSpriteList.sprites.Count == 0)
@@ -88,6 +99,10 @@ public class SpriteAnimation<T> : MonoBehaviour
         spriteRenderer.sprite = nowSpriteList.sprites[nowSpriteNum];
     }
 
+    /// <summary>
+    /// 원하는 만큼 스프라이트 전환. 음수를 넣으면 이전 스프라이트로 바뀜
+    /// </summary>
+    /// <param name="num">한 번에 전환할 스프라이트 수</param>
     public void ChangeSpriteNext(int num)
     {
         if (num < 0)
@@ -102,6 +117,9 @@ public class SpriteAnimation<T> : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이전 스프라이트로 전환
+    /// </summary>
     public void ChangeSpritePrevious()
     {
         if (nowSpriteList.sprites.Count == 0)
@@ -114,6 +132,11 @@ public class SpriteAnimation<T> : MonoBehaviour
         spriteRenderer.sprite = nowSpriteList.sprites[nowSpriteNum];
     }
 
+
+    /// <summary>
+    /// 원하는 만큼 스프라이트 전환(역방향). 음수를 넣으면 다음 스프라이트로 바뀜
+    /// </summary>
+    /// <param name="num">한 번에 전환할 스프라이트 수</param>
     public void ChangeSpritePrevious(int num)
     {
         if (num < 0)

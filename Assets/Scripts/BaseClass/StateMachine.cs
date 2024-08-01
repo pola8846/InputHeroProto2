@@ -6,6 +6,9 @@ using System.Collections.Generic;
 /// </summary>
 public class StateMachine
 {
+    /// <summary>
+    /// 모체 유닛
+    /// </summary>
     private Unit unit;
     public Unit Unit => unit;
 
@@ -19,11 +22,19 @@ public class StateMachine
     /// </summary>
     private Dictionary<Type, State> stateInstances = new Dictionary<Type, State>();
 
+    /// <summary>
+    /// 생성자
+    /// </summary>
+    /// <param name="unit">모체로 등록될 유닛</param>
     public StateMachine(Unit unit)
     {
         this.unit = unit;
     }
 
+    /// <summary>
+    /// 해당 상태로 전환
+    /// </summary>
+    /// <typeparam name="T">전환할 상태의 타입</typeparam>
     public void ChangeState<T>() where T : State
     {
         Type type = typeof(T);
@@ -37,6 +48,10 @@ public class StateMachine
         currentState.Enter();
     }
 
+    /// <summary>
+    /// 해당 상태로 전환
+    /// </summary>
+    /// <param name="state">전환할 상태 개체</param>
     public void ChangeState(State state)
     {
         Type type = state.GetType();
@@ -50,6 +65,9 @@ public class StateMachine
         currentState.Enter();
     }
 
+    /// <summary>
+    /// state에 update 이벤트 전달
+    /// </summary>
     public void Update()
     {
         if (currentState != null)
@@ -58,11 +76,17 @@ public class StateMachine
         }
     }
 
+    /// <summary>
+    /// 일시정지 대응용. 제작 중
+    /// </summary>
     public void Pause()
     {
         currentState?.Pause();
     }
 
+    /// <summary>
+    /// 일시정지 해제 대응용. 제작 중
+    /// </summary>
     public void Resume()
     {
         currentState?.Resume();

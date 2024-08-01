@@ -6,7 +6,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
     //이동
     [Header("모션 속도")]
     [SerializeField, Range(0, 2)] float xPosManifulator;
-    [SerializeField] float maxXValue;
+    [SerializeField] float maxXValue;//이동
     private float MoveCount;
 
 
@@ -29,7 +29,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
         }
         else if(sourceUnit.GroundCheck())//점프가 아니면(이동)
         {
-            //MoveCount를 좌우 조작*배율만큼 변경
+            //MoveCount를 속도*배율만큼 변경
             MoveCount += sourceUnit.MoverV.Velocity.x * xPosManifulator * Time.deltaTime;
 
             //조작이 없으면 idle
@@ -40,7 +40,7 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
                     ChangeSpriteList("Idle");
                 }
                 MoveCount = 0;
-            }//조작이 있으면
+            }//조작이 있으면 속도 비례하여 해당 방향으로 이동 애니메이션
             else if (Mathf.Abs(MoveCount) > maxXValue)
             {
                 if (nowSpriteList.keycode != "Move")
@@ -70,13 +70,13 @@ public class Down_Animator : SpriteAnimation<PlayerUnit>
         base.Update();
     }
 
-    public void FlipCheck()
+    public void FlipCheck()//방향 전환
     {
         flip = !sourceUnit.IsMouseLeft;
         spriteRenderer.flipX = !flip;
     }
 
-    void jumpingSprite()
+    void jumpingSprite()//점프 시 애니메이션
     {
         if (nowSpriteList.keycode != "Jump")
         {
