@@ -10,29 +10,30 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     protected Dictionary<InputType, bool> keyStay = new();
 
     [Header("기타")]
-    private bool canMove = true;
+    private bool canMove = true; //이동 가능한가?
 
     [SerializeField]
-    public GameObject areaAttackPrefab;
+    public GameObject areaAttackPrefab;//근접 공격용 프리팹(현재 미사용)
     [SerializeField]
-    private GameObject originPos;
+    private GameObject originPos;//좌표 계산 기준 위치
     public Vector3 OriginPos => originPos.transform.position;
 
     [SerializeField]
-    private float glitchTime = 0.5f;
+    private float glitchTime = 0.5f;//피격 시 글리치 이펙트 유지 시간
     [SerializeField]
-    private GameObject gameoverText;
+    private GameObject gameoverText;//사망 시 활성화할 오브젝트(게임 오버 이미지)
 
     [Header("대시")]
     [SerializeField, Range(1f, 5f)]
-    private float dashSpeedRate = 2f;
+    private float dashSpeedRate = 2f;//대시가 일반 속도의 몇 배인지
     [SerializeField]
-    private float dashTime = 1f;
+    private float dashTime = 1f;//대시유지시간
     private TickTimer dashTimer;
     [SerializeField, Range(0f, 1f)]
-    private float dashSlowRate = 1f;
+    private float dashSlowRate = 1f;//대시가 슬로우의 영향 받는 비율
 
     [Header("점프")]
+    //바닥 체크 용
     [SerializeField]
     protected Transform groundCheckerLT;
     [SerializeField]
@@ -43,25 +44,25 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [SerializeField]
     protected float groundCheckRadius = 0;
     [SerializeField]
-    protected string groundLayer = "";
+    protected string groundLayer = "";//바닥 레이어
     [SerializeField]
-    protected string halfGroundLayer = "";
-    private bool isDownJumping = false;
+    protected string halfGroundLayer = "";//반벽 레이어
+    private bool isDownJumping = false;//아래 점프 도중인가?
     private PlatformEffector2D effector2D;
 
-    private int canJumpCounter;
+    private int canJumpCounter;//남은 점프 회수 체크용(2단 이상 점프 시)
     public int CanJumpCounter => canJumpCounter;
-    private bool isJumping = false;
+    private bool isJumping = false;//점프 중인가?
     public bool IsJumping => isJumping;
 
 
     [Header("원거리 공격")]
     [SerializeField]
-    private float shootCooltime;
+    private float shootCooltime;//공격 쿨타임
     [SerializeField, Range(0, 1)]
-    private float shootSlowRate = 1;
-    private TickTimer shootTimer;
-    private bool canShootTemp = true;
+    private float shootSlowRate = 1;//공격이 슬로우에 영향 받는 비율
+    private TickTimer shootTimer;//공격용 타이머
+    private bool canShootTemp = true;//일시적으로 공격 불가능하게 만들 때 쓰는 플래그
     private bool CanShoot//공격할 수 있는가?
     {
         get
@@ -75,9 +76,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private float attackRange = 50f;//사거리
 
     //마우스 각도
-    private Vector2 nowMouseDir;
-    private bool isNowMouseDirCashed = false;
-    public Vector2 NowMouseDir
+    private Vector2 nowMouseDir;//플레이어 기준으로 마우스까지의 방향 벡터
+    private bool isNowMouseDirCashed = false;//캐시 체크용 플래그
+    public Vector2 NowMouseDir//플레이어 기준으로 마우스까지의 방향 벡터
     {
         get
         {
@@ -94,7 +95,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
             }
         }
     }
-    public float NowMouseAngle
+    public float NowMouseAngle//마우스까지의 방향을 각도로 받아옴
     {
         get
         {
@@ -132,10 +133,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     //장탄
     [SerializeField]
-    private int maxBullet;
+    private int maxBullet;//최대 탄환 수
     public int MaxBullet => maxBullet;
     [SerializeField]
-    private int nowBullet;
+    private int nowBullet;//현재 탄환 수
     public int NowBullet
     {
         get => nowBullet;
@@ -148,18 +149,18 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
     //재장전 시간
     [SerializeField]
-    private float reloadTime = 3f;
+    private float reloadTime = 3f;//재장전에 걸리는 시간
     public float ReloadTime => reloadTime;
-    public float RemainReloadTime => reloadTimer.GetRemain(ReloadTime);
-    private TickTimer reloadTimer;
+    public float RemainReloadTime => reloadTimer.GetRemain(ReloadTime);//재장전 완료까지 남은 시간
+    private TickTimer reloadTimer;//재장전용 타이머
     [SerializeField, Range(0f,1f)]
-    private float reloadSlowRate = 1;
-    private bool reloading = false;
+    private float reloadSlowRate = 1;//재장전이 슬로우의 영향을 얼마나 받을지?
+    private bool reloading = false;//재장전 중인가?
     public bool IsReloading => reloading;
 
-    public bool isDash;
+    public bool isDash;//대시 중인가?
 
-    public Vector2 ShootStartPos
+    public Vector2 ShootStartPos//총알 발사 시작점
     {
         get
         {
@@ -167,11 +168,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    [Header("애니메이션")]
     //애니메이션
     [SerializeField]
-    private Upper_Animator upperAni;
+    private Upper_Animator upperAni;//상체
     [SerializeField]
-    private Down_Animator downAni;
+    private Down_Animator downAni;//하체
 
 
     protected override void Start()
@@ -205,6 +207,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     }
 
 
+    /// <summary>
+    /// 키 눌렸을 때의 처리
+    /// </summary>
+    /// <param name="inputType">눌린 키</param>
     public void KeyDown(InputType inputType)
     {
         //입력 검사
@@ -252,7 +258,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 if (CanShoot)//공격
                     InputShoot();
                 else if (NowBullet <= 0)//총알 부족 시
-                    UIManager.Instance.OnBulletUseFailed?.Invoke();
+                    UIManager.Instance.OnBulletUseFailed?.Invoke();//부족 알림 표시
                 break;
 
             case InputType.Reload:
@@ -281,7 +287,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
-
+    /// <summary>
+    /// 키 뗄 때 처리
+    /// </summary>
+    /// <param name="inputType">뗀 키</param>
     public void KeyUp(InputType inputType)
     {
 
@@ -292,29 +301,32 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    /// <summary>
+    /// Update마다 이동 체크
+    /// </summary>
     private void InputMoveCheck()
     {
-        if (canMove)
+        if (canMove)//움직일 수 있고
         {
-            if (InputManager.IsKeyPushing(InputType.MoveLeft))
+            if (InputManager.IsKeyPushing(InputType.MoveLeft))//왼쪽 누르고 있다면
             {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);
-                if (!isLookLeft)
+                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);//이동
+                if (!isLookLeft)//방향 전환
                 {
                     Turn();
                 }
             }
-            else if (InputManager.IsKeyPushing(InputType.MoveRight))
+            else if (InputManager.IsKeyPushing(InputType.MoveRight))//오른쪽 누르고 있다면
             {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed));
-                if (isLookLeft)
+                MoverV.SetVelocityX(Mathf.Max(0, Speed));//이동
+                if (isLookLeft)//방향 전환
                 {
                     Turn();
                 }
             }
-            else
+            else//이동 키 조작 없으면
             {
-                MoverV.StopMoveX();
+                MoverV.StopMoveX();//정지
             }
         }
         if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
@@ -323,19 +335,22 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    /// <summary>
+    /// 애니메이션 갱신
+    /// </summary>
     private void Animate()
     {
-        //
         if (true)
         {
             upperAni.FlipCheck();
             downAni.FlipCheck();
         }
-
-
     }
 
     #region 원거리 기본공격
+    /// <summary>
+    /// 공격 키 입력
+    /// </summary>
     private void InputShoot()
     {
         //if (!TimeManager.IsSlowed)
@@ -345,6 +360,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         Shoot();
     }
 
+    /// <summary>
+    /// 공격
+    /// </summary>
     private void Shoot()
     {
         NowBullet--;
@@ -394,7 +412,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         ShootByRay();
     }
 
-    //대상에게 탄 충돌 시도, 대상을 쏠 수 있으면 true
+    //목표에게 탄 충돌 시도, 대상을 쏠 수 있으면 true
     private bool ShootToTarget(Projectile target)
     {
         if (target != null && BulletPathCheck(target.transform.position))
@@ -424,10 +442,15 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return false;
     }
 
+    /// <summary>
+    /// 자동 조준되지 않았을 때 레이를 통해 피격 처리
+    /// </summary>
     private void ShootByRay()
     {
         //방향대로 쏜다
-        int layer = (1 << LayerMask.NameToLayer("HitBox")) | (1 << LayerMask.NameToLayer("Bullet")) | (1 << LayerMask.NameToLayer("Ground"));
+        int layer = (1 << LayerMask.NameToLayer("HitBox")) | 
+            (1 << LayerMask.NameToLayer("Bullet")) | 
+            (1 << LayerMask.NameToLayer("Ground"));
         var ray = Physics2D.RaycastAll(ShootStartPos, NowMouseDir, attackRange, layer);
         Collider2D target = null;//충돌한 적법하고 가장 가까운 대상
         Vector2 hitPos = Vector2.zero;//충돌한 지점
@@ -502,8 +525,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     /// <summary>
     /// 피격 처리
     /// </summary>
-    /// <param name="target"></param>
-    /// <param name="hitPos"></param>
+    /// <param name="target">공격받은 대상</param>
+    /// <param name="hitPos">충돌 지점</param>
     /// <returns>발생할 이펙트 게임오브젝트</returns>
     private GameObject HitCheck(Collider2D target, Vector2 hitPos)
     {
@@ -518,7 +541,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         HitBox hitBox = target.GetComponent<HitBox>();
         if (hitBox != null && target.CompareTag("Enemy"))
         {
-            hitBox.Damage(1);
+            hitBox.Damage(1);//피해 입힌다
             //Hit(hitBox.Unit);
             return null;
         }
@@ -533,14 +556,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 var da = target.GetComponentInChildren<DamageArea>();
                 if (da != null)
                 {
-                    da.Destroy();
+                    da.Destroy();//파괴
                     return null;
                 }
 
                 var prj = target.GetComponentInChildren<Projectile>();
                 if (prj != null)
                 {
-                    prj.Parried();
+                    prj.Parried();//패리
                 }
                 return particle;
             }
@@ -556,6 +579,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         return particle;
     }
 
+    /// <summary>
+    /// 플레이어로부터 착탄 지점까지 발사 효과 그려주기
+    /// </summary>
+    /// <param name="target">착탄 지점</param>
     private void DrawHitGrapicAtMinRange(Vector2 target)
     {
         var dist = target - ShootStartPos;
@@ -567,17 +594,24 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //총알 발사 그래픽 그리기. 표시되긴 하는데 안 이쁨
     private IEnumerator DrawHitGrapic(Vector2 start, Vector2 target)
     {
-        GameObject go = Instantiate(trail);
+        GameObject go = Instantiate(trail);//트레일을 생성한다
         go.transform.position = start;
         go.GetComponent<TrailRenderer>().emitting = true;
 
-        yield return null;
+        yield return null;//트레일 처리를 위해 1프레임 대기
 
+        //트레일 이동 후 제거
         go.transform.position = target;
-
         Destroy(go, go.GetComponent<TrailRenderer>().time);
     }
 
+    /// <summary>
+    /// 착탄 지점에 파티클 표시(지형일 경우)
+    /// </summary>
+    /// <param name="particle">생성할 파티클</param>
+    /// <param name="start">발사 위치</param>
+    /// <param name="target">착탄 위치</param>
+    /// <param name="dir">파티클 방향</param>
     private void DrawParticle(GameObject particle, Vector2 start, Vector2 target, Vector2 dir)
     {
         if (particle != null)
@@ -590,6 +624,9 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    /// <summary>
+    /// 공격 종료
+    /// </summary>
     public void AttackEnd()
     {
         canMove = true;
@@ -625,7 +662,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
 
         int layer = LayerMask.GetMask(groundLayer, halfGroundLayer);
-        if (groundCheckerCollider.IsTouchingLayers(layer))
+        if (groundCheckerCollider.IsTouchingLayers(layer))//콜라이더가 해당 레이어에 닿아 있는가?
         {
             return true;
         }
@@ -687,6 +724,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    //장전 취소
     private void CancelReload()
     {
         reloading = false;
@@ -694,7 +732,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         reloadTimer.Reset();
     }
 
-    //대시
+    //대시. 이후 제거할 것
     private IEnumerator DoDash()
     {
         canShootTemp = false;
@@ -722,11 +760,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         canShootTemp = true;
     }
 
+    //반대 방향 회전. 그래픽은 마우스 방향 기준이므로 처리해주지 않음
     public override void Turn()
     {
         isLookLeft = !isLookLeft;
     }
 
+    //죽을 때
     protected override void OnKilled()
     {
         base.OnKilled();
@@ -734,6 +774,8 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         gameoverText.SetActive(true);
         //죽을 때 처리 추가
     }
+    
+    //피해 입을 때
     protected override void OnDamaged()
     {
         base.OnDamaged();
@@ -741,6 +783,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         StartCoroutine(DamageEffect());
     }
 
+    //피격 시 이펙트 표시
     private IEnumerator DamageEffect()
     {
         GameManager.TestGlitch.currentGlitch = TestGlitch.GlitchType.Hurt;

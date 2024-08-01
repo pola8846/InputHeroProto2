@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -98,7 +94,7 @@ public class Unit : MonoBehaviour
 
     protected virtual void Update()
     {
-        
+
     }
 
     protected virtual void FixedUpdate()
@@ -151,7 +147,7 @@ public class Unit : MonoBehaviour
 
     public virtual void Turn(bool lookLeft)
     {
-        if (isLookLeft!=lookLeft)
+        if (isLookLeft != lookLeft)
         {
             Turn();
         }

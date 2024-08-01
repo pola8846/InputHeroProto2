@@ -7,13 +7,12 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance => instance;
 
-
+    //중개용 변수
     private static PlayerUnit player;
     public static PlayerUnit Player => player;
 
     private static TestGlitch testGlitch;
     public static TestGlitch TestGlitch => testGlitch;
-
 
 
     [SerializeField]
