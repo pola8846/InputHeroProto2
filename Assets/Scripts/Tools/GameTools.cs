@@ -126,7 +126,7 @@ public class GameTools
     /// <returns>점이 삼각형 안에 있는지 여부</returns>
     private static bool IsPointInTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
     {
-        // 벡터 간의 크로스 프로덕트를 사용하여 점이 삼각형 내부에 있는지 검사
+        // 벡터 간의 외적을 사용하여 점이 삼각형 내부에 있는지 검사
         bool b1 = CrossProduct(b - a, point - a) < 0.0f;
         bool b2 = CrossProduct(c - b, point - b) < 0.0f;
         bool b3 = CrossProduct(a - c, point - c) < 0.0f;
@@ -552,8 +552,10 @@ public class GameTools
     public static Rect GetCameraViewportSize()
     {
         // 카메라의 뷰포트 경계 계산
-        Vector2 bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, -Camera.main.transform.position.z + GameManager.CameraZPos));
-        Vector2 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, -Camera.main.transform.position.z + GameManager.CameraZPos));
+        Vector2 bottomLeft = Camera.main.ViewportToWorldPoint
+            (new Vector3(0, 0, -Camera.main.transform.position.z + GameManager.CameraZPos));
+        Vector2 topRight = Camera.main.ViewportToWorldPoint
+            (new Vector3(1, 1, -Camera.main.transform.position.z + GameManager.CameraZPos));
 
         return new(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
     }

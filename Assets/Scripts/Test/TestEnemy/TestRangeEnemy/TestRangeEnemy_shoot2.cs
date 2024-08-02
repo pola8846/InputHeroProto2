@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public class TestRangeEnemy_shoot2 : TimedState
 {
     private TestRangeEnemy source => (TestRangeEnemy)unit;
@@ -38,7 +33,7 @@ public class TestRangeEnemy_shoot2 : TimedState
             ChangeState<TestRangeEnemy_shoot>();
     }
 
-    public override void Exit() 
+    public override void Exit()
     {
         base.Exit();
     }

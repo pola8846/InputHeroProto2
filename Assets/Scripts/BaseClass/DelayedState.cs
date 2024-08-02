@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
 /// 선/후딜을 가지고 시간에 의해 진행되는 상태. 원하는 만큼 주 효과를 반복할 수 있음.
 /// </summary>

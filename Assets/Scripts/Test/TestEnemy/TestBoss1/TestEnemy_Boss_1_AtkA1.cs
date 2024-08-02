@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestEnemy_Boss_1_AtkA1 : DelayedState
@@ -24,12 +21,10 @@ public class TestEnemy_Boss_1_AtkA1 : DelayedState
         mainDelay = DelayM;
         lateDelay = DelayL;
     }
-
     protected override void OnEnterEarly()
     {
         Source.SetColor(Color.red);
     }
-
     protected override void OnEnterMain()
     {
         if (ReferenceEquals(TargetPlatform, Source.PlatformD))

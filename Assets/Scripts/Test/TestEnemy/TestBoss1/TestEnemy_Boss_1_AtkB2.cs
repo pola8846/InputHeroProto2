@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestEnemy_Boss_1_AtkB2 : DelayedState

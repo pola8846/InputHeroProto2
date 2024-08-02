@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,8 +8,9 @@ public class Bullet : Projectile
     private Rigidbody2D rb;
 
     [SerializeField]
-    private bool isNotSlowed = false;
+    private bool isNotSlowed = false;//슬로우 영향을 받는가?
 
+    //초기화
     public override void Initialize(Vector2 dir, float speed, Unit sourceUnit, float lifeTime = -1f, float lifeDistance = -1f)
     {
         base.Initialize(dir, speed, sourceUnit, lifeTime, lifeDistance);

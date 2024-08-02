@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TickCounter
 {
     /// <summary>
@@ -35,7 +31,7 @@ public class TickCounter
         bool result = false;
         tickCount++;
 
-        if (tickCount>=tickTargetNum)
+        if (tickCount >= tickTargetNum)
         {
             result = true;
             if (autoReset)

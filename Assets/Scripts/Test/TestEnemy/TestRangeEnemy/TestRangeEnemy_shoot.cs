@@ -6,7 +6,7 @@ public class TestRangeEnemy_shoot : TimedState
     {
         get
         {
-            if (GameManager.Player!=null)
+            if (GameManager.Player != null)
             {
                 return GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
             }
@@ -46,7 +46,7 @@ public class TestRangeEnemy_shoot : TimedState
 
     private void AimPlayer()
     {
-        if (GameManager.Player==null)
+        if (GameManager.Player == null)
         {
             return;
         }

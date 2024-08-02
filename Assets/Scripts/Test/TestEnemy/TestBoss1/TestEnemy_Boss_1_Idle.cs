@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TestEnemy_Boss_1_Idle : TimedState
 {
     private TickTimer timer_waitMaxTime;
@@ -38,7 +34,7 @@ public class TestEnemy_Boss_1_Idle : TimedState
 
     protected override void Main()
     {
-        
+
     }
 
     public override void Exit()

@@ -5,16 +5,11 @@ using UnityEngine;
 public class TestEnemy_Boss_1 : Enemy
 {
     [SerializeField]
-    private GameObject test;
+    private State state;//임시
 
-
-    [SerializeField]
-    private State state;
-
-    private BulletShooter shooter;
+    private BulletShooter shooter;//총알 발사기
     public BulletShooter Shooter => shooter;
 
-    //입력용 수치
     [Header("입력용")]
     [SerializeField]
     private float wait_MaxTime;//대기 최대 시간
@@ -28,11 +23,11 @@ public class TestEnemy_Boss_1 : Enemy
     private float meleeAttack1CheckDistance;//근접공격을 위해 멈출 거리
     public float MeleeAttack1CheckDistance => meleeAttack1CheckDistance;
     [SerializeField]
-    private CollisionChecker meleeAttack1AreaChecker;
+    private CollisionChecker meleeAttack1AreaChecker;//근접 공격 범위 체크용 에리어
 
     [Header("공격 관련")]
     [SerializeField]
-    private float anyAttackCooltime;
+    private float anyAttackCooltime;//모든 공격 공용 쿨타임
 
     [Header("근접공격")]
     [SerializeField]
@@ -98,17 +93,17 @@ public class TestEnemy_Boss_1 : Enemy
     [Header("맵 위치")]
     [SerializeField]
     private Transform platformL;
-    public Transform PlatformL => platformL;
+    public Transform PlatformL => platformL;//왼쪽 발판
     [SerializeField]
     private CollisionChecker collisionCheckerL;
     [SerializeField]
     private Transform platformR;
-    public Transform PlatformR => platformR;
+    public Transform PlatformR => platformR;//오른쪽 발판
     [SerializeField]
     private CollisionChecker collisionCheckerR;
     [SerializeField]
     private Transform platformD;
-    public Transform PlatformD => platformD;
+    public Transform PlatformD => platformD;//아래 발판
     [SerializeField]
     private CollisionChecker collisionCheckerD;
     public Transform targetPlatform;
@@ -170,7 +165,8 @@ public class TestEnemy_Boss_1 : Enemy
                 {
                     SetState(State.MeleeAttack1_EWait);
                 }
-                else if (isLookLeft == (GameManager.Player.transform.position.x > transform.position.x + meleeAttack1CheckDistance * (isLookLeft ? -1 : 1)))
+                else if (isLookLeft == (GameManager.Player.transform.position.x > 
+                    transform.position.x + meleeAttack1CheckDistance * (isLookLeft ? -1 : 1)))
                 {
                     SetState(State.Wait);
                 }
@@ -314,6 +310,7 @@ public class TestEnemy_Boss_1 : Enemy
         EnterState(state);
     }
 
+    //상태 진입 시 처리
     private void EnterState(State st)
     {
         switch (st)
@@ -385,7 +382,8 @@ public class TestEnemy_Boss_1 : Enemy
 
             case State.BarrageAttack1_EWait:
                 //Debug.Log($"{targetPlatform.transform.position}, {targetPlatform}");
-                transform.position = targetPlatform.transform.position + (Vector3.up * targetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
+                transform.position = targetPlatform.transform.position + 
+                    (Vector3.up * targetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
                 shooter.shootType = ShootType.fan;
                 shooter.BulletNum = barrageAttack1BulletNum;
                 shooter.BulletSpeed = 6f;
@@ -425,6 +423,7 @@ public class TestEnemy_Boss_1 : Enemy
         }
     }
 
+    //상태 종료 시 처리
     private void ExitState(State st)
     {
         switch (st)
@@ -459,6 +458,7 @@ public class TestEnemy_Boss_1 : Enemy
     }
 
     //기타
+    //색깔설정(애니메이션 대신)
     public void SetColor(Color color)
     {
         if (color == Color.clear)
@@ -472,7 +472,7 @@ public class TestEnemy_Boss_1 : Enemy
         }
     }
     /// <summary>
-    /// 공격 고르기. 안 했다면 false 반환
+    /// 가능한 공격 중에서 랜덤으로 고르기. 안 했다면 false 반환
     /// </summary>
     /// <returns>공격 골랐는지</returns>
     private bool ChoiceAttack()
@@ -516,7 +516,7 @@ public class TestEnemy_Boss_1 : Enemy
             }
 
 
-
+            //무작위 선정
             if (states.Count >= 1)
             {
                 int rand = UnityEngine.Random.Range(0, states.Count);
@@ -550,6 +550,7 @@ public class TestEnemy_Boss_1 : Enemy
         return false;
     }
 
+    //State 작성 도중 만들었던 임시 코드
     public Type ChoiceAttackState()
     {
         if (lastAttackTime.Check(anyAttackCooltime))
@@ -636,14 +637,17 @@ public class TestEnemy_Boss_1 : Enemy
         float moveX = Stats.moveSpeed * (isLookLeft ? -1 : 1);
         moverV.SetVelocityX(moveX);
     }
+    //정지
     public void StopMove()
     {
         moverT.StopMove();
         moverV.StopMove();
     }
+    //플레이어 방향으로 발사
     public void ShootToPlayer(float angleRange = 0f)
     {
-        float temp2 = GameTools.GetDegreeAngleFormDirection(GameManager.Player.transform.position + Vector3.up * 0.5f - transform.position);
+        float temp2 = GameTools.GetDegreeAngleFormDirection
+            (GameManager.Player.transform.position + Vector3.up * 0.5f - transform.position);
         shooter.bulletAngleMax = temp2 + angleRange;
         shooter.bulletAngleMin = temp2 - angleRange;
         shooter.Triger();

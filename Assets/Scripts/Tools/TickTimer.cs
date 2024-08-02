@@ -13,17 +13,17 @@ public class TickTimer
     /// <summary>
     /// 검사할 시간의 기본값
     /// </summary>
-    public float checkTime;
-    private bool autoReset;
-    private bool unscaledTime;
+    public float checkTime;//검사할 시간(초)
+    private bool autoReset;//검사 이후 true 받으면 자동 리셋?
+    private bool unscaledTime;//배속 영향 받는가?
 
     //일시정지
-    private bool isPaused;
-    private float pauseTime;
+    private bool isPaused;//정지 중인가?
+    private float pauseTime;//정지 걸었던 시간
 
     //경과 시간 카운트
-    private float elapsedTime;
-    private float lastUpdatedTime;
+    private float elapsedTime;//총 경과 시간
+    private float lastUpdatedTime;//마지막으로 검사한 시간
 
     /// <summary>
     /// 현재 시간
@@ -43,6 +43,7 @@ public class TickTimer
         }
     }
 
+    //생성자
     public TickTimer(float checkTime = 1f, bool isTrigerInstant = false, bool autoReset = false, bool unscaledTime = false)
     {
         this.checkTime = checkTime;
@@ -60,6 +61,9 @@ public class TickTimer
         this.autoReset = autoReset;
     }
 
+    /// <summary>
+    /// 초기화. 새로 타이머 파는 대신 이걸 사용해도 됨
+    /// </summary>
     public void Reset()
     {
         time = NowTime;
@@ -89,6 +93,8 @@ public class TickTimer
             Reset();
         }
         return result;
+
+        //일시정지 도중의 처리. 작업 우선도가 낮아져서 일단 주석 처리해둠
         /*
         if (isPaused)
         {
@@ -116,6 +122,10 @@ public class TickTimer
         */
     }
 
+    /// <summary>
+    /// 기본 설정된 시간으로 검사
+    /// </summary>
+    /// <returns>설정한 시간만큼 지났는가?</returns>
     public bool Check()
     {
         return Check(checkTime);
@@ -138,6 +148,10 @@ public class TickTimer
         }
     }
 
+    /// <summary>
+    /// 기본 설정된 시간으로 남은 시간 검사
+    /// </summary>
+    /// <returns>남은 시간</returns>
     public float GetRemain()
     {
         return GetRemain(checkTime);
@@ -153,7 +167,7 @@ public class TickTimer
     }
 
     /// <summary>
-    /// 타이머를 일시정지합니다.
+    /// 타이머를 일시정지
     /// </summary>
     public void Pause()
     {
@@ -166,7 +180,7 @@ public class TickTimer
     }
 
     /// <summary>
-    /// 일시정지된 타이머를 다시 시작합니다.
+    /// 일시정지된 타이머를 다시 시작
     /// </summary>
     public void Resume()
     {
@@ -179,7 +193,7 @@ public class TickTimer
     }
 
     /// <summary>
-    /// 시간 강제 갱신
+    /// 시간 강제 갱신. 일시정지 혹은 시간 배율 변화 등이 일어날 때 사용
     /// </summary>
     /// <param name="timeRate">시간 변화 얼마나 적용할지 배율</param>
     public void UpdateElapsedTime(float timeRate = 1)

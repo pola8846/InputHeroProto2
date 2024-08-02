@@ -4,7 +4,7 @@ public class TestRangeEnemy_Animation_Top : SpriteAnimation<TestRangeEnemy>
 {
     [SerializeField]
     private float animationFrameTime;
-     
+
 
     protected override void Start()
     {

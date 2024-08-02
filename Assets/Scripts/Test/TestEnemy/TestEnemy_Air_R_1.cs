@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent (typeof (MoverByTransform))]
+[RequireComponent(typeof(MoverByTransform))]
 public class TestEnemy_Air_R_1 : Enemy
 {
     [SerializeField]
@@ -273,17 +270,6 @@ public class TestEnemy_Air_R_1 : Enemy
     {
         Vector2 temp = target - (Vector2)transform.position;
         return temp.normalized;
-    }
-    private void SetColor(Color color)
-    {
-        if (color == Color.clear)
-        {
-            renderer.material.color = originColor;
-        }
-        else
-        {
-            renderer.material.color = color;
-        }
     }
 
     private void SetRandomPatrolPosition()

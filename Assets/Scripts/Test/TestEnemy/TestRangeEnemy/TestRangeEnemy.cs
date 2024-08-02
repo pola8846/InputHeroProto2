@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Mover))]
@@ -36,7 +34,7 @@ public class TestRangeEnemy : Enemy
     public bool FindPlayerInEngage()
     {
         if (GameManager.Player == null)
-            return false; 
+            return false;
         bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, engageDistance);
         return result;
     }

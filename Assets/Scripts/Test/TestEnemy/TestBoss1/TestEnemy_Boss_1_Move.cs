@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TestEnemy_Boss_1_Move : State
 {
     private TickTimer timer_MaxTime;
@@ -27,7 +23,8 @@ public class TestEnemy_Boss_1_Move : State
 
     public override void Execute()
     {
-        if (Source.IsLookLeft == (GameManager.Player.transform.position.x > Source.transform.position.x + Source.MeleeAttack1CheckDistance * (Source.IsLookLeft ? -1 : 1)))
+        if (Source.IsLookLeft == (GameManager.Player.transform.position.x > 
+            Source.transform.position.x + Source.MeleeAttack1CheckDistance * (Source.IsLookLeft ? -1 : 1)))
         {
             machine.ChangeState<TestEnemy_Boss_1_AtkM1>();
             return;

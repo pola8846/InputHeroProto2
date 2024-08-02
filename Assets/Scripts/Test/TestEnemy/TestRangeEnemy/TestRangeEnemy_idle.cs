@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TestRangeEnemy_idle : State
 {
     private TestRangeEnemy source => (TestRangeEnemy)unit;

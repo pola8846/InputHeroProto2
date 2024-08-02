@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestFsmEnemy_timed : TimedState
@@ -7,7 +5,7 @@ public class TestFsmEnemy_timed : TimedState
     public TestFsmEnemy_timed(StateMachine machine) : base(machine)
     {
         timer.checkTime = 2;
-        
+
     }
 
     public override void Enter()

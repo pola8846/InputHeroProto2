@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletShooter : MonoBehaviour
 {
-    public GameObject GO;
+    public GameObject GO;//발사할 프리팹
 
     [SerializeField]
-    private int bulletNum = 1;
+    private int bulletNum = 1;//발사할 총알 수
     public int BulletNum
     {
         get
@@ -20,10 +18,10 @@ public class BulletShooter : MonoBehaviour
         }
     }
 
-    public ShootType shootType;
+    public ShootType shootType;//발사 타입
 
     [SerializeField]
-    private float bulletSpeedMin = 1;
+    private float bulletSpeedMin = 1;//총알 최소 속도
     public float BulletSpeedMin
     {
         get
@@ -36,7 +34,7 @@ public class BulletShooter : MonoBehaviour
         }
     }
     [SerializeField]
-    private float bulletSpeedMax = 1;
+    private float bulletSpeedMax = 1;//총알 최대 속도
     public float BulletSpeedMax
     {
         get
@@ -55,8 +53,9 @@ public class BulletShooter : MonoBehaviour
             bulletSpeedMax = bulletSpeedMin = Mathf.Max(0, value);
         }
     }
-    public float bulletAngleMin = 90;
-    public float bulletAngleMax = 90;
+
+    public float bulletAngleMin = 90;//총알 최소 각도
+    public float bulletAngleMax = 90;//총알 최대 각도
     public float BulletAngle
     {
         set
@@ -65,13 +64,13 @@ public class BulletShooter : MonoBehaviour
         }
     }
 
-    public float lifeTime = 0;
-    public float lifeDistance = 0;
+    public float lifeTime = 0;//총알 수명(초)
+    public float lifeDistance = 0;//총알 수명(거리)
 
-    public Unit Unit;
-    public bool isPlayers = false;
+    public Unit Unit;//모체 유닛
+    public bool isPlayers = false;//플레이어의 것인가?
 
-    public bool testTriger = false;
+    public bool testTriger = false;//테스트용 수동 발사기
 
     private void Update()
     {
@@ -82,6 +81,7 @@ public class BulletShooter : MonoBehaviour
         }
     }
 
+    //발사
     public void Triger()
     {
         Shoot();
@@ -91,7 +91,7 @@ public class BulletShooter : MonoBehaviour
     {
         switch (shootType)
         {
-            case ShootType.oneWay:
+            case ShootType.oneWay://해당 방향으로 각도 범위 사이에서 무작위로 발사
                 for (int i = 0; i < bulletNum; i++)
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
@@ -101,7 +101,7 @@ public class BulletShooter : MonoBehaviour
                 }
                 break;
 
-            case ShootType.fan:
+            case ShootType.fan://해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, bulletAngleMin);
                     Quaternion quatAtOnce = Quaternion.Euler(0, 0, (bulletAngleMax - bulletAngleMin) / bulletNum);
@@ -121,13 +121,17 @@ public class BulletShooter : MonoBehaviour
         }
     }
 
+
+    //발사체 생성
     private void MakeProjectile(Vector2 direction)
     {
+        //생성
         Attack attack = Attack.MakeGameObject(Unit, (isPlayers ? "Enemy" : "Player"));
-        Destroy(attack.gameObject, lifeTime<=0? 10f : lifeTime +1);
-        
+        Destroy(attack.gameObject, lifeTime <= 0 ? 10f : lifeTime + 1);
+
+        //초기화
         GameObject go = Instantiate(GO, transform.position, transform.rotation, attack.transform);
-        if (go.GetComponentsInChildren<DamageArea>().Length>=1)
+        if (go.GetComponentsInChildren<DamageArea>().Length >= 1)
         {
             attack.EnrollDamage(go);
         }
@@ -136,13 +140,14 @@ public class BulletShooter : MonoBehaviour
             attack.isDestroySelfAuto = false;
         }
 
-
+        //총알 세팅값 설정
         Projectile projectile = go.GetComponent<Projectile>();
         projectile?.Initialize(
             direction, Random.Range(bulletSpeedMin, bulletSpeedMax), Unit,
             lifeTime: lifeTime, lifeDistance: lifeDistance);
     }
 
+    //발사각 설정
     public void SetBulletAngle(float angle, float range = 0)
     {
         bulletAngleMax = angle + range;
@@ -150,8 +155,9 @@ public class BulletShooter : MonoBehaviour
     }
 }
 
+//발사 타입
 public enum ShootType
 {
-    oneWay,
-    fan,
+    oneWay,//해당 방향으로 각도 범위 사이에서 무작위로 발사
+    fan,//해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
 }

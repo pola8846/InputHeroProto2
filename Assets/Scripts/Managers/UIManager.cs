@@ -26,7 +26,6 @@ public class UIManager : MonoBehaviour
     //
     [SerializeField]
     private TextMeshProUGUI bulletCounter;
-    public TestActionBar testActionBar;
 
     private void Awake()
     {

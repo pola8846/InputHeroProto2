@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Camera)), RequireComponent(typeof(SmoothMoving))]
 public class CameraTracking : MonoBehaviour
 {
-    public Vector3 originPos;
-    private SmoothMoving smooth;
+    public Vector3 originPos;//초기 위치
+    private SmoothMoving smooth;//이동 대행해줄 스크립트
     [SerializeField]
     private float trackingDistance;//추적 시작할 거리
 
@@ -19,7 +16,7 @@ public class CameraTracking : MonoBehaviour
 
     [SerializeField]
     private Transform focusPoint;// 카메라가 비출 타겟
-    public bool isFocusing; // 카메라의 시선이 아직 타겟으로 이동 중인가??
+    public bool isFocusing; // 카메라의 시선이 아직 타겟으로 이동 중인가?
     public bool IsFocusing
     {
         get { return isFocusing; }
@@ -39,20 +36,23 @@ public class CameraTracking : MonoBehaviour
 
         Vector3 targetPos;
 
-        if (mouseTracking)
+        if (mouseTracking)//마우스 추적 시, 마우스 방향으로 일정 비율 따라감
         {
             Vector2 mouseDir = (Vector3)GameManager.MousePos - GameManager.Player.transform.position;//마우스까지의 거리
             mouseDir /= 2;
-            mouseDir.x = Mathf.Clamp(mouseDir.x, mouseTrackingRangeOffset.x - Mathf.Abs(mouseTrackingRange.x), mouseTrackingRangeOffset.x + Mathf.Abs(mouseTrackingRange.x));
-            mouseDir.y = Mathf.Clamp(mouseDir.y, mouseTrackingRangeOffset.y - Mathf.Abs(mouseTrackingRange.y), mouseTrackingRangeOffset.y + Mathf.Abs(mouseTrackingRange.y));
+            mouseDir.x = Mathf.Clamp(mouseDir.x, mouseTrackingRangeOffset.x - Mathf.Abs(mouseTrackingRange.x), 
+                mouseTrackingRangeOffset.x + Mathf.Abs(mouseTrackingRange.x));
+            mouseDir.y = Mathf.Clamp(mouseDir.y, mouseTrackingRangeOffset.y - Mathf.Abs(mouseTrackingRange.y), 
+                mouseTrackingRangeOffset.y + Mathf.Abs(mouseTrackingRange.y));
 
             targetPos = (focusPoint.position + (Vector3)mouseDir) + originPos;
         }
-        else
+        else//그냥 따라감
         {
             targetPos = focusPoint.position + originPos;
         }
 
+        //이동에 필요한 최소 거리보다 목표 지점까지의 거리가 길다면 이동
         if (Vector3.Distance(transform.position, targetPos) > trackingDistance)
         {
             isFocusing = true;
@@ -62,7 +62,7 @@ public class CameraTracking : MonoBehaviour
             smooth.directionPos = targetPos - dist;
             smooth.move = true;
         }
-        else
+        else//이동 정지
         {
             isFocusing = false;
             smooth.move = false;
