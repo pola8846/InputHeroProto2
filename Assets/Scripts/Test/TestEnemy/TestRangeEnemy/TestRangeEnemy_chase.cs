@@ -13,7 +13,8 @@ public class TestRangeEnemy_chase : State
             {
                 return lastDir;
             }
-            var result = GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+            //플레이어가 오른쪽에 있는가?
+            var result = GameManager.Player.transform.position.x >= unit.transform.position.x;
             lastDir = result;
             return lastDir;
         }

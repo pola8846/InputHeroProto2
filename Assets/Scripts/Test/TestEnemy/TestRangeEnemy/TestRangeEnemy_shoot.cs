@@ -8,7 +8,8 @@ public class TestRangeEnemy_shoot : TimedState
         {
             if (GameManager.Player != null)
             {
-                return GameManager.Player.transform.position.x >= unit.transform.position.x;//플레이어가 오른쪽에 있는가?
+                //플레이어가 오른쪽에 있는가?
+                return GameManager.Player.transform.position.x >= unit.transform.position.x;
             }
             else
                 return false;

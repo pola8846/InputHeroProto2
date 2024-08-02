@@ -35,7 +35,8 @@ public class TestRangeEnemy : Enemy
     {
         if (GameManager.Player == null)
             return false;
-        bool result = GameTools.IsAround(transform.position, GameManager.Player.transform.position, engageDistance);
+        bool result = GameTools.IsAround
+            (transform.position, GameManager.Player.transform.position, engageDistance);
         return result;
     }
 }
