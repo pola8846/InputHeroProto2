@@ -91,7 +91,7 @@ public class BulletShooter : MonoBehaviour
     {
         switch (shootType)
         {
-            case ShootType.oneWay://해당 방향으로 각도 범위 사이에서 무작위로 발사
+            case ShootType.OneWay://해당 방향으로 각도 범위 사이에서 무작위로 발사
                 for (int i = 0; i < bulletNum; i++)
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, Random.Range(bulletAngleMin, bulletAngleMax));
@@ -101,7 +101,7 @@ public class BulletShooter : MonoBehaviour
                 }
                 break;
 
-            case ShootType.fan://해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
+            case ShootType.Fan://해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
                 {
                     Quaternion quat = Quaternion.Euler(0, 0, bulletAngleMin);
                     Quaternion quatAtOnce = Quaternion.Euler(0, 0, (bulletAngleMax - bulletAngleMin) / bulletNum);
@@ -158,6 +158,6 @@ public class BulletShooter : MonoBehaviour
 //발사 타입
 public enum ShootType
 {
-    oneWay,//해당 방향으로 각도 범위 사이에서 무작위로 발사
-    fan,//해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
+    OneWay,//해당 방향으로 각도 범위 사이에서 무작위로 발사
+    Fan,//해당 방향을 기준으로 각도 범위 사이에서 균일한 각도 간격으로 발사
 }

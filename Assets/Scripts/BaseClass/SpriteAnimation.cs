@@ -5,7 +5,6 @@ using UnityEngine;
 public class SpriteAnimation<T> : MonoBehaviour
 {
     protected SpriteRenderer spriteRenderer;//담당하는 스프라이트 랜더러
-    protected Material material;//적용할 매터리얼
     protected TickTimer timer;//시간 체크용 타이머
 
 
@@ -34,7 +33,6 @@ public class SpriteAnimation<T> : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         timer = new TickTimer();
-        material = spriteRenderer.material;
         ChangeSpriteList(startSpriteList);
     }
 
@@ -149,56 +147,5 @@ public class SpriteAnimation<T> : MonoBehaviour
         {
             ChangeSpritePrevious();
         }
-    }
-}
-
-[Serializable]
-public class spriteAnimationList
-{
-    public string name;
-    public List<Sprite> sprites;
-
-    // == 연산자 오버로딩
-    public static bool operator ==(spriteAnimationList sal, string name)
-    {
-        return sal.name == name;
-    }
-
-    public static bool operator ==(string name, spriteAnimationList sal)
-    {
-        return sal.name == name;
-    }
-
-    // != 연산자 오버로딩
-    public static bool operator !=(spriteAnimationList sal, string name)
-    {
-        return sal.name != name;
-    }
-
-    public static bool operator !=(string name, spriteAnimationList sal)
-    {
-        return sal.name != name;
-    }
-
-    // Equals 메서드 오버라이딩
-    public override bool Equals(object obj)
-    {
-        if (obj is spriteAnimationList)
-        {
-            var sal = (spriteAnimationList)obj;
-            return this.name == sal.name;
-        }
-        else if (obj is string)
-        {
-            var name = (string)obj;
-            return this.name == name;
-        }
-        return false;
-    }
-
-    // GetHashCode 메서드 오버라이딩
-    public override int GetHashCode()
-    {
-        return name.GetHashCode();
     }
 }

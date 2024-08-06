@@ -6,14 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(Mover))]
 public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 {
-    //[Header("조작키")]
-    protected Dictionary<InputType, bool> keyStay = new();
-
     [Header("기타")]
     private bool canMove = true; //이동 가능한가?
 
-    [SerializeField]
-    public GameObject areaAttackPrefab;//근접 공격용 프리팹(현재 미사용)
     [SerializeField]
     private GameObject originPos;//좌표 계산 기준 위치
     public Vector3 OriginPos => originPos.transform.position;
@@ -35,14 +30,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     [Header("점프")]
     //바닥 체크 용
     [SerializeField]
-    protected Transform groundCheckerLT;
-    [SerializeField]
-    protected Transform groundCheckerRD;
-    [SerializeField]
-    private GameObject groundChecker;
     private Collider2D groundCheckerCollider;
-    [SerializeField]
-    protected float groundCheckRadius = 0;
     [SerializeField]
     protected string groundLayer = "";//바닥 레이어
     [SerializeField]
@@ -51,7 +39,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     private PlatformEffector2D effector2D;
 
     private int canJumpCounter;//남은 점프 회수 체크용(2단 이상 점프 시)
-    public int CanJumpCounter => canJumpCounter;
     private bool isJumping = false;//점프 중인가?
     public bool IsJumping => isJumping;
 
@@ -180,10 +167,6 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     {
         base.Start();
         effector2D = GetComponent<PlatformEffector2D>();
-        if (groundChecker != null)
-        {
-            groundCheckerCollider = groundChecker.GetComponent<Collider2D>();
-        }
         GameManager.SetPlayer(this);
         InputManager.EnrollReciver(this);
         reloadTimer = new();
@@ -656,7 +639,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     //땅 체크
     public bool GroundCheck()
     {
-        if (groundChecker == null)
+        if (groundCheckerCollider == null)
         {
             return false;
         }

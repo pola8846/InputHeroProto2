@@ -27,7 +27,7 @@ public class TestEnemy_Boss_1_AtkB1 : DelayedState
 
         Source.transform.position = TargetPlatform.transform.position + 
             (Vector3.up * TargetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
-        Shooter.shootType = ShootType.fan;
+        Shooter.shootType = ShootType.Fan;
         Shooter.BulletNum = Source.BarrageAttack1BulletNum;
         Shooter.BulletSpeed = 6f;
         Source.MoverV.SetVelocity(new Vector2(0, 0.2f));

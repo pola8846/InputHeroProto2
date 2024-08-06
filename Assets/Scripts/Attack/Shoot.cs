@@ -12,9 +12,6 @@ public class Shoot : Projectile
     private TrailRenderer trail;
 
 
-    /// <summary>
-    /// 대미지. 나중에 피해 공식 및 상태이상 만들 때 수정할 것
-    /// </summary>
     public float damage;
 
     [SerializeField]

@@ -248,24 +248,3 @@ public class Mover : MonoBehaviour
         }
     }
 }
-
-public struct Move
-{
-    public float x;
-    public bool isMoveX;
-    public float y;
-    public bool isMoveY;
-    public float lifeTime;
-    public bool isAdded;
-
-    public Move(Vector2 move, bool isMoveX = true, bool isMoveY = true, float lifeTime = -1, bool isAdded = false)
-    {
-        x = move.x;
-        y = move.y;
-        this.isMoveX = isMoveX;
-        this.isMoveY = isMoveY;
-        this.isAdded = isAdded;
-
-        this.lifeTime = lifeTime;
-    }
-}

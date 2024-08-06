@@ -337,7 +337,7 @@ public class TestEnemy_Boss_1 : Enemy
             case State.RangeAttack1_EWait:
                 SetColor(Color.yellow * 0.8f);
                 rangeAttack1Counter = 0;
-                shooter.shootType = ShootType.oneWay;
+                shooter.shootType = ShootType.OneWay;
                 shooter.BulletNum = 1;
                 shooter.BulletSpeed = 25f;
                 //shooter.bulletDamageMax = shooter.bulletDamageMin = stats.attackPower;
@@ -384,7 +384,7 @@ public class TestEnemy_Boss_1 : Enemy
                 //Debug.Log($"{targetPlatform.transform.position}, {targetPlatform}");
                 transform.position = targetPlatform.transform.position + 
                     (Vector3.up * targetPlatform.lossyScale.y * 0.5f) + (Vector3.up * 2f);
-                shooter.shootType = ShootType.fan;
+                shooter.shootType = ShootType.Fan;
                 shooter.BulletNum = barrageAttack1BulletNum;
                 shooter.BulletSpeed = 6f;
                 moverV.SetVelocity(new Vector2(0, 0.2f));
@@ -402,7 +402,7 @@ public class TestEnemy_Boss_1 : Enemy
             case State.BarrageAttack2_EWait:
                 {
                     SetColor(Color.cyan);
-                    shooter.shootType = ShootType.fan;
+                    shooter.shootType = ShootType.Fan;
                     shooter.BulletNum = barrageAttack2BulletNum;
                     shooter.bulletAngleMax = 360;
                     shooter.bulletAngleMin = 0;

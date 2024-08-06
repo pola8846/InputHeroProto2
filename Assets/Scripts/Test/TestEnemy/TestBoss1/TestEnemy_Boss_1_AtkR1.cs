@@ -25,7 +25,7 @@ public class TestEnemy_Boss_1_AtkR1 : DelayedState
     protected override void OnEnterEarly()
     {
         Source.SetColor(Color.yellow);
-        Source.Shooter.shootType = ShootType.oneWay;
+        Source.Shooter.shootType = ShootType.OneWay;
         Source.Shooter.BulletNum = 1;
         Source.Shooter.BulletSpeed = 8f;
     }

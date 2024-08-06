@@ -25,7 +25,7 @@ public class TestEnemy_Boss_1_AtkB2 : DelayedState
     protected override void OnEnterEarly()
     {
         Source.SetColor(Color.cyan);
-        Source.Shooter.shootType = ShootType.fan;
+        Source.Shooter.shootType = ShootType.Fan;
         Source.Shooter.BulletNum = Source.BarrageAttack2BulletNum;
         Source.Shooter.bulletAngleMax = 360;
         Source.Shooter.bulletAngleMin = 0;

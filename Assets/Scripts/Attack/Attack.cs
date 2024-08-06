@@ -28,11 +28,6 @@ public class Attack : MonoBehaviour
     protected string targetTag;//피해를 입힐 대상의 태그
     protected bool isInitialized = false;//초기화 되었는가?
 
-    public virtual void Initialization(Unit unit, string targetTag)
-    {
-        this.attackUnit = unit;
-        this.targetTag = targetTag;
-    }
     private List<DamageArea> damageAreaList = new();//등록된 대미지
     private List<Unit> damagedUnitList = new();//대미지 받은 유닛 리스트
 

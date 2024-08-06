@@ -167,7 +167,7 @@ public class TimeManager : MonoBehaviour
     }
 
     //시간 소모
-    public static void DecreaseComboTime(float time)
+    public static void DecreaseSlowTime(float time)
     {
         instance.slowTimer.AddOffset(time);
     }
