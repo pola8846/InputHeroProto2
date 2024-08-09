@@ -8,6 +8,10 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 {
     [Header("기타")]
     private bool canMove = true; //이동 가능한가?
+    public bool CanMove
+    {
+        get { return canMove; }
+    }
 
     [SerializeField]
     private GameObject originPos;//좌표 계산 기준 위치
@@ -155,6 +159,12 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
+    // FSM
+    private StateMachine mainStateMachine;
+    private StateMachine downStateMachine;
+    public string currentMainState;
+    public string currentDownState;
+
     [Header("애니메이션")]
     //애니메이션
     [SerializeField]
@@ -175,6 +185,13 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         upperAni = GetComponentInChildren<Upper_Animator>();
         downAni = GetComponentInChildren<Down_Animator>();
+
+        // FSM
+        mainStateMachine = new(this);
+        mainStateMachine.ChangeState<PlayerMain_aim>();
+
+        downStateMachine = new(this);
+        downStateMachine.ChangeState<PlayerDown_idle>();
     }
 
     protected override void Update()
@@ -183,8 +200,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
 
         JumpCheck();
         ReloadCheck();
-        InputMoveCheck();
+        //InputMoveCheck();
         Animate();
+
+        // FSM
+        mainStateMachine.Update();
+        currentMainState = mainStateMachine.GetCurrentState();
+        downStateMachine.Update();
+        currentDownState = downStateMachine.GetCurrentState();
 
         Debug.Log(TickTimer.GetConvertedTimeRate(shootSlowRate));
     }
@@ -227,7 +250,7 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
                 {
                     if (canJumpCounter > 0 && canMove)
                     {
-                        Jump();
+                        //Jump();
                     }
                 }
                 break;
@@ -287,36 +310,36 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
     /// <summary>
     /// Update마다 이동 체크
     /// </summary>
-    private void InputMoveCheck()
-    {
-        if (canMove)//움직일 수 있고
-        {
-            if (InputManager.IsKeyPushing(InputType.MoveLeft))//왼쪽 누르고 있다면
-            {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);//이동
-                if (!isLookLeft)//방향 전환
-                {
-                    Turn();
-                }
-            }
-            else if (InputManager.IsKeyPushing(InputType.MoveRight))//오른쪽 누르고 있다면
-            {
-                MoverV.SetVelocityX(Mathf.Max(0, Speed));//이동
-                if (isLookLeft)//방향 전환
-                {
-                    Turn();
-                }
-            }
-            else//이동 키 조작 없으면
-            {
-                MoverV.StopMoveX();//정지
-            }
-        }
-        if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
-        {
-            InputShoot();
-        }
-    }
+    //private void InputMoveCheck()
+    //{
+    //    if (canMove)//움직일 수 있고
+    //    {
+    //        if (InputManager.IsKeyPushing(InputType.MoveLeft))//왼쪽 누르고 있다면
+    //        {
+    //            MoverV.SetVelocityX(Mathf.Max(0, Speed) * -1);//이동
+    //            if (!isLookLeft)//방향 전환
+    //            {
+    //                Turn();
+    //            }
+    //        }
+    //        else if (InputManager.IsKeyPushing(InputType.MoveRight))//오른쪽 누르고 있다면
+    //        {
+    //            MoverV.SetVelocityX(Mathf.Max(0, Speed));//이동
+    //            if (isLookLeft)//방향 전환
+    //            {
+    //                Turn();
+    //            }
+    //        }
+    //        else//이동 키 조작 없으면
+    //        {
+    //            MoverV.StopMoveX();//정지
+    //        }
+    //    }
+    //    if (InputManager.IsKeyPushing(InputType.Shoot) && CanShoot)//총알 발사
+    //    {
+    //        InputShoot();
+    //    }
+    //}
 
     /// <summary>
     /// 애니메이션 갱신
@@ -669,14 +692,14 @@ public class PlayerUnit : Unit, IGroundChecker, IMoveReceiver
         }
     }
 
-    //점프
-    private void Jump()
-    {
-        canJumpCounter--;
-        MoverV.SetVelocityY(0, true);
-        MoverV.AddForceY(JumpPower);
-        isJumping = true;
-    }
+    ////점프
+    //private void Jump()
+    //{
+    //    canJumpCounter--;
+    //    MoverV.SetVelocityY(0, true);
+    //    MoverV.AddForceY(JumpPower);
+    //    isJumping = true;
+    //}
 
 
     //재장전

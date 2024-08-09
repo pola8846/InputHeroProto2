@@ -31,6 +31,11 @@ public class StateMachine
         this.unit = unit;
     }
 
+    public string GetCurrentState()
+    {
+        return currentState.ToString();
+    }
+
     /// <summary>
     /// 해당 상태로 전환
     /// </summary>

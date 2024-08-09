@@ -133,6 +133,30 @@ public class InputManager : MonoBehaviour
         return KeyStay.ContainsKey(inputType) && KeyStay[inputType];
     }
 
+    // 일단 추가..
+    public static bool IsKeyDown(InputType inputType)
+    {
+        return Input.GetKeyDown(KeyDict[inputType]);
+    }
+    public static bool IsKeyUp(InputType inputType)
+    {
+        return Input.GetKeyUp(KeyDict[inputType]);
+    }
+    public static bool IsKeyDownOrPushing(InputType inputType) // 괴랄하지만 일단..
+    {
+        if (KeyStay.ContainsKey(inputType) && KeyStay[inputType])
+        {
+            return true;
+        }
+        else
+        {
+            if (IsKeyPushing(inputType))
+            {
+                return true;
+            }
+            else return false;
+        }
+    }
 
     public static void EnrollReciver(IMoveReceiver receiver)
     {
